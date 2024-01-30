@@ -30,6 +30,17 @@ $apiKey = isset($env) ? $env['OPENAI_API_KEY'] : getenv('OPENAI_API_KEY');
 // Read the request payload from the client
 $requestPayload = file_get_contents('php://input');
 
+# Chat log
+if ($env["CHAT_LOG"] ?? false) {
+	# Log the request payload to a file
+	$logFile = 'request_payload.log'; 
+	$parsedPayload = json_decode($requestPayload, true); 
+	$prettyPayload = json_encode($parsedPayload, JSON_PRETTY_PRINT); 
+
+	$logData = "-----\n" . date('Y-m-d H:i:s') . "\n" . $prettyPayload . "\n";
+	file_put_contents($logFile, $logData, FILE_APPEND);
+}
+
 $ch = curl_init();
 curl_setopt($ch, CURLOPT_URL, $apiUrl);
 curl_setopt($ch, CURLOPT_POST, 1);
