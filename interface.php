@@ -13,6 +13,11 @@ if (!isset($_SESSION['username'])) {
 	exit;
 }
 
+if (file_exists(".env")){
+    $env = parse_ini_file('.env');
+}
+$gpt_model = isset($env) ? $env['GPT_MODEL'] : "";
+
 ?>
 
 <link rel="stylesheet" href="app.css">	
@@ -313,6 +318,7 @@ if (!isset($_SESSION['username'])) {
 		const messagesElement = document.querySelector(".messages");
 		const messageTemplate = document.querySelector('#message');
 		const inputField = document.querySelector(".input-field");
+		const gptModel = "<?php echo $gpt_model; ?>";
 		
 		let message = {};
 		message.role = "user";
@@ -324,7 +330,7 @@ if (!isset($_SESSION['username'])) {
 		document.querySelector('.limitations')?.remove();
 		
 		const requestObject = {};
-		requestObject.model = 'gpt-4-turbo';
+		requestObject.model = gptModel;
 		requestObject.stream = true;
 		requestObject.messages = [];
 		const messageElements = messagesElement.querySelectorAll(".message");
