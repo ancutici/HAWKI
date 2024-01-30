@@ -116,7 +116,55 @@
 	}
   } else {
 	// do get
+
+	if (file_exists(".env")){
+		$env = parse_ini_file('.env');
+	}    
+
+    if ((isset($env) ? $env["Authentication"] : getenv("Authentication")) == "LTI") {		
+        $oauth_consumer_key = isset($env) ? $env["LTI_CONSUMER_KEY"] : getenv("LTI_CONSUMER_KEY");
+        $oauth_consumer_secret = isset($env) ? $env["LTI_CONSUMER_SECRET"] : getenv("LTI_CONSUMER_SECRET");
+        
+        $ok = true;
+        $ok = $ok && $_SERVER['REQUEST_METHOD'] === 'POST';
+        $ok = $ok && isset($_POST['oauth_consumer_key']) && ($_POST['oauth_consumer_key'] === $oauth_consumer_key);
+
+		$provider = new OAuthProvider();
+
+        $provider->consumerKey = $oauth_consumer_key;
+        $provider->consumerSecret = $oauth_consumer_secret ;
+
+        $provider->consumerHandler(function($provider) use ($oauth_consumer_secret) {
+            $provider->consumer_secret = $oauth_consumer_secret;
+            return OAUTH_OK;
+        });
+
+        $provider->timestampNonceHandler(function ($provider) {
+            return OAUTH_OK;
+        });
+
+        try {
+            $provider->isRequestTokenEndpoint(true);
+            $provider->checkOAuthRequest();
+        } catch (OAuthException $e) {
+            $ok = false;
+        }
+        
+        if ( $ok ) {
+            $firstname = $_POST['lis_person_name_given'];
+            $surname = $_POST['lis_person_name_family'];
+            $initials = substr($firstname, 0, 1) . substr($surname, 0, 1);
+
+            // echo "login erfolgreich!";
+            $_SESSION['username'] = $initials;
+            $_SESSION['initials'] = $initials;
+            
+            header("Location: interface.php");
+            exit;
+        }       
+    }	
 	
+
   }
 
 
@@ -175,11 +223,15 @@
 			<button>' . $ldap_login . '</button >
 		  </form>';
 	  }
+	  if ((isset($env) ? $env["Authentication"] : getenv("Authentication")) == "LTI") {
+		  $login_available = true;
+	  }
+	  
 	  if (!$login_available) {
 		  echo 'No authentication method defined';
 		  die;
 	  }
-
+	  
 	  ?>
 	<h2 class="top-auto">Interesse?</h2>
 	<p>Wenn Sie das Interface für Ihre Hochschule ausprobieren möchten, hinterlassen Sie bitte hier Ihre E-Mail-Adresse.</p>
