@@ -45,7 +45,7 @@ if ($templateData['AUTHENTICATION'] == 'TEST' && isset($_POST['login']) && isset
   }
 }
 
-if ($templateData['AUTHENTICATION'] == 'LTI' && $_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['oauth_consumer_key']) ) {
+if ($templateData['AUTHENTICATION'] == 'LTI' && $_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['oauth_consumer_key'])) {
   $post_oauth_consumer_key = filter_var($_POST['oauth_consumer_key'], FILTER_SANITIZE_STRING);
 
   $loginResult = authLTI($templateData['LTI_CONSUMER_KEY'], $templateData['LTI_CONSUMER_SECRET'], $post_oauth_consumer_key);
@@ -57,7 +57,6 @@ if ($templateData['AUTHENTICATION'] == 'LTI' && $_SERVER['REQUEST_METHOD'] === '
   } else {
     $templateData['LOGIN_ERROR'] = $loginResult['authStatus'];
   }
-
 }
 
 $templates = new League\Plates\Engine('./template');
