@@ -59,6 +59,6 @@ if ($templateData['AUTHENTICATION'] == 'LTI' && $_SERVER['REQUEST_METHOD'] === '
   }
 }
 
-$templates = new League\Plates\Engine('./template');
+$templates = new League\Plates\Engine('./template/' . $templateData['TEMPLATE']);
 
 echo $templates->render('loginTemplate', $templateData);

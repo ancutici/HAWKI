@@ -17,6 +17,6 @@ if (file_exists('.env')) {
 
 $templateData['USERNAME'] = htmlspecialchars($_SESSION['username'], ENT_QUOTES, 'UTF-8');
 
-$templates = new League\Plates\Engine('./template');
+$templates = new League\Plates\Engine('./template/' . $templateData['TEMPLATE']);
 
 echo $templates->render('interfaceTemplate', $templateData);
