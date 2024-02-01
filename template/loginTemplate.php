@@ -6,8 +6,8 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<title>HAWKI</title>
 	<?php if ($FAVICON_URI != ''): ?>
-	<link rel="shortcut icon" type="image/x-icon" href="<?= $FAVICON_URI ?>" media="screen" />
-	<link rel="icon" type="image/x-icon" href="<?= $FAVICON_URI ?>" media="screen" />
+		<link rel="shortcut icon" type="image/x-icon" href="<?= $FAVICON_URI ?>" media="screen" />
+		<link rel="icon" type="image/x-icon" href="<?= $FAVICON_URI ?>" media="screen" />
 	<?php endif; ?>
 	<link rel="stylesheet" href="./style.css">
 </head>
@@ -126,7 +126,7 @@
 		</div>
 	</div>
 	<!-- partial -->
-	<script src="./script.js"></script>
+	<script src="./login.js"></script>
 </body>
 
 </html>
