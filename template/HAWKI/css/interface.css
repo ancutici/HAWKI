@@ -1,3 +1,31 @@
+@font-face {
+  font-family: 'Fira Sans';
+  src: url('../font/FiraSans-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Fira Sans';
+  src: url('../font/FiraSans-Italic.ttf') format('truetype');
+  font-weight: 400;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: 'Fira Sans';
+  src: url('../font/FiraSans-Bold.ttf') format('truetype');
+  font-weight: bold;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Fira Sans';
+  src: url('../font/FiraSans-BoldItalic.ttf') format('truetype');
+  font-weight: bold;
+  font-style: italic;
+}
+
 :root {
   /* HAWK */
   --main-bg-color: rgb(35,48,176);
@@ -8,13 +36,6 @@
   width: 150px;
 }
 
-@font-face {
-  font-family: 'Fira Sans';
-  font-style: normal;
-  font-weight: 400;
-  font-display: swap;
-  src: url(FiraSans.woff2) format('woff2');
-}
 
 *{
   scrollbar-width: 0px;

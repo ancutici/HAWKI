@@ -5,10 +5,8 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<title>HAWKI</title>
-	<?php if ($FAVICON_URI != ''): ?>
-		<link rel="shortcut icon" type="image/x-icon" href="<?= $FAVICON_URI ?>" media="screen" />
-		<link rel="icon" type="image/x-icon" href="<?= $FAVICON_URI ?>" media="screen" />
-	<?php endif; ?>
+	<link rel="shortcut icon" type="image/x-icon" href="<?= $TEMPLATE_PATH ?>/img/favicon.png" media="screen" />
+	<link rel="icon" type="image/x-icon" href="<?= $TEMPLATE_PATH ?>/img/favicon.png" media="screen" />
 
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/vs.min.css">
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
@@ -16,7 +14,7 @@
 	<!-- and it's easy to individually load additional languages -->
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/languages/go.min.js"></script>
 
-	<link rel="stylesheet" href="app.css">
+	<link rel="stylesheet" href="<?= $TEMPLATE_PATH ?>/css/interface.css">
 </head>
 
 <body>
@@ -24,7 +22,7 @@
 	<div class="wrapper">
 		<div class="sidebar">
 			<div class="logo" onclick="load(this, 'chat.htm')">
-				<img src="/img/logo.svg" alt="HAWK Logo" width="150px">
+				<img src="<?= $TEMPLATE_PATH ?>/img/logo.svg" alt="HAWK Logo" width="150px">
 			</div>
 			<div class="menu">
 				<details>

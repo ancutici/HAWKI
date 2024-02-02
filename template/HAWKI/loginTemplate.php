@@ -5,18 +5,16 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<title>HAWKI</title>
-	<?php if ($FAVICON_URI != ''): ?>
-		<link rel="shortcut icon" type="image/x-icon" href="<?= $FAVICON_URI ?>" media="screen" />
-		<link rel="icon" type="image/x-icon" href="<?= $FAVICON_URI ?>" media="screen" />
-	<?php endif; ?>
-	<link rel="stylesheet" href="./style.css">
+	<link rel="shortcut icon" type="image/x-icon" href="<?= $TEMPLATE_PATH ?>/img/favicon.png" media="screen" />
+	<link rel="icon" type="image/x-icon" href="<?= $TEMPLATE_PATH ?>/img/favicon.png" media="screen" />
+	<link rel="stylesheet" href="<?= $TEMPLATE_PATH ?>/css/login.css">
 </head>
 
 <body>
 	<!-- partial:index.partial.html -->
 	<div class="wrapper">
 		<aside>
-			<img src="/img/logo.svg" alt="">
+			<img src="<?= $TEMPLATE_PATH ?>/img/logo.svg" alt="">
 			<h2>Willkommen zurück!</h2>
 
 			<?php if ($AUTHENTICATION == 'OIDC'): ?>

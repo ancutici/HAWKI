@@ -17,6 +17,7 @@ if (file_exists('.env')) {
 }
 
 $templateData['SCRIPT'] = htmlspecialchars($_SERVER['PHP_SELF'], ENT_QUOTES, 'UTF-8');
+$templateData['TEMPLATE_PATH'] = './template/' . $templateData['TEMPLATE'];
 
 if ($templateData['AUTHENTICATION'] == 'LDAP' && isset($_POST['login']) && isset($_POST['password'])) {
   $login = filter_var($_POST['login'], FILTER_SANITIZE_STRING);
@@ -59,6 +60,6 @@ if ($templateData['AUTHENTICATION'] == 'LTI' && $_SERVER['REQUEST_METHOD'] === '
   }
 }
 
-$templates = new League\Plates\Engine('./template/' . $templateData['TEMPLATE']);
+$templates = new League\Plates\Engine($templateData['TEMPLATE_PATH']);
 
 echo $templates->render('loginTemplate', $templateData);
