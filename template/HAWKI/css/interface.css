@@ -36,6 +36,13 @@
   width: 150px;
 }
 
+@font-face {
+  font-family: "Fira Sans";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url(FiraSans.woff2) format("woff2");
+}
 
 * {
   scrollbar-width: 0px;
