@@ -137,19 +137,21 @@
         }
         
         if ( $ok ) {
+            // echo "login erfolgreich!";
             $firstname = $_POST['lis_person_name_given'];
             $surname = $_POST['lis_person_name_family'];
             $initials = substr($firstname, 0, 1) . substr($surname, 0, 1);
-
-            // echo "login erfolgreich!";
             $_SESSION['username'] = $initials;
             $_SESSION['initials'] = $initials;
-            
+			$_SESSION['employeetype'] = "-";
+
             header("Location: interface.php");
             exit;
-        }       
+        } else {
+			echo "Automatisches Login nur über LTI möglich";
+			//header("Location: login.php");						
+		}      
     }	
-	
 
   }
 
