@@ -1,0 +1,186 @@
+.sidebar {
+    background-color: #3670A1;
+    color:#99B2C8;
+}
+
+.sidebar .info,
+.sidebar .info a,
+.sidebar .info a:visited {
+    color: #99B2C8;
+}
+
+.sidebar .info a:hover,
+.sidebar .info a:active {
+    color: #fff;
+}
+
+.logo img {
+    width: 300px;
+}
+
+.sidebar .logo {
+    padding: 0;
+}
+
+.sidebar h3 {
+    color: #E3F1F4;
+}
+
+.menu-item svg path {
+  fill: #99B2C8;
+}
+
+.submenu-item {
+  color: #99B2C8;
+}
+
+.submenu-item,
+.submenu-item:hover,
+.submenu-item:active,
+.submenu-item:visited,
+.submenu-item.active,
+.submenu-item.visited {
+  border:none;
+}
+
+.menu-item:hover,
+.menu-item:visited,
+.menu-item:active,
+.menu-item.active,
+.menu-item:hover svg path,
+.menu-item:visited svg path,
+.menu-item:active svg path,
+.menu-item.active svg path,
+.submenu-item:hover,
+.submenu-item:active,
+.submenu-item:visited,
+.submenu-item.active,
+.submenu-item.visited {
+    color: #fff;
+    fill: #fff;
+}
+
+.menu-item:hover,
+.menu-item:visited,
+.menu-item:active,
+.menu-item.active,
+.menu-item:hover svg path,
+.menu-item:active svg path,
+.menu-item.active svg path {
+  border-color: #fff;
+}
+
+.sidebar {
+    background-color: #3670A1;
+    color:#99B2C8;
+}
+
+
+.menu-item.open {
+  border-color: #99B2C8;
+  color: #fff;
+}
+
+input[type="radio"]:checked + p {
+    background: #003F75;
+}
+
+.sidebar details {
+    color: #E3F1F4;
+    font-size: 0.9rem;
+}
+
+.message-icon {
+    background: #003F75;
+}
+
+.vote-hover:hover,
+.userpost-send svg {
+    fill: #003F75;
+    color: #003F75;
+}
+
+aside,
+aside a,
+aside a:visited {
+    color: #99B2C8;
+}
+
+aside a:hover,
+aside a:active {
+    color: #fff;
+}
+
+aside {
+    background-color: #3670A1;
+    width: 300px;
+    color:#fff;
+    padding: 2rem;
+}
+
+aside img {
+    width: 300px;
+    margin:-30px;
+}
+
+aside button {
+    background: #003F75;
+}
+
+aside label {
+    xopacity: unset;
+}
+
+aside {
+    display: grid;
+    grid-template-rows: 1fr auto;
+    overflow-y: scroll;
+}
+
+aside input {
+    margin-bottom:10px;
+}
+
+aside button {
+    width: auto;
+    align-self: unset;
+    margin-top: unset;
+}
+
+.sidebar h2 {
+    font-size: 1.5em;
+}
+
+.menu {
+    padding-top:0;
+}
+
+.main-header {
+    margin-left:8%;
+    max-width: 100ch;
+    border-bottom: 1px #bbb solid;
+}
+
+.suggestion {
+    max-width: 90ch;
+}
+
+.message-content {
+    max-width: 100ch;
+    margin-left:8%;
+}
+
+
+.input-container .input {
+    max-width: 100ch;
+    margin-left:8%;
+}
+
+.input-container .input {
+    overflow-y: auto;
+    max-height: 50ch;
+}
+
+.limitations {
+    margin-left: 8%;
+}
