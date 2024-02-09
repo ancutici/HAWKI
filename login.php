@@ -2,6 +2,12 @@
 require_once './vendor/autoload.php';
 require_once 'auth.php';
 
+/*
+	ini_set('display_errors', 1);
+	ini_set('display_startup_errors', 1);
+	error_reporting(E_ALL);
+*/
+
 session_start();
 
 if (isset($_SESSION['username'])) {
@@ -26,6 +32,8 @@ if ($templateData['AUTHENTICATION'] == 'LDAP' && isset($_POST['login']) && isset
   $loginResult = authLDAP($login, $password);
   if ($loginResult['authStatus'] == 'ok') {
     $_SESSION['username'] = substr($loginResult['firstname'], 0, 1) . substr($loginResult['surname'], 0, 1);
+    $_SESSION['employeetype'] = $loginResult;
+    $_SESSION['initials'] = $_SESSION['username'];
     header('Location: interface.php');
     exit;
   } else {
@@ -38,7 +46,8 @@ if ($templateData['AUTHENTICATION'] == 'TEST' && isset($_POST['login']) && isset
   $password = filter_var($_POST['password'], FILTER_SANITIZE_STRING);
 
   if ($login == 'tester' && $password == 'superlangespasswort123') {
-    $_SESSION['username'] = 'T';
+	$_SESSION['username'] = "TE";
+	$_SESSION['employeetype'] = "Tester";
     header('Location: interface.php');
     exit;
   } else {
@@ -53,6 +62,7 @@ if ($templateData['AUTHENTICATION'] == 'LTI' && $_SERVER['REQUEST_METHOD'] === '
   if ($loginResult['authStatus'] == 'ok') {
     $_SESSION['username'] = substr($loginResult['firstname'], 0, 1) . substr($loginResult['surname'], 0, 1);
     $_SESSION['initials'] = $_SESSION['username'];
+    $_SESSION['employeetype'] = $loginResult;
     header('Location: interface.php');
     exit;
   } else {
