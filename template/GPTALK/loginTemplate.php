@@ -8,15 +8,17 @@
 	<link rel="shortcut icon" type="image/x-icon" href="<?= $TEMPLATE_PATH ?>/img/favicon.png" media="screen" />
 	<link rel="icon" type="image/x-icon" href="<?= $TEMPLATE_PATH ?>/img/favicon.png" media="screen" />
 	<link rel="stylesheet" href="<?= $TEMPLATE_PATH ?>/css/login.css">
+	<link rel="stylesheet" href="<?= $TEMPLATE_PATH ?>/css/hohenheim.css">
+<link rel="stylesheet" href="https://sibforms.com/forms/end-form/build/sib-styles.css">
 </head>
 
 <body>
 	<!-- partial:index.partial.html -->
 	<div class="wrapper">
 		<aside>
-			<img src="<?= $TEMPLATE_PATH ?>/img/logo.svg" alt="">
-			<h2>Willkommen zurück!</h2>
-
+			<div class="loginPanel">
+					<img id="Universität Hohenheim Logo" src="<?= $TEMPLATE_PATH ?>/img/universitaet-hohenheim-logo3.svg" alt="">
+			<h3>Willkommen zurück!</h3>
 			<?php if ($AUTHENTICATION == 'OIDC'): ?>
 				<form action='oidc_login.php' class='column' method='post'>
 					<button>Login</button>
@@ -62,69 +64,44 @@
 					die;
 				endif;
 			?>
-
-			<h2 class="top-auto">Interesse?</h2>
-			<p>Wenn Sie das Interface für Ihre Hochschule ausprobieren möchten, hinterlassen Sie bitte hier Ihre
-				E-Mail-Adresse.</p>
-			<form action="<?= $SCRIPT ?>" class="column" method="post" id="newsletterForm">
-				<label for="newsletter">E-Mail-Adresse</label>
-				<input type="email" name="newsletter" id="newsletter">
-				<button>Senden</button>
-			</form>
-			<a href="/datenschutz" target="_blank">Datenschutzerklärung</a>
-			<a href="/impressum" target="_blank">Impressum</a>
+</div>	
 		</aside>
 
 		<main>
-			<h1>GPT für die Hochschule</h1>
-			<p><small><i>HAWKI</i> ist ein didaktisches Interface für Hochschulen, das auf der API von OpenAI basiert.
-				Für die Nutzerinnen und Nutzer ist es nicht notwendig, einen Account anzulegen, die Hochschul-ID
-				reicht für den Login aus - es werden keine nutzerbezogenen Daten gespeichert.</small></p>
-			<p>Das Angebot wurde im Interaction Design Lab der HAWK entwickelt, um allen Hochschulangehörigen die
-				Möglichkeit zu geben, Künstliche Intelligenz in ihre Arbeitsprozesse zu integrieren und einen
-				Begegnungsraum zu haben, damit sich eventuell neue Arbeitsweisen ergeben und eine hochschulinterne
-				Diskussion über den Einsatz von K.I. entstehen kann. Derzeit ist die Oberfläche in drei Bereiche
-				unterteilt:</p>
+			<div class="infoPanel">
+					<div class="textPanel">
+						<div class="page">
+							<h1 class="headerLine">GPTalk Hohenheim</h1>
+							<p><small>Mit <i>GPTalk</i> haben Studierende und Lehrende der Universität die Möglichkeit, ChatGPT zu verwenden, ohne einen separaten Account anlegen zu müssen. Die Anmeldung erfolgt einfach über die Hohenheimer Benutzerkennung. Es werden keine nutzerbezogenen Daten gespeichert.
+</small></p>
 
-			<ul>
-				<li>
-					<strong>Konversation</strong>Ein Chatbereich wie bei ChatGPT, für einen schnellen Einstieg in jede
-					beliebige Aufgabe.
-				</li>
-				<li>
-					<strong>Virtuelles Büro</strong>Gespräche mit fiktiven Expert*innen als mentales Modell, um sich in
-					fachfremde Bereiche einzuarbeiten und gezieltere Anfragen an echte Hochschul-Expert*innen zu
-					stellen.
-				</li>
-				<li>
-					<strong>Lernraum</strong>Die Lernräume sollen helfen, die verschiedenen Unterstützungsmöglichkeiten
-					zu verstehen und zu lernen, was einen effektiven Prompt ausmacht.
-				</li>
-			</ul>
+<p>GPTalk bietet die Möglichkeit, Künstliche Intelligenz in der Lehre zu integrieren. Es schafft zudem einen Begegnungsraum, in dem neue Arbeitsweisen entstehen können und eine hochschulinterne Diskussion über den Einsatz von K.I. angeregt wird. Das Interface ist in drei Bereiche unterteilt:</p>
 
-			<div class="video-button" id="openModal">
-				<svg viewBox="0 0 512 512" title="play-circle">
-					<path
-						d="M256 8C119 8 8 119 8 256s111 248 248 248 248-111 248-248S393 8 256 8zm115.7 272l-176 101c-15.8 8.8-35.7-2.5-35.7-21V152c0-18.4 19.8-29.8 35.7-21l176 107c16.4 9.2 16.4 32.9 0 42z" />
-				</svg>
-				<video src="hawkistart.mp4" playsinline preload muted loop autoplay></video>
+
+							<h3>Konversation</h3>
+							<p>Ein Chatbereich wie bei ChatGPT, für einen schnellen Einstieg in jede beliebige Aufgabe.<br>
+				</p>
+
+							<h3>Virtuelles Büro</h3>
+							<p>Gespräche mit fiktiven Expertinnen und Experten als mentales Modell, um sich in fachfremde Bereiche einzuarbeiten und gezieltere Anfragen an echte Hochschul-Expertinnen und -Experten zu stellen.
+				</p>
+
+							<h3>Lernraum</h3>
+							<p>Die Lernräume sollen helfen, die verschiedenen Unterstützungsmöglichkeiten zu verstehen und zu lernen, was einen effektiven Prompt ausmacht.<br><br>
+				</p>
+				</br>
+    
+	<p><a href="https://www.uni-hohenheim.de/einsatz-von-generativer-ki-in-pruefungen#c560357" target="_blank">Empfehlungen des Senats für den Einsatz künstlicher Intelligenz (KI) in Prüfungen</a>.</p>
+	
+
+<p>GPTalk Hohenheim ist ein Service des <a href="https://kim.uni-hohenheim.de" target="_blank">KIM </a> der Universität Hohenheim</p>    
+</p>				
+						</div>
 			</div>
+				</div>
+
 		</main>
-
-		<div class="image_preview_container">
-			<div class="image_preview"></div>
 		</div>
-
-	</div>
-
-	<div id="videoModal" class="modal">
-		<div class="modal-content">
-			<span id="closeModal" class="close">&times;</span>
-			<video src="hawkistart.mp4" controls>
-		</div>
-	</div>
-	<!-- partial -->
-	<script src="./login.js"></script>
-</body>
+	</body>
 
 </html>

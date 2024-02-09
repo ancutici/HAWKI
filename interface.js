@@ -27,7 +27,7 @@ function update(event) {
 
 function load(element, filename){
     let messagesElement = document.querySelector(".messages");
-    fetch(`views/${filename}`)
+    fetch(`${php_templatePath}/views/${filename}`)
       .then((response) => {
         return response.text();
       })
@@ -310,7 +310,7 @@ function addMessage(message){
     if(message.role == "assistant"){
         messageElement.querySelector(".message-icon").textContent = "AI";
     }else{
-        messageElement.querySelector(".message-icon").textContent = '<?= $_SESSION['username'] ?>';
+        messageElement.querySelector(".message-icon").textContent = php_username;
         messageElement.querySelector(".message").classList.add("me");
     }
     
@@ -530,5 +530,3 @@ function linkify(htmlString) {
 			target.dataset.clicked = "false"; // Reset the clicked state of this button
 		}, 2000);
 	}
-//#endregion
-</script>

@@ -100,6 +100,41 @@ input[type="radio"]:checked + p {
     color: #003F75;
 }
 
+.message-content {
+    max-width: 100ch;
+    margin-left:8%;
+}
+
+.menu {
+    padding-top:0;
+}
+
+
+.main-header {
+    margin-left:8%;
+    max-width: 100ch;
+    border-bottom: 1px #bbb solid;
+}
+
+.suggestion {
+    max-width: 90ch;
+}
+
+.input-container .input {
+    max-width: 100ch;
+    margin-left:8%;
+}
+
+.input-container .input {
+    overflow-y: auto;
+    max-height: 50ch;
+}
+
+.limitations {
+    margin-left: 8%;
+}
+
+
 aside,
 aside a,
 aside a:visited {
@@ -145,42 +180,4 @@ aside button {
     width: auto;
     align-self: unset;
     margin-top: unset;
-}
-
-.sidebar h2 {
-    font-size: 1.5em;
-}
-
-.menu {
-    padding-top:0;
-}
-
-.main-header {
-    margin-left:8%;
-    max-width: 100ch;
-    border-bottom: 1px #bbb solid;
-}
-
-.suggestion {
-    max-width: 90ch;
-}
-
-.message-content {
-    max-width: 100ch;
-    margin-left:8%;
-}
-
-
-.input-container .input {
-    max-width: 100ch;
-    margin-left:8%;
-}
-
-.input-container .input {
-    overflow-y: auto;
-    max-height: 50ch;
-}
-
-.limitations {
-    margin-left: 8%;
 }

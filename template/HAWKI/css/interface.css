@@ -1,27 +1,27 @@
 @font-face {
   font-family: 'Fira Sans';
-  src: url('../font/FiraSans-Regular.ttf') format('truetype');
+  src: url('/font/FiraSans-Regular.ttf') format('truetype');
   font-weight: 400;
   font-style: normal;
 }
 
 @font-face {
   font-family: 'Fira Sans';
-  src: url('../font/FiraSans-Italic.ttf') format('truetype');
+  src: url('/font/FiraSans-Italic.ttf') format('truetype');
   font-weight: 400;
   font-style: italic;
 }
 
 @font-face {
   font-family: 'Fira Sans';
-  src: url('../font/FiraSans-Bold.ttf') format('truetype');
+  src: url('/font/FiraSans-Bold.ttf') format('truetype');
   font-weight: bold;
   font-style: normal;
 }
 
 @font-face {
   font-family: 'Fira Sans';
-  src: url('../font/FiraSans-BoldItalic.ttf') format('truetype');
+  src: url('/font/FiraSans-BoldItalic.ttf') format('truetype');
   font-weight: bold;
   font-style: italic;
 }
@@ -34,14 +34,6 @@
 /* Size of logo on interface page */
 .logo img {
   width: 150px;
-}
-
-@font-face {
-  font-family: "Fira Sans";
-  font-style: normal;
-  font-weight: 400;
-  font-display: swap;
-  src: url(FiraSans.woff2) format("woff2");
 }
 
 * {
@@ -650,4 +642,8 @@ input[type="radio"] {
   margin-top: 0.5rem;
   user-select: none;
   background: #f6f6f6;
+}
+
+.messages .privacy {
+  padding: 100px;
 }

@@ -224,7 +224,7 @@
 
 	<div class="modal" onclick="modalClick(this)" id="data-protection">
 		<div class="modal-content">
-			<h2>Nutzungshinweis</h2>
+			<h2>Nutzungshinweisx</h2>
 			<p>Bitte geben Sie keine personenbezogenen Daten ein. Wir verwenden die API von OpenAI. Das bedeutet, dass die von Ihnen eingegebenen Daten direkt an OpenAI gesendet werden. Es besteht die Möglichkeit, dass OpenAI diese Daten weiterverwendet.</p>
 		<button>Bestätigen</button>
 		</div>
@@ -234,6 +234,7 @@
 	<script>
 		var php_username = "<?= $USERNAME ?>";
 		var php_gptModel = "<?= $GPT_MODEL ?>";
+		var php_templatePath = "<?= $TEMPLATE_PATH ?>";
 	</script>
 	<script src="./interface.js"></script>
 
