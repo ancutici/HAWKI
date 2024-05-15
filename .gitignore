@@ -1,8 +1,5 @@
 .env
 .DS_Store
 
-feedback/*/***
-
-*.log
 /vendor/
 *Original.php
