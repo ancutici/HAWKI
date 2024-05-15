@@ -29,7 +29,7 @@
 			<div class="menu">
 				<details>
 					<summary>
-						<h3>Konversation ⓘ</h3>
+					<h3>Konversation ⓘ <br><span style="color: #99B2C8;">mit Modell <?= $GPT_MODEL ?></span></h3>
 					</summary>
 					Ein Chatbereich wie bei ChatGPT, für einen schnellen Einstieg in jede beliebige Aufgabe.
 				</details>
