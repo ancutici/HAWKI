@@ -105,6 +105,10 @@
 									<input type="hidden" name="csrf_token" value="' . $_SESSION['csrf_token'] . '">
 									<button type="submit" name="submit">' . $translation['Login'] . '</button >
 								</form>';
+						}						
+						if ((isset($env) ? $env["Authentication"] : getenv("Authentication")) == "LTI") {
+							$login_available = true;
+							echo "Automatisches Login nur über ILIAS (LTI) möglich";
 						}
 						if (!$login_available) {
 							echo 'No authentication method defined';
