@@ -8,7 +8,7 @@
 		setLanguage();
 	}
 	$translation = $_SESSION['translation'];
-    
+
 	if (!isset($_SESSION['username'])) {
 		header("Location: login.php");
 		exit;
@@ -286,7 +286,21 @@
 
 <?php
 	include( VIEWS_PATH . 'guidelines.php');
+	$usage_guideline_version = isset($translation['usage_guideline_version']) ? $translation['usage_guideline_version'] : "";
 ?>
+
+<script>	
+	const currentVersion = '<?php echo $usage_guideline_version; ?>';
+	const savedVersion = localStorage.getItem('usage_guideline_version');
+    console.log('Current Version: ', currentVersion);
+    console.log('Saved Version: ', savedVersion);
+	if (!savedVersion || savedVersion !== currentVersion) {
+		console.log('Clear the old confirmation and show the modal');
+		// Clear the old confirmation and show the modal
+		localStorage.removeItem('data-protection');
+		localStorage.setItem('usage_guideline_version', currentVersion);
+	}
+</script>
 
 <script>
 

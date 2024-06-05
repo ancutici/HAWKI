@@ -196,13 +196,21 @@
         }
         
         if ( $ok ) {
-            // echo "login erfolgreich!";
+            //echo "login erfolgreich!";
+
+            // Generate CSRF Token
+            if(!isset($_SESSION['csrf_token'])){
+                generate_csrf_token();
+            }            
             $firstname = $_POST['lis_person_name_given'];
             $surname = $_POST['lis_person_name_family'];
             $initials = substr($firstname, 0, 1) . substr($surname, 0, 1);
             $_SESSION['username'] = $initials;
             $_SESSION['initials'] = $initials;
 			$_SESSION['employeetype'] = "-";
+
+            // Set session variable to indicate a fresh login
+            // $_SESSION['fresh_login'] = true;
 
             header("Location: interface.php");
             exit;
