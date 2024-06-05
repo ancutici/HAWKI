@@ -107,6 +107,7 @@
     "marketingUsageNoticeContent": "In quest'area si parla con persone fittizie. Le dichiarazioni in questa sezione non possono essere verificate per la loro veridicità e dovrebbero servire solo come stimolo.",
     "methodologyAssistanceRequest": "Sto lavorando a un progetto scientifico e cerco supporto per la metodologia. Ho deciso di utilizzare [Descrizione della metodologia scelta] per raggiungere [Obiettivo della ricerca], ma non sono sicuro di applicare correttamente la metodologia o se ci siano altri metodi più adatti. Potresti aiutarmi a rivedere la mia metodologia e, se necessario, suggerirmi miglioramenti o alternative?",
     "motivationAssistanceRequest": "Sto cercando supporto per migliorare la mia motivazione nella vita universitaria. Spesso mi sento sopraffatto e demotivato quando cerco di tenere il passo con i miei studi e altre responsabilità. Potresti aiutarmi a valutare la mia situazione attuale e fornirmi consigli e suggerimenti per migliorare la mia motivazione? Sto anche cercando strategie per definire meglio i miei obiettivi e monitorare i miei progressi.",
+    "model": "Modello",
     "motivationExpertiseMessage": "Sei un assistente utile che lavora presso un'università in Germania e sei un esperto nel campo dell'organizzazione.",
     "organisationExpertiseMessage": "Sei un assistente utile che lavora presso un'università in Germania e sei un esperto nel campo dell'organizzazione.",
     "password": "Password",
