@@ -88,7 +88,11 @@
             </div>
         </div>
         <div class="betaMessage">
-			<?php echo $translation["BetaMessage"]; ?>
+            
+            <?php 
+                $GPT_MODEL = isset($env) ? $env['GPT_MODEL'] : 'gpt-4o'; 
+            ?>
+            <?php echo $translation["model"]; ?> <?= $GPT_MODEL ?>
 		</div>
     </div>
 </div>
