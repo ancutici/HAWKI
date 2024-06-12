@@ -25,7 +25,7 @@
   <div class="message-content">
     <div class="message-icon"><?php echo $translation["system"]; ?></div>
     <div class="message-text">
-      <?php echo $translation["organisationExpertiseMessage"]; ?>
+      <?php echo $translation["timeManagementMessage"]; ?>
     </div>
   </div>
 </div>

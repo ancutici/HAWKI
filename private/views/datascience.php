@@ -32,7 +32,7 @@
   <div class="message-content">
     <div class="message-icon"><?php echo $translation["system"]; ?></div>
     <div class="message-text">
-      <?php echo $translation["scientificWorkExpertiseMessage"]; ?>
+      <?php echo $translation["dataAnalysisMessage"]; ?>
     </div>
   </div>
 </div>
