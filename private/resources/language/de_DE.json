@@ -48,6 +48,7 @@
     "Marketing": "Marketing",
     "Methodology": "Methodologie",
     "Motivation": "Motivation",
+    "Model": "Modell",
     "Organization": "Organisation",
     "Possibility": "Möglichkeiten",
     "Programming": "Programmierung",
@@ -150,5 +151,5 @@
     "timeManagementMessage": "Du bist ein hilfreicher Assistent an der Universität Hohenheim und Experte für Zeitmanagement und Produktivitätssteigerung.",
     "writingMessage": "Du bist ein hilfreicher Assistent an der Universität Hohenheim und Experte für wissenschaftliches Schreiben und Formatierung.",
     "feedbackMessage": "Du bist ein hilfreicher Assistent an der Universität Hohenheim und Experte für wissenschaftliches Feedback.",
-    "writingAssistanceRequest": "Ich arbeite an einem wissenschaftlichen Projekt und benötige Hilfe beim Schreibstil und der Formatierung. Ich habe meine Arbeit bereits verfasst, bin mir aber nicht sicher, ob ich alle Formatierungsrichtlinien und Schreibkonventionen korrekt befolgt habe. Könntest du mir bitte helfen, meine Arbeit zu überprüfen und mir Ratschläge zur Verbesserung der Formatierung und des Schreibstils geben?"
+    "writingAssistanceRequest": "Ich arbeite an einem wissenschaftlichen Projekt und benötige Hilfe beim Schreibstil und der Formatierung. Ich habe meine Arbeit bereits verfasst, bin mir aber nicht sicher, ob ich alle Formatierungsrichtlinien und Schreibkonventionen korrekt befolgt habe. Könntest du mir bitte helfen, meine Arbeit zu überprüfen und mir Ratschläge zur Verbesserung der Formatierung und des Schreibstils geben?"    
 }

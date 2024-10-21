@@ -43,7 +43,11 @@
 	}
 
 	// Set the GPT model to use
-	$GPT_MODEL = isset($env) ? $env['GPT_MODEL'] : 'gpt-4o';
+	//$GPT_MODEL = isset($env) ? $env['GPT_MODEL'] : 'gpt-4o';
+
+	// GPT-Modelle laden und das Standardmodell bestimmen
+	$models = isset($env['GPT_MODELS']) ? explode(',', $env['GPT_MODELS']) : ['gpt-4o-mini'];
+	$default_model = $models[0]; // Das erste Modell in der Liste als Standard setzen
 ?>
 <!DOCTYPE html>
 <head>
@@ -96,6 +100,17 @@
 			<img id="HAWK_logo" src="/public/img/logo.svg" alt="">
 		</div>
 		<div class="menu">
+			<details>
+				<summary>
+					<h3><?php echo $translation["Model"]; ?></h3>	
+					<select id="model" onchange="setModel()">
+						<?php foreach ($models as $model): ?>
+							<option value="<?= $model ?>"><?= $model ?></option>
+						<?php endforeach; ?>
+					</select>				
+				</summary>
+			</details>
+
 			<details>
 				<summary>
 					<h3><?php echo $translation["Conversation"]; ?>
@@ -242,10 +257,12 @@
 				<p id="system-prompt"></p>
 			</div>
 
-		</div>
-		<div class="betaMessage">
+		</div>		
+
+<!-- 		<div class="betaMessage">
 			<?php echo $translation["model"]; ?> <?= $GPT_MODEL ?>
 		</div>
+ -->
 	</div>
 
 
@@ -307,6 +324,19 @@
 		// Clear the old confirmation and show the modal
 		localStorage.removeItem('data-protection');
 		localStorage.setItem('usage_guideline_version', currentVersion);
+	}
+</script>
+
+<script>
+	// JavaScript: Setze 'selected_model' in localStorage auf das PHP-Standardmodell (bei jedem Seitenaufruf)
+	window.onload = function() {
+		localStorage.setItem('selected_model', '<?php echo $default_model; ?>');
+	};
+
+	// Save the selected model to localStorage
+	function setModel() {
+		const selectedModel = document.getElementById('model').value;
+		localStorage.setItem('selected_model', selectedModel);
 	}
 </script>
 
@@ -397,8 +427,15 @@
 		document.querySelector('.limitations')?.remove();
 
 		const requestObject = {};
-		requestObject.model = "<?= $GPT_MODEL ?>"; //'gpt-4-turbo-preview';
+		// requestObject.model = "<?= $GPT_MODEL ?>"; 
+		requestObject.model = localStorage.getItem('selected_model');
 		requestObject.stream = true;
+
+		// Falls das Modell 'o1-mini' ist, setze den Stream auf false
+		if (requestObject.model === 'o1-mini') {
+			requestObject.stream = false;
+		}
+
 		requestObject.messages = [];
 		const messageElements = messagesElement.querySelectorAll(".message");
 		messageElements.forEach(messageElement => {
@@ -408,12 +445,24 @@
 			requestObject.messages.push(messageObject);
 		})
 
-		
+		// Prüfe, ob das Modell 'system' Nachrichten unterstützt
+		if (requestObject.model === 'o1-mini') {
+			// Filtere alle Nachrichten mit der Rolle 'system' heraus
+			requestObject.messages = requestObject.messages.filter(msg => msg.role !== 'system');
+		}
+
+		// MA: Logging
+		console.log(requestObject);
+
+		isStreaming = requestObject.stream; 
+
 		const streamAPI = "/api/stream-api";
 		postData(streamAPI, requestObject)
-		.then(stream => processStream(stream))
-		.catch(error => console.error('Error:', error));
+		.then(stream => processStream(stream, isStreaming))
+		.catch(error => console.error('Error:', error));	
+
 	}
+
 
 	async function postData(url = '', data = {}) {
 		try{
@@ -427,6 +476,11 @@
 				body: JSON.stringify(data),
 				signal: abortCtrl.signal
 			});
+
+			// Logge den Inhalt der Antwort (Body)
+			//const responseBody = await response.text();
+			//console.log("Response Body:", responseBody);
+
 			return response.body;
 
 		} catch(error){
@@ -434,7 +488,8 @@
 		}
 	}
 
-	async function processStream(stream) {
+
+	async function processStream(stream, isStreaming) {
 		// if fetching is aborted before it's complete the stream will be empty.
 		// stream should be checked to avoid throwing error.
 		if (!stream) {
@@ -479,31 +534,44 @@
 				let decodedData = new TextDecoder().decode(value);
 				decodedData = incompleteSlice + decodedData;
 
-				const delimiter = '\n\n';
-				const delimiterPosition = decodedData.lastIndexOf(delimiter);
-				if (delimiterPosition > -1) {
-					incompleteSlice = decodedData.substring(delimiterPosition + delimiter.length);
-					decodedData = decodedData.substring(0,delimiterPosition + delimiter.length);
-				} else {
-					incompleteSlice = decodedData;
-					continue;
-				}
-				// end of inserted code
+				//MA:  Logge die dekodierten Daten
+				console.log("Decoded Stream Data:", decodedData);
 
-				let chunks = decodedData.split("data: ");
-				chunks.forEach((chunk, index) => {
-
-					if(!isJSON(chunk)){
-						return;
+				if (isStreaming) {
+					const delimiter = '\n\n';
+					const delimiterPosition = decodedData.lastIndexOf(delimiter);
+					if (delimiterPosition > -1) {
+						incompleteSlice = decodedData.substring(delimiterPosition + delimiter.length);
+						decodedData = decodedData.substring(0,delimiterPosition + delimiter.length);
+					} else {
+						incompleteSlice = decodedData;
+						continue;
 					}
-					if(chunk.indexOf('finish_reason":"stop"') > 0) return false;
-					if(chunk.indexOf('DONE') > 0) return false;
-					if(chunk.indexOf('role') > 0) return false;
-					if(chunk.length == 0) return false;
+					// end of inserted code
 
-					document.querySelector(".message:last-child").querySelector(".message-text").innerHTML =  FormatChunk(JSON.parse(chunk)["choices"][0]["delta"].content);
+					let chunks = decodedData.split("data: ");
+					chunks.forEach((chunk, index) => {
 
-				})
+						if(!isJSON(chunk)){
+							return;
+						}
+						if(chunk.indexOf('finish_reason":"stop"') > 0) return false;
+						if(chunk.indexOf('DONE') > 0) return false;
+						if(chunk.indexOf('role') > 0) return false;
+						if(chunk.length == 0) return false;
+
+						document.querySelector(".message:last-child").querySelector(".message-text").innerHTML =  FormatChunk(JSON.parse(chunk)["choices"][0]["delta"].content);
+
+					})
+				} else {
+					console.log("Full Response (non-streaming):", decodedData);  // Ausgabe für Debugging
+
+					// Parsing the JSON response
+					const parsedData = JSON.parse(decodedData);
+					const messageContent = parsedData.choices[0].message?.content || parsedData.choices[0].text;
+
+					document.querySelector(".message:last-child").querySelector(".message-text").innerHTML = FormatChunk(messageContent);
+				}
 
 				FormatMathFormulas();
 
@@ -522,6 +590,7 @@
 			ShowCopyButton();
 		}
 	}
+
 
 	//MESSAGE SENT FROM STREAM MANAGER...
 	function addMessage(message){
