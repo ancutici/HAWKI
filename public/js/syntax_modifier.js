@@ -59,93 +59,60 @@
 	}
 
 
-	function ReplaceMarkdownSyntax(text) {
-		// Match Markdown code block syntax
-		const codeBlockRegex = /<pre><code\s+ignore_Format>([\s\S]+?)<\/code><\/pre>/g;
-
-		// Replace Markdown code blocks with placeholders
-		const codeBlocks = [];
-		text = text.replace(codeBlockRegex, (match, content) => {
-			codeBlocks.push(content);
-			return `[[[[CODEBLOCK_${codeBlocks.length - 1}]]]]`;
-		});
-		
-		//replace bold and italic (*text* or ___text___)
-		text = text.replace(/\*\*\*(.*?)\*\*\*/g, '<b><i>$1</i></b>');
-		text = text.replace(/___(.*?)___/g, '<b><i>$1</i></b>');
-
-		//replace only bold (text or __text__)
-		text = text.replace(/\*\*(.*?)\*\*/g, '<b>$1</b>');
-		text = text.replace(/__(.*?)__/g, '<b>$1</b>');
-
-		//replace only italic (*text* or _text_)
-		text = text.replace(/\*(.*?)\*/g, '<i>$1</i>');
-		text = text.replace(/_(.*?)_/g, '<i>$1</i>');
-		
-		// Replace Striketrough
-		text = text.replace(/~~(.*?)~~/g, "<del>$1</del>");
-
-		// // Links
-		text = text.replace(/\[([^\]]+)\]\(([^\)]+)\)/g, '<a href="$2">$1</a>');
-
-		//     // Headings
-		text = text.replace(/(?<![^\s])(######\s?(.*))/g, '<h3>$2</h3>');
-		text = text.replace(/(?<![^\s])(#####\s?(.*))/g, '<h3>$2</h3>');
-		text = text.replace(/(?<![^\s])(####\s?(.*))/g, '<h3>$2</h3>');
-		text = text.replace(/(?<![^\s])(###\s?(.*))/g, '<h3>$2</h3>');
-		text = text.replace(/(?<![^\s])(##\s?(.*))/g, '<h3>$2</h3>');
-		text = text.replace(/(?<![^\s])(#\s?(.*))/g, '<h3>$2</h3>');
-
-		//HANDLE MARKDOWN TABLES
-		// Match Markdown table syntax
-		const tableRegex = /(\|.*\|)\n(\|.*\|)(\n\|\s*:?-+:?\s*)*\n((\|.*\|)\n*)+/g;
-
-		// Replace Markdown table with HTML table
-		text = text.replace(tableRegex, (match) => {
-			// Check if inside code block
-			if (match.includes('[[[[CODEBLOCK_')) {
-				return match; // If inside code block, return as is
-			}
-
-			const rows = match.split('\n').filter(Boolean);
-
-			// Remove leading/trailing pipes and split rows into cells
-			const cells = rows.map(row => row.replace(/^\||\|$/g, '').split('|').map(cell => cell.trim()));
-
-
-			// Filter out rows containing only dashes
-			const filteredCells = cells.filter(row => !row.every(cell => /^-+$/.test(cell)));
-
-			// Determine header row
-			const headerRow = filteredCells.shift();
-
-			// Build HTML table
-			let html = '<table>\n<thead>\n<tr>\n';
-			html += headerRow.map(cell => `<th>${cell}</th>`).join('\n');
-			html += '\n</tr>\n</thead>\n<tbody>\n';
-
-			// Add rows
-			filteredCells.forEach(row => {
-				html += '<tr>\n';
-				row.forEach(cell => {
-					html += `<td>${cell}</td>\n`;
-				});
-				html += '</tr>\n';
-			});
-
-			// Close table tags
-			html += '</tbody>\n</table>\n';
-
-			return html;
-		});
-
-		// Restore code blocks
-		codeBlocks.forEach((codeBlock, index) => {
-			text = text.replace(`[[[[CODEBLOCK_${index}]]]]`, `<pre><code ignore_Format>${codeBlock}</code></pre>`);
-		});
-
-		return text;
+	function FormatChunks(chunk){
+		summedText += chunk;
+		return FormatSingleResponse(summedText);
 	}
+
+
+	function FormatSingleResponse(raw) {
+		// Zuerst Codeblöcke identifizieren und als Platzhalter ersetzen
+		let codeBlocks = [];
+		let placeholderIndex = 0;
+	
+		// Verwende ein reguläres Ausdruck, um alle Codeblöcke zu extrahieren und zu speichern
+		raw = raw.replace(/```(.*?)```/gs, function(match) {
+			codeBlocks.push(match);
+			return `@@CODEBLOCK_${placeholderIndex++}@@`;
+		});
+	
+		// Zuerst: Erstelle ein temporäres HTML-Element, um die Mathematik zu rendern
+		let tempElement = document.createElement("div");
+		tempElement.innerHTML = raw;
+		
+		// Mathematische Formeln rendern mit KaTeX
+		renderMathInElement(tempElement, {
+			delimiters: [
+				{left: '$$', right: '$$', display: true},
+				{left: '$', right: '$', display: false},
+				{left: '\\(', right: '\\)', display: false},
+				{left: '\\[', right: '\\]', display: true}
+			],
+			displayMode: true,
+			ignoredClasses: ["ignore_Format"],
+			throwOnError: true
+		});
+		
+		// Nun ist der Inhalt mit gerenderten Mathematikformeln im `tempElement`
+		// Extrahiere den Inhalt als HTML-String
+		let mathRenderedHTML = tempElement.innerHTML;
+	
+		// Jetzt die Code-Blöcke zurück einsetzen
+		codeBlocks.forEach((codeBlock, index) => {
+			mathRenderedHTML = mathRenderedHTML.replace(`@@CODEBLOCK_${index}@@`, codeBlock);
+		});
+	
+		// Konvertiere den Markdown-Text zu HTML mit marked.js
+		let rawHTML = marked.parse(mathRenderedHTML);
+	
+		// Schließlich: Bereinige das HTML mit DOMPurify
+		let sanitizedHTML = DOMPurify.sanitize(rawHTML);
+	
+		// Gib den bereinigten HTML-Code zurück
+		return sanitizedHTML;
+	}
+	
+	
 
 
 	function escapeHTML(text) {
@@ -160,24 +127,6 @@
 		});
 	}
 
-	function FormatMathFormulas() {
-		element = document.querySelector(".message:last-child").querySelector(".message-text");
-		
-		renderMathInElement(element, {
-		// customised options
-		// • auto-render specific keys, e.g.:
-			delimiters: [
-				{left: '$$', right: '$$', display: true},
-				{left: '$', right: '$', display: false},
-				{left: '\\(', right: '\\)', display: false},
-				{left: '\\[', right: '\\]', display: true}
-			],
-			displayMode : true,
-			ignoredClasses: ["ignore_Format"],
-			// • rendering keys, e.g.:
-			throwOnError : true
-		});
-	}
 
 	function isJSON(str) {
 		try {

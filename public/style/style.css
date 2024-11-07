@@ -100,20 +100,3 @@ strong {
     background-color: var(--background-color);
     color: var(--text-color);
 }
-
-
-/* Anpassungen für die Universität Hohenheim */
-#HAWK_logo {
-    max-width: 15rem;
-    image-rendering: crisp-edges; 
-}
-
-.darkMode #HAWK_logo {
-    filter: invert(1) grayscale(1) contrast(2);
-}
-
-select#model {
-    border: none;
-    font-size: 16px;
-    padding: 12px 16px;
-}

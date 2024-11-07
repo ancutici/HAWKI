@@ -58,12 +58,20 @@
 	<?php if (isset($_SESSION['csrf_token'])) : ?>
 		<meta name="csrf-token" content="<?php echo $_SESSION['csrf_token']; ?>">
 	<?php endif; ?>
-	<title>HAWKI</title>
+	<title>GPTalk</title>
 
 
 	<link rel="stylesheet" href="/public/style/style.css">
 	<link rel="stylesheet" href="/public/style/interface_style.css">
 	<link rel="stylesheet" href="/public/style/settings_style.css">
+	<link rel="stylesheet" href="/public/style/style_hoh.css">
+
+	<!-- Marked -->
+	<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+
+	<!-- DOMPurify -->
+	<script src="https://cdn.jsdelivr.net/npm/dompurify@2.3.4/dist/purify.min.js"></script>
+
 
 	<!-- COMMON SCRIPTS -->
 	<script src="/public/js/scripts.js"></script>
@@ -102,13 +110,16 @@
 		<div class="menu">
 			<details>
 				<summary>
-					<h3><?php echo $translation["Model"]; ?></h3>	
+					<h3><?php echo $translation["Model"]; ?>
+						<svg viewBox="0 0 50 50"><path d="M 25 2 C 12.309295 2 2 12.309295 2 25 C 2 37.690705 12.309295 48 25 48 C 37.690705 48 48 37.690705 48 25 C 48 12.309295 37.690705 2 25 2 z M 25 4 C 36.609824 4 46 13.390176 46 25 C 46 36.609824 36.609824 46 25 46 C 13.390176 46 4 36.609824 4 25 C 4 13.390176 13.390176 4 25 4 z M 25 11 A 3 3 0 0 0 22 14 A 3 3 0 0 0 25 17 A 3 3 0 0 0 28 14 A 3 3 0 0 0 25 11 z M 21 21 L 21 23 L 22 23 L 23 23 L 23 36 L 22 36 L 21 36 L 21 38 L 22 38 L 23 38 L 27 38 L 28 38 L 29 38 L 29 36 L 28 36 L 27 36 L 27 21 L 26 21 L 22 21 L 21 21 z"/></svg>
+					</h3>	
 					<select id="model" onchange="setModel()">
 						<?php foreach ($models as $model): ?>
 							<option value="<?= $model ?>"><?= $model ?></option>
 						<?php endforeach; ?>
-					</select>				
-				</summary>
+					</select>										
+				</summary>		
+				<?php echo $translation["Model_Info"]; ?>
 			</details>
 
 			<details>
@@ -452,7 +463,7 @@
 		}
 
 		// MA: Logging
-		console.log(requestObject);
+		//console.log(requestObject);
 
 		isStreaming = requestObject.stream; 
 
@@ -535,7 +546,7 @@
 				decodedData = incompleteSlice + decodedData;
 
 				//MA:  Logge die dekodierten Daten
-				console.log("Decoded Stream Data:", decodedData);
+				//console.log("Decoded Stream Data:", decodedData);
 
 				if (isStreaming) {
 					const delimiter = '\n\n';
@@ -560,20 +571,19 @@
 						if(chunk.indexOf('role') > 0) return false;
 						if(chunk.length == 0) return false;
 
-						document.querySelector(".message:last-child").querySelector(".message-text").innerHTML =  FormatChunk(JSON.parse(chunk)["choices"][0]["delta"].content);
+						document.querySelector(".message:last-child").querySelector(".message-text").innerHTML =  FormatChunks(JSON.parse(chunk)["choices"][0]["delta"].content);					
 
 					})
+					
 				} else {
-					console.log("Full Response (non-streaming):", decodedData);  // Ausgabe für Debugging
+					// console.log("Full Response (non-streaming):", decodedData);  // Ausgabe für Debugging
 
 					// Parsing the JSON response
 					const parsedData = JSON.parse(decodedData);
 					const messageContent = parsedData.choices[0].message?.content || parsedData.choices[0].text;
-
-					document.querySelector(".message:last-child").querySelector(".message-text").innerHTML = FormatChunk(messageContent);
+					// console.log("messageContent: ", messageContent);
+					document.querySelector(".message:last-child").querySelector(".message-text").innerHTML = FormatSingleResponse(messageContent);
 				}
-
-				FormatMathFormulas();
 
 				hljs.highlightAll();
 				scrollToLast();

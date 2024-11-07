@@ -1,0 +1,35 @@
+/* Anpassungen für die Universität Hohenheim */
+#HAWK_logo {
+    max-width: 15rem;
+    image-rendering: crisp-edges; 
+}
+
+.darkMode #HAWK_logo {
+    filter: invert(1) grayscale(1) contrast(2);
+}
+
+select#model {
+    border: none;
+    font-size: 16px;
+    padding: 12px 16px;
+}
+
+.message-text {
+    white-space: normal;
+}
+
+.katex * {
+    font-family: 'KaTeX_Main', sans-serif !important; /* Standard KaTeX-Font für alle mathematischen Darstellungen */
+}
+
+.message-content {
+    max-width: 90ch;
+}
+
+.message-text {
+    max-width: 85ch;
+}
+
+.input {
+    max-width: 90ch;
+}
