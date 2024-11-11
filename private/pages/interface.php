@@ -67,10 +67,12 @@
 	<link rel="stylesheet" href="/public/style/style_hoh.css">
 
 	<!-- Marked -->
-	<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+	<!-- <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script> -->
+	<script src="/public/js/marked.min.js"></script>
 
 	<!-- DOMPurify -->
-	<script src="https://cdn.jsdelivr.net/npm/dompurify@2.3.4/dist/purify.min.js"></script>
+	<!-- <script src="https://cdn.jsdelivr.net/npm/dompurify@2.3.4/dist/purify.min.js"></script> -->
+	<script src="/public/js/purify.min.js"></script>
 
 
 	<!-- COMMON SCRIPTS -->
