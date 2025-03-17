@@ -145,7 +145,9 @@ class AuthenticationController extends Controller
             if (!$authenticatedUserInfo) {
                 return response()->json(['error' => 'Login Failed!'], 401);
             }
-    
+
+            // dd($authenticatedUserInfo);
+
             Log::info('LOGIN: ' . $authenticatedUserInfo['username']);
     
             $user = User::where('username', $authenticatedUserInfo['username'])->first();

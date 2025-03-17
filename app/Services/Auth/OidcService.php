@@ -36,36 +36,29 @@ class OidcService
     public function authenticate()
     {
         try {
-            // Attempt to authenticate the user
             $this->oidc->authenticate();
-
-            // Retrieve attribute mapping from configuration
-            $firstNameAttr = config('open_id_connect.attribute_map.firstname');
-            $lastNameAttr = config('open_id_connect.attribute_map.lastname');
-            $emailAttr = config('open_id_connect.attribute_map.email');
-            $employeetypeAttr = config('open_id_connect.attribute_map.employeetype');
-
-            // Retrieve user information
+    
+            // Attribute mapping from config
+            $usernameAttr = config('open_id_connect.attribute_map.username', 'preferred_username');
+            $firstNameAttr = config('open_id_connect.attribute_map.firstname', 'given_name');
+            $lastNameAttr = config('open_id_connect.attribute_map.lastname', 'family_name');
+            $emailAttr = config('open_id_connect.attribute_map.email', 'email');
+            $employeetypeAttr = config('open_id_connect.attribute_map.employeetype', 'employeetype');
+    
+            // Request attributes from userinfo
+            $username = $this->oidc->requestUserInfo($usernameAttr);
+            $firstname = $this->oidc->requestUserInfo($firstNameAttr);
+            $lastname = $this->oidc->requestUserInfo($lastNameAttr);
             $email = $this->oidc->requestUserInfo($emailAttr);
             $employeetype = $this->oidc->requestUserInfo($employeetypeAttr);
-
-            $firstname = $this->oidc->requestUserInfo($firstNameAttr);
-            $surname = $this->oidc->requestUserInfo($lastNameAttr);
-            $name = trim("$firstname $surname");
-
-            // Return UserInfo array to authentication controller
-            if (!empty($_SERVER['REMOTE_USER'])) {
-                return [
-                    'username' => $_SERVER['REMOTE_USER'],
-                    'name' => $name,
-                    'email' => $email,
-                    'employeetype' => $employeetype,
-                ];
-            } else {
-                throw new \RuntimeException('REMOTE_USER is not set.');
-            }
+    
+            return [
+                'username' => $username,
+                'name' => trim("$firstname $lastname"),
+                'email' => $email,
+                'employeetype' => $employeetype ?: 'N/A', // Dummy fallback
+            ];
         } catch (\Exception $e) {
-            // Handle errors, such as authentication failures
             return response()->json(['error' => 'Authentication failed: ' . $e->getMessage()], 401);
         }
     }
