@@ -153,13 +153,6 @@ class AuthenticationController extends Controller
             $user = User::where('username', $authenticatedUserInfo['username'])->first();
     
             if ($user) {
-                // Aktualisiere die Felder bei jedem Login
-                $user->update([
-                    'name' => $authenticatedUserInfo['name'],
-                    'email' => $authenticatedUserInfo['email'],
-                    'employeetype' => $authenticatedUserInfo['employeetype'],
-                ]);
-                
                 Auth::login($user);
                 return redirect('/handshake');
             }

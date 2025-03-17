@@ -37,29 +37,22 @@ class OidcService
     {
         try {
             $this->oidc->authenticate();
-    
-            // Attribute mapping from config
-            $usernameAttr = config('open_id_connect.attribute_map.username', 'preferred_username');
-            $firstNameAttr = config('open_id_connect.attribute_map.firstname', 'given_name');
-            $lastNameAttr = config('open_id_connect.attribute_map.lastname', 'family_name');
-            $emailAttr = config('open_id_connect.attribute_map.email', 'email');
-            $employeetypeAttr = config('open_id_connect.attribute_map.employeetype', 'employeetype');
-    
-            // Request attributes from userinfo
-            $username = $this->oidc->requestUserInfo($usernameAttr);
-            $firstname = $this->oidc->requestUserInfo($firstNameAttr);
-            $lastname = $this->oidc->requestUserInfo($lastNameAttr);
-            $email = $this->oidc->requestUserInfo($emailAttr);
-            $employeetype = $this->oidc->requestUserInfo($employeetypeAttr);
-    
+            $userInfo = $this->oidc->requestUserInfo();
+            // dd([
+            //     'username' => $userInfo->preferred_username ?? $userInfo->email,
+            //     'name' => $userInfo->name ?? trim(($userInfo->given_name ?? '') . ' ' . ($userInfo->family_name ?? '')),
+            //     'email' => $userInfo->email ?? '',
+            //     'employeetype' => $userInfo->employeetype ?? 'N/A', // Wenn nicht vorhanden, Dummy
+            // ]);
             return [
-                'username' => $username,
-                'name' => trim("$firstname $lastname"),
-                'email' => $email,
-                'employeetype' => $employeetype ?: 'N/A', // Dummy fallback
+                'username' => $userInfo->preferred_username ?? $userInfo->email,
+                'name' => $userInfo->name ?? trim(($userInfo->given_name ?? '') . ' ' . ($userInfo->family_name ?? '')),
+                'email' => $userInfo->email ?? '',
+                'employeetype' => $userInfo->employeetype ?? 'N/A', // Wenn nicht vorhanden, Dummy
             ];
         } catch (\Exception $e) {
             return response()->json(['error' => 'Authentication failed: ' . $e->getMessage()], 401);
         }
     }
+    
 }
