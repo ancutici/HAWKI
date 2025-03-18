@@ -1,4 +1,12 @@
 {
+    "Guidelines": "Guidelines for Using GPTalk",
+    "Cnf_tokenMsg1":"Please keep this token safe and use it carefully to keep you account safe. If GPTalk detects suspicious behaviour this token will be revoked.",
+    "Exported_At":"Exported from GPTalk on:",
+    "AboutHAWKI": "About GPTalk",
+    "Input_Placeholder_Room": "Write a group message or mention @gptalk to use the AI.",
+    "MistakeWarning": "GPTalk may make mistakes. Check important information.",
+    "Reg_SL5_T": "Important: Without this passkey, you will not be able to access your saved chats later. If you lose the passkey, unfortunately, your previous chats cannot be recovered. Save your passkey securely - and then have fun with GPTalk 2! 🚀",
+
     "ADD YOUR CURSTOM KEYS HERE": ""
 
 

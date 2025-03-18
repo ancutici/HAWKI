@@ -1,4 +1,12 @@
 {
+    "Guidelines": "Leitfaden zum Umgang mit GPTalk",
+    "Cnf_tokenMsg1": "Bitte bewahre diesen Token sicher auf und verwende ihn mit Bedacht, um dein Konto zu schützen. Wenn GPTalk verdächtiges Verhalten feststellt, wird dieser Token widerrufen.",
+    "Exported_At":"Exportiert aus GPTalk am:",
+    "AboutHAWKI": "Über GPTalk",
+    "Input_Placeholder_Room": "Schreibe eine Gruppennachricht oder erwähne @gptalk, um die KI zu nutzen.",
+    "MistakeWarning": "GPTalk kann Fehler machen. Überprüfe wichtige Informationen.",
+    "Reg_SL5_T": "Wichtig: Ohne diesen Passkey kannst du später nicht mehr auf deine gespeicherten Chats zugreifen. Falls du den Passkey verlierst, sind deine bisherigen Chats leider nicht wiederherstellbar. Sichere also deinen Passkey gut - und dann viel Spaß mit GPTalk 2! 🚀",
+
     "ADD YOUR CURSTOM KEYS HERE": ""
 
 
