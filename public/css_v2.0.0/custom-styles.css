@@ -94,12 +94,46 @@
 
 .logo{
     /* adjust width and aspect ratio as needed */
-    width: 8rem;
+    width: 17rem;
     /* Aaspect ration of HAWK logo */
-    aspect-ratio: 2.226/1;
+    aspect-ratio: 3.87/1;
 
-    background-image: url("/img/logo.png");
+    background-image: url("/img/logo-universitaet-hohenheim.png");
     background-size: cover;
     background-repeat: no-repeat;
     /* background-size: auto; */
+}
+
+.about-content a,
+.about-content a:visited,
+.about-content a:focus,
+.about-content a:active {
+  color: #003f75;
+  text-decoration: none;
+  transition: color 0.2s ease, text-decoration 0.2s ease;
+}
+
+.about-content a:hover {
+  color: #1f80d6;
+  text-decoration: underline;
+}
+
+.guideline-content a,
+.guideline-content a:visited,
+.guideline-content a:focus,
+.guideline-content a:active {
+  color: #003f75;
+  text-decoration: none;
+  transition: color 0.2s ease, text-decoration 0.2s ease;
+}
+
+.guideline-content a:hover {
+  color: #1f80d6;
+  text-decoration: underline;
+}
+
+
+
+#overlay-logo img {
+  width: 50rem;
 }
