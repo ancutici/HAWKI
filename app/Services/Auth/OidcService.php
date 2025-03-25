@@ -38,17 +38,14 @@ class OidcService
         try {
             $this->oidc->authenticate();
             $userInfo = $this->oidc->requestUserInfo();
-            // dd([
-            //     'username' => $userInfo->preferred_username ?? $userInfo->email,
-            //     'name' => $userInfo->name ?? trim(($userInfo->given_name ?? '') . ' ' . ($userInfo->family_name ?? '')),
-            //     'email' => $userInfo->email ?? '',
-            //     'employeetype' => $userInfo->employeetype ?? 'N/A', // Wenn nicht vorhanden, Dummy
-            // ]);
+            // dd($userInfo);
             return [
                 'username' => $userInfo->preferred_username ?? $userInfo->email,
                 'name' => $userInfo->name ?? trim(($userInfo->given_name ?? '') . ' ' . ($userInfo->family_name ?? '')),
                 'email' => $userInfo->email ?? '',
-                'employeetype' => $userInfo->employeetype ?? 'N/A', // Wenn nicht vorhanden, Dummy
+                'employeetype' => isset($userInfo->affiliation) && is_array($userInfo->affiliation) && count($userInfo->affiliation) > 0
+                    ? implode(',', $userInfo->affiliation)
+                    : 'N/A',
             ];
         } catch (\Exception $e) {
             return response()->json(['error' => 'Authentication failed: ' . $e->getMessage()], 401);

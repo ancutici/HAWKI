@@ -8,6 +8,9 @@
     "Input_Placeholder_Room": "Schreibe eine Gruppennachricht oder erwähne @gptalk, um die KI zu nutzen.",
     "MistakeWarning": "GPTalk kann Fehler machen. Überprüfe wichtige Informationen.",
     "Reg_SL5_T": "Wichtig: Ohne diesen Passkey kannst du später nicht mehr auf deine gespeicherten Chats zugreifen. Falls du den Passkey verlierst, sind deine bisherigen Chats leider nicht wiederherstellbar. Sichere also deinen Passkey gut - und dann viel Spaß mit GPTalk 2! 🚀",
+    "hawki_name": "GPTalk",
+    "ClearLocalData": "Schlüsselbunddaten aus diesem Browser entfernen und abmelden",
+    "Cnf_passkeyRemove": "Durch die Bestätigung werden deine Schlüsselbunddaten aus diesem Browser entfernt.<br><br> <b>Solltest Du Dich an diesem Browser erneut anmelden, benötigst Du Deinen Passkey um auf Deine verschlüsselten Chats zugreifen zu können.<b>",
 
     "ADD YOUR CURSTOM KEYS HERE": ""
 

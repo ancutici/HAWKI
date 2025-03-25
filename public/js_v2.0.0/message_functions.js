@@ -66,10 +66,15 @@ function addMessageToChatlog(messageObj, isFromServer = false){
     /// Set Author Name
     if(messageObj.model && messageObj.message_role === 'assistant'){
         model = modelsList.find(m => m.id === messageObj.model);
+        // messageElement.querySelector('.message-author').innerHTML = 
+        //     model ?
+        //     `<span>${messageObj.author.username} </span><span class="message-author-model">(${model.label})</span>`:
+        //     `<span>${messageObj.author.username} </span><span class="message-author-model">(${messageObj.model}) !!! Obsolete !!!</span>`;
+
         messageElement.querySelector('.message-author').innerHTML = 
             model ?
-            `<span>${messageObj.author.username} </span><span class="message-author-model">(${model.label})</span>`:
-            `<span>${messageObj.author.username} </span><span class="message-author-model">(${messageObj.model}) !!! Obsolete !!!</span>`;
+            `<span>${hawkiAvatarName} </span><span class="message-author-model">(${model.label})</span>`:
+            `<span>${hawkiAvatarName} </span><span class="message-author-model">(${messageObj.model}) !!! Obsolete !!!</span>`;
 
         messageElement.dataset.model = messageObj.model;
         messageElement.dataset.author = messageObj.author.username;
@@ -333,7 +338,7 @@ function detectMentioning(rawText){
         let processedText = rawText;
         
         for (const mention of mentionMatches) {
-            if (mention.toLowerCase() === "@hawki") {
+            if (mention.toLowerCase() === "@gptalk") {
                 returnObj.aiMentioned = true;
                 returnObj.aiMention = mention; // Remove the '@' for aiMention
                 processedText = processedText.replace(new RegExp(mention, 'i'), '').trim();

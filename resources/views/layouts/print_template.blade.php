@@ -71,6 +71,7 @@
     const userInfo = @json($userProfile);
 	const userAvatarUrl = @json($userData['avatar_url']);
 	const hawkiAvatarUrl = @json($userData['hawki_avatar_url']);
+	const hawkiAvatarName = @json($userData['hawki_name']);
 	const activeModule = @json($activeModule);
     const data = @json($messages);
 	const modelsList = @json($models).models;

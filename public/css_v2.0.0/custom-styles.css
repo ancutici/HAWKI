@@ -137,3 +137,18 @@
 #overlay-logo img {
   width: 50rem;
 }
+
+
+.message-wrapper .round-icon img {
+  width: 170%;
+  height: 170%;
+  border: 1px solid #777;
+}
+
+.message-wrapper .message-author {
+  margin-left: 10px;
+}
+
+.message-wrapper .dot {
+  display: none;
+}

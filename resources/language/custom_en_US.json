@@ -7,6 +7,9 @@
     "Input_Placeholder_Room": "Write a group message or mention @gptalk to use the AI.",
     "MistakeWarning": "GPTalk may make mistakes. Check important information.",
     "Reg_SL5_T": "Important: Without this passkey, you will not be able to access your saved chats later. If you lose the passkey, unfortunately, your previous chats cannot be recovered. Save your passkey securely - and then have fun with GPTalk 2! 🚀",
+    "hawki_name": "GPTalk",
+    "ClearLocalData": "Remove keychain data from this browser and log out",
+    "Cnf_passkeyRemove": "By confirming, your keychain data will be removed from this browser.<br><br> <b>If you log in to this browser again, you will need your passkey to access your encrypted chats.<b>",
 
     "ADD YOUR CURSTOM KEYS HERE": ""
 
