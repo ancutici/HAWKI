@@ -51,9 +51,7 @@ class HomeController extends Controller
         $rooms = $roomController->getUserRooms(request());
 
         $avatarUrl = $userProfile->avatar_id !== '' ? Storage::disk('public')->url('profile_avatars/' . $userProfile->avatar_id) : null;
-        // $hawkiAvatarUrl = Storage::disk('public')->url('profile_avatars/' . User::find(1)->avatar_id);
-        // ##MA: HAWKI-Avatar statt User-Avatar
-        $hawkiAvatarUrl = '/img/ki-avatar.webp';
+        $hawkiAvatarUrl = Storage::disk('public')->url('profile_avatars/' . User::find(1)->avatar_id);
         $userData = [
             'avatar_url'=> $avatarUrl,
             'hawki_avatar_url'=>$hawkiAvatarUrl,

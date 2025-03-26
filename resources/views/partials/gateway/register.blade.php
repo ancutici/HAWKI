@@ -12,7 +12,7 @@
         <div class="slide" data-index="1">
             <h1>{{ $translation["Reg_SL1_H"] }}</h1>
             <div class="slide-content">
-                <p>{{ $translation["Reg_SL1_T"] }}</p>
+                <p>{!! $translation["Reg_SL1_T"] !!}</p>
             </div>
             <div class="nav-buttons">
                 <button class="btn-lg-fill" onclick="switchSlide(2)">{{ $translation["Reg_SL1_B"] }}</button>
@@ -41,7 +41,7 @@
             <h1>{{ $translation["Reg_SL4_H"] }}</h1>
             <div class="slide-content">
                 <p>
-                    {{!! $translation["Reg_SL4_T"] }}
+                    {!! $translation["Reg_SL4_T"] !!}
                 </p>
             </div>
             <div class="nav-buttons">
