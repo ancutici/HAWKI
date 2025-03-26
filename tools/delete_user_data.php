@@ -127,6 +127,14 @@ try {
     $roomsStmt = $pdo->query($sqlRooms);
     $roomsToDelete = $roomsStmt->fetchAll(PDO::FETCH_COLUMN);
 
+    // Eventuelle Raum-Avatarbilder ermitteln zum späteren Löschen
+    if (!empty($roomsToDelete)) {
+        $placeholders = implode(',', array_fill(0, count($roomsToDelete), '?'));
+        $stmt = $pdo->prepare("SELECT room_icon FROM rooms WHERE id IN ($placeholders)");
+        $stmt->execute($roomsToDelete);
+        $roomIcons = $stmt->fetchAll(PDO::FETCH_COLUMN);
+        }    
+
     foreach ($roomsToDelete as $roomId) {
         // 5.2: Assistant-Nachrichten in diesen Räumen löschen
         $delMessages = $pdo->prepare("DELETE FROM messages WHERE room_id = :rid");
@@ -144,6 +152,13 @@ try {
     // -------------------------------
     // 6) User selbst entfernen
     // -------------------------------
+
+    // 6.1 Eventuelles User-Avatarbild ermitteln
+    $stmt = $pdo->prepare("SELECT avatar_id FROM users WHERE username = :uname");
+    $stmt->execute(['uname' => $username]);
+    $userAvatar = $stmt->fetchColumn();
+
+    // 6.2 User selbst aus DB entfernen
     $stmt = $pdo->prepare("DELETE FROM users WHERE id = :uid");
     $stmt->execute(['uid' => $uid]);
 
@@ -159,4 +174,32 @@ try {
     }
     echo "FEHLER bei der Löschung: " . $e->getMessage() . "\n";
     exit(1);
+}
+
+// Eventuelle Avatarbilder löschen
+if (!empty($userAvatar)) {
+    $userAvatarPath = __DIR__ . "/../storage/app/public/profile_avatars/" . $userAvatar;
+    if (file_exists($userAvatarPath)) {
+        if (unlink($userAvatarPath)) {
+            echo "User-Avatarbild '{$userAvatar}' wurde gelöscht.\n";
+        } else {
+            echo "WARNUNG: User-Avatarbild '{$userAvatar}' konnte nicht gelöscht werden.\n";
+        }
+    }
+}
+
+// Eventuelle Raum-Avatarbilder löschen
+if (!empty($roomsToDelete)) {
+    foreach ($roomIcons as $icon) {
+        if (!empty($icon)) {
+            $roomAvatarPath = __DIR__ . "/../storage/app/public/room_avatars/" . $icon;
+            if (file_exists($roomAvatarPath)) {
+                if (unlink($roomAvatarPath)) {
+                    echo "Raum-Avatarbild '{$icon}' wurde gelöscht.\n";
+                } else {
+                    echo "WARNUNG: Raum-Avatarbild '{$icon}' konnte nicht gelöscht werden.\n";
+                }
+            }
+        }
+    }	
 }
