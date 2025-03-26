@@ -41,7 +41,7 @@
             <h1>{{ $translation["Reg_SL4_H"] }}</h1>
             <div class="slide-content">
                 <p>
-                    {{ $translation["Reg_SL4_T"] }}
+                    {{!! $translation["Reg_SL4_T"] }}
                 </p>
             </div>
             <div class="nav-buttons">
