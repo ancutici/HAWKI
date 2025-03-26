@@ -10,7 +10,7 @@
  * Aufruf (Beispiel):
  *   php delete_user_data.php ancutici
  * 
- * Voraussetzung:
+ * Voraussetzung (sollte bereits erfüllt sein):
  *   sudo -u www-data -H composer require vlucas/phpdotenv
  */
 
