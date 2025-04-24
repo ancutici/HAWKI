@@ -28,10 +28,15 @@
 <div class="wrapper">
     <div class="sidebar">
         <div class="logo"></div>
-
         <div class="loginPanel">
+            <!-- <h1 class="appTitle">GPTalk</h1>
+            <p class="appClaim">{{ $translation["AppClaim"] }}</p> -->
+            <img src="img/gptalk2.jpg" class="gptalk-logo">
+            <!-- <img src="img/ki-avatar.webp" alt="AI Avatar" class="ai-avatar"> -->
+    
 			{!! $authForms !!}
         </div>
+
 
 
         <div class="footerPanel">

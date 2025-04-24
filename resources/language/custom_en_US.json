@@ -13,6 +13,7 @@
     "Reg_SL2_T": "In the new group chats, naturally, all group members can see your messages - that's the whole point. But even here, your content remains protected and is not visible to anyone outside the group. Your privacy is important to us, so you can rest assured: your data belongs to you alone! 🙌",
     "Reg_SL4_T": "Before you get started, you need a personal passkey. This is used to store your chats securely in encrypted form. As a rule, you don't have to enter it again - unless you switch browsers or delete your browser data. Then you have to enter it once when you log in. <br><br>As soon as you have created the passkey, you can download a file with a so-called backup code. This is an encrypted version of your passkey. You should save this file securely - for example on a USB stick or in a protected folder. If you ever forget your passkey, you can use this file to restore it.",
     "Reg_SL5_T": "Important: Without this passkey, you will not be able to access your saved chats later. If you lose the passkey, unfortunately, your previous chats cannot be recovered. Save your passkey securely - and then have fun with GPTalk 2! 🚀",
+    "AppClaim": "Your AI. Your ideas. Your university.",
 
     "ADD YOUR CURSTOM KEYS HERE": ""
 
