@@ -28,14 +28,15 @@
             </div>
 
             <div class="row">
-                <h4 class="label-header">{{ $translation["Bio"] }}</h4>
+                <!-- <h4 class="label-header">{{ $translation["Bio"] }}</h4> -->
                 <textarea 
                     class="text-input fit-height"
                     placeholder="Über mich..." 
                     name="bio" 
                     id="bio-input" 
                     maxlength="300"
-                    oninput="resizeInputField(this); checkBioUpdate()"></textarea>
+                    oninput="resizeInputField(this); checkBioUpdate()"
+                    style="display:none;"></textarea>
                 
                 <button class="btn-md-stroke save-btn" onclick="updateUserInformation()">{{ $translation["Save"] }}</button>
             </div>
