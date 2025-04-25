@@ -29,10 +29,7 @@
     <div class="sidebar">
         <div class="logo"></div>
         <div class="loginPanel">
-            <!-- <h1 class="appTitle">GPTalk</h1>
-            <p class="appClaim">{{ $translation["AppClaim"] }}</p> -->
             <img src="img/gptalk2.jpg" class="gptalk-logo">
-            <!-- <img src="img/ki-avatar.webp" alt="AI Avatar" class="ai-avatar"> -->
     
 			{!! $authForms !!}
         </div>
@@ -54,8 +51,12 @@
 
     <main>
         <div class="backgroundImageContainer">
-            <video class="image_preview_container" src="" type="video/m4v" preload="none" autoplay loop muted></video>
-            <a href="" target="_blank" class="video-credits"></a>
+            <div class="gptalk-background">
+                <img src="img/background01.png">
+            </div>
+
+            <!-- <video class="image_preview_container" src="" type="video/m4v" preload="none" autoplay loop muted></video>
+            <a href="" target="_blank" class="video-credits"></a> -->
         </div>
     </main>
 </div>
