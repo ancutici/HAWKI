@@ -20,24 +20,19 @@ class User extends Authenticatable
         'publicKey',
         'avatar_id',
         'bio',
+        'isRemoved'
     ];
 
 
     public function members()
     {
-        return $this->hasMany(Member::class);
+        return $this->hasMany(Member::class)->where('isRemoved', false);
     }
 
     public function rooms()
     {
-        return $this->hasManyThrough(
-            Room::class,
-            Member::class,
-            'user_id', // Foreign key on the members table
-            'id',      // Foreign key on the rooms table
-            'id',      // Local key on the users table
-            'room_id'  // Local key on the members table
-        );
+        return $this->belongsToMany(Room::class, 'members', 'user_id', 'room_id')
+                    ->wherePivot('isRemoved', false);
     }
 
     // Define the relationship with AiConv
@@ -50,4 +45,9 @@ class User extends Authenticatable
     {
         return $this->hasMany(Invitation::class, 'username', 'username');
     }
+
+    public function revokProfile(){
+        $this->update(['isRemoved'=> 1]);
+    }
+
 }
