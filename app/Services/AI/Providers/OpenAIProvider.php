@@ -234,7 +234,7 @@ class OpenAIProvider extends BaseAIModelProvider
     protected function handleModelSpecificFormatting(string $modelId, array $messages): array
     {
         // Special case for o1-mini: convert system to user
-        if ($modelId === 'o1-mini' && isset($messages[0]) && $messages[0]['role'] === 'system') {
+        if (str_starts_with($modelId, 'o') && str_ends_with($modelId, '-mini') && isset($messages[0]) && $messages[0]['role'] === 'system') {
             $messages[0]['role'] = 'user';
         }
         
