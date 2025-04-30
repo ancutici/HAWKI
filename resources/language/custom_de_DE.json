@@ -9,11 +9,15 @@
     "MistakeWarning": "GPTalk kann Fehler machen. Überprüfe wichtige Informationen.",
     "hawki_name": "GPTalk",
     "ClearLocalData": "Schlüsselbunddaten aus diesem Browser entfernen und abmelden",
-    "Cnf_passkeyRemove": "Durch die Bestätigung werden deine Schlüsselbunddaten aus diesem Browser entfernt.<br><br> <b>Solltest Du Dich an diesem Browser erneut anmelden, benötigst Du Deinen Passkey um auf Deine verschlüsselten Chats zugreifen zu können.<b>",
-    "Reg_SL1_T": "Ab jetzt werden deine Chats gespeichert, damit du auch später jederzeit darauf zugreifen kannst - und das geräteübergreifend. Deine Eingaben sind dabei komplett sicher: alles, was du schreibst, wird verschlüsselt gespeichert. Das bedeutet, dass niemand, auch nicht die Hochschule, einsehen kann, was du geschrieben hast. 🕵️ <br><br>Deine Eingaben werden bei OpenAI 30 Tage gespeichert und dann gelöscht. Bei der GWDG erfolgt keine Speicherung. In beiden Fällen bleiben deine Daten ungenutzt für Produktverbesserung oder Verhaltensanalyse.",
-    "Reg_SL2_T": "In den neuen Gruppenchats können natürlich alle Teilnehmenden der Gruppe deine Nachrichten sehen - das ist ja Sinn der Sache. Aber auch hier bleiben eure Inhalte geschützt und sind für niemanden außerhalb der Gruppe sichtbar. Deine Privatsphäre ist uns wichtig, deshalb kannst du dir sicher sein: Deine Daten gehören nur dir! 🙌",
-    "Reg_SL4_T": "Bevor du loslegst, brauchst du einen persönlichen Passkey. Damit werden deine Chats sicher verschlüsselt gespeichert. In der Regel musst du ihn nicht erneut eingeben – außer, du wechselst den Browser oder löschst deine Browserdaten. Dann musst du ihn beim Login einmalig eingeben.<br><br>Sobald du den Passkey erstellt hast, kannst du eine Datei mit einem sogenannten Backup-Code herunterladen. Das ist eine verschlüsselte Version deines Passkeys. Diese Datei solltest du sicher abspeichern – zum Beispiel auf einem USB-Stick oder in einem geschützten Ordner. Falls du deinen Passkey einmal vergisst, kannst du ihn mit dieser Datei wiederherstellen.",
-    "Reg_SL5_T": "Wichtig: Ohne diesen Passkey kannst du später nicht mehr auf deine gespeicherten Chats zugreifen. Falls du den Passkey verlierst, sind deine bisherigen Chats leider nicht wiederherstellbar. Sichere also deinen Passkey gut - und dann viel Spaß mit GPTalk 2! 🚀",
+    "Cnf_passkeyRemove": "Durch die Bestätigung werden deine Schlüsselbunddaten aus diesem Browser entfernt.<br><br> <b>Solltest Du Dich an diesem Browser erneut anmelden, benötigst Du Deinen Datakey um auf Deine verschlüsselten Chats zugreifen zu können.<b>",
+
+    "Reg_SL4_H": "Erstelle deinen Datakey! 🔒",
+    "Reg_SL4_T": "<strong>Wichtig:</strong> Du erstellst beim ersten Login deinen persönlichen Datakey, eine Art Passwort. Mit diesem Datakey werden deine Chats verschlüsselt, bevor sie auf unserem Server gespeichert werden. Zusätzlich zum Login brauchst du deinen Datakey, wenn du dich auf einem neuen Gerät anmeldest. Dein Gerät bzw. Browser merkt sich deinen Datakey, sodass du ihn nicht jedes Mal erneut eingeben musst. Im letzten Schritt kannst du außerdem den Wiederherstellungscode deines Datakeys herunterladen. ",
+    "Reg_SL5_H": "Erstelle deinen Datakey! 🔒",
+    "Reg_SL5_T": "<strong>Bitte beachte:</strong> Deine Chatnachrichten werden sicher verschlüsselt. Wenn du deinen Datakey verlierst, kannst du nicht mehr auf deine bisherigen Chats zugreifen. Bewahre deinen Datakey deshalb gut auf und schütze ihn vor dem Zugriff Dritter.",
+    "Reg_SL6_H": "Sichere deinen Wiederherstellungscode! 🔒",
+    "Reg_SL6_T": "Mit diesem Wiederherstellungscode kannst du deinen Datakey wiederherstellen, falls du ihn vergessen oder verloren hast. Lade deinen Code auf dein Endgerät und speichere ihn an einem sicheren Ort.",
+
     "AppClaim": "Deine KI. Deine Ideen. Deine Uni.",
 
     "ADD YOUR CURSTOM KEYS HERE": ""
