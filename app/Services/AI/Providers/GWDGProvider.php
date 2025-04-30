@@ -188,30 +188,44 @@ class GWDGProvider extends OpenAIProvider
      * @return string
      * @throws \Exception
      */
+    // public function getModelsStatus(): array
+    // {
+    //     $response = $this->pingProvider();
+    //     $referenceList = json_decode($response, true)['data'];
+    //     $models = $this->config['models'];
+    
+    //     // Index the referenceList by IDs for O(1) access
+    //     $referenceMap = [];
+    //     foreach ($referenceList as $reference) {
+    //         $referenceMap[$reference['id']] = $reference['status'];
+    //     }
+    
+    //     // Update each model with the status from the reference map if it exists
+    //     foreach ($models as &$model) {
+    //         if (isset($referenceMap[$model['id']])) {
+    //             $model['status'] = $referenceMap[$model['id']];
+    //         } else {
+    //             $model['status'] = 'unknown'; // or any default value if not found
+    //         }
+    //     }
+    
+    //     return $models;
+    // }
     public function getModelsStatus(): array
     {
-        $response = $this->pingProvider();
-        $referenceList = json_decode($response, true)['data'];
-        $models = $this->config['models'];
+        $referenceList = json_decode($this->pingProvider(), true)['data'] ?? [];
+        $referenceMap  = collect($referenceList)
+                         ->pluck('status', 'id')        // ['id' => 'running' …]
+                         ->all();
     
-        // Index the referenceList by IDs for O(1) access
-        $referenceMap = [];
-        foreach ($referenceList as $reference) {
-            $referenceMap[$reference['id']] = $reference['status'];
-        }
-    
-        // Update each model with the status from the reference map if it exists
-        foreach ($models as &$model) {
-            if (isset($referenceMap[$model['id']])) {
-                $model['status'] = $referenceMap[$model['id']];
-            } else {
-                $model['status'] = 'unknown'; // or any default value if not found
-            }
-        }
-    
-        return $models;
+        return collect($this->config['models'])
+            ->map(function ($model) use ($referenceMap) {
+                $model['status'] = $referenceMap[$model['id']] ?? 'offline';
+                return $model;
+            })
+            ->all();
     }
-
+    
     // /**
     // * Ping the API to check status of all models
     // */
@@ -228,21 +242,58 @@ class GWDGProvider extends OpenAIProvider
      *
      * @return string
      */
+    // protected function pingProvider(): string
+    // {        
+    //     $url = $this->config['ping_url'];
+    //     $apiKey = $this->config['api_key'];
+
+    //     try {
+    //         $response = Http::withToken($apiKey)
+    //             ->timeout(5) // Set a short timeout
+    //             ->get($url);
+
+    //         return $response;
+    //     } catch (\Exception $e) {
+    //         return null;
+    //     }
+
+    //     return $statuses;
+    // }
+
+    /**
+     *  Pingt die GWDG-API und liefert IMMER einen gültigen JSON-String zurück.
+     *  Fällt die API aus, kommt ein Platzhalter-JSON zurück.
+     */
+    /**
+     * Get status of all models
+     *
+     * @return string
+     */
     protected function pingProvider(): string
-    {        
-        $url = $this->config['ping_url'];
+    {
+        $url    = $this->config['ping_url'];
         $apiKey = $this->config['api_key'];
 
         try {
             $response = Http::withToken($apiKey)
-                ->timeout(5) // Set a short timeout
-                ->get($url);
+                            ->timeout(5)
+                            ->get($url);
 
-            return $response;
-        } catch (\Exception $e) {
-            return null;
+            // Erfolgreicher Call → echten Body zurückgeben
+            if ($response->successful()) {
+                return $response->body();
+            }
+
+            // Unerwarteter HTTP-Status
+            Log::warning("GWDG ping failed ({$response->status()}).");
+        } catch (\Throwable $e) {
+            // Netzwerk­fehler, Timeout, DNS-Probleme …
+            Log::error('GWDG ping exception: '.$e->getMessage());
         }
 
-        return $statuses;
+        // Fallback: leeres Ergebnis, damit Folgefunktionen nicht crashen
+        return json_encode(['data' => []]);
     }
+
+
 }
