@@ -276,7 +276,7 @@ class GWDGProvider extends OpenAIProvider
 
         try {
             $response = Http::withToken($apiKey)
-                            ->timeout(5)
+                            ->timeout(2)
                             ->get($url);
 
             // Erfolgreicher Call → echten Body zurückgeben
