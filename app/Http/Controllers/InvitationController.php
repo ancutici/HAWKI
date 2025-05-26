@@ -18,12 +18,11 @@ use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 
-
 class InvitationController extends Controller
 {
 
     /// Send the email with the signed URL to external invitee
-    public function sendExternInvitationEmail(Request $request) {
+    public function sendExternInvitationEmail(Request $request) {        
 
         // Validate the request
         $validatedData = $request->validate([

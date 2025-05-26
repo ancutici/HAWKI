@@ -59,7 +59,7 @@
 				<h1 id="start-title">{{ $translation["StartBanner"] }}</h1>
 
 				@include('partials.home.input-field', ['lite' => false])
-
+				<!-- <p class="warning"><a href="/models" target="_blank" rel="noopener noreferrer">Infos zu den Modellen</a></p> -->
 			</div>
 			<p class="warning">{{ $translation["MistakeWarning"] }}</p>
 

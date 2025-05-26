@@ -146,5 +146,11 @@ class HomeController extends Controller
         $translation = $this->languageController->getTranslation();
         return view('layouts.dataprotection', compact('translation'));
     }
+
+    public function modelinfosIndex(Request $request){
+        $translation = $this->languageController->getTranslation();
+        return view('layouts.modelinfos', compact('translation'));
+    }
+
 }
 

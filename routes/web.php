@@ -39,7 +39,8 @@ Route::middleware('prevent_back')->group(function () {
     
     Route::get('/dataprotection',[HomeController::class, 'dataprotectionIndex']);
 
-    
+    Route::get('/models',[HomeController::class, 'modelinfosIndex']);
+
     Route::middleware('registrationAccess')->group(function () {
     
         Route::get('/register', [AuthenticationController::class, 'register']);

@@ -11,9 +11,9 @@
     "Cnf_passkeyRemove": "By confirming, your keychain data will be removed from this browser.<br><br> <b>If you log in to this browser again, you will need your Datakey to access your encrypted chats.<b>",
 
     "Reg_SL4_H": "Create your Datakey! 🔒",
-    "Reg_SL4_T": "<strong>Important:</strong> On your first login, you create your personal data key, a type of password. Your chats are encrypted with this data key before being stored on our server. In addition to the login, you will need your data key when you log in on a new device. Your device or browser remembers your data key, so you don't have to enter it every time. In the final step, you can also download the recovery code for your data key.",    
+    "Reg_SL4_T": "You always log in with your Hohenheim user ID. The first time you log in, you create a personal datakey - a kind of additional password that is used to encrypt your chat messages before they are saved on our server.<br><br><strong>When do you need the datakey?</strong><br>In addition to your normal login, you will need the datakey when you log in on a new device or in a different browser. Your current device or browser automatically saves the Datakey so that you don't have to enter it every time. Without your Datakey, you will no longer be able to access your previous conversations.<br><br><strong>Important: Save recovery code</strong><br>At the end of this registration, you can download a recovery code for your Datakey. This is important in case you lose your Datakey. ",    
     "Reg_SL5_H": "Create your Datakey! 🔒",
-    "Reg_SL5_T": "<strong>Please note:</strong> Your chat messages are securely encrypted. If you lose your data key, you will no longer be able to access your previous chats. Therefore, keep your data key safe and protect it from third-party access.",
+    "Reg_SL5_T": "<strong>Please note:</strong> Your chats are secure and fully encrypted. However, you will no longer be able to access your previous conversations without your data key. Therefore, keep your Datakey safe and protect it from access by third parties.",
     "Reg_SL6_H": "Secure your Recovery Code! 🔒",
     "Reg_SL6_T": "With this recovery code, you can restore your data key if you forget or lose it. Download your code onto your device and store it in a secure location.",
     
