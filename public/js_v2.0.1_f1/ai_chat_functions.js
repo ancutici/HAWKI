@@ -413,6 +413,9 @@ async function submitConvToServer(convName) {
     }
 
     try {
+            // MA:Debug
+            // console.log("RequestObject für /req/conv/createChat:", requestObject);
+
         const response = await fetch('/req/conv/createChat', {
             method: "POST",
             headers: {
@@ -423,6 +426,21 @@ async function submitConvToServer(convName) {
         });
 
         const data = await response.json();
+
+            // MA:Debug
+            // Erstmal nur Text holen und anzeigen, bevor als JSON geparst wird
+            // const rawText = await response.text();
+            // console.log('RAW response from /req/conv/createChat:', rawText);
+
+            // let data;
+            // try {
+            //     data = JSON.parse(rawText);
+            // } catch (e) {
+            //     console.error('Could not parse JSON! Got this instead:', rawText);
+            //     throw e; // oder: return null;
+            // }
+
+
 
         if (data.success) {
             return data.conv;

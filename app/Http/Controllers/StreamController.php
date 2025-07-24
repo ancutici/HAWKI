@@ -177,13 +177,23 @@ class StreamController extends Controller
                 //Log::info('google chunk detected');
             }
 
-        
+            // MA:Debug
+            // Log::info('Raw Data Chunk: ' . $data);
+
             // Skip non-JSON or empty chunks
             $chunks = explode("data: ", $data);
+            
             foreach ($chunks as $chunk) {
-                if (connection_aborted()) break;
-                if (!json_decode($chunk, true) || empty($chunk)) continue;
                 
+                if (connection_aborted()) break;
+
+                $endJson = strrpos($chunk, '}');
+                if ($endJson !== false) {
+                    $chunk = substr($chunk, 0, $endJson + 1);
+                }
+
+                if (!json_decode($chunk, true) || empty($chunk)) continue;
+                // Log::info('Processing chunk: ' . "M2");
                 // Get the provider for this model
                 $provider = $this->aiConnectionService->getProviderForModel($payload['model']);
                 
@@ -210,17 +220,19 @@ class StreamController extends Controller
                     'model' => $payload['model'],
                     'isDone' => $formatted['isDone'],
                     'content' => json_encode($formatted['content']),
-                ];
+                ];               
+                
                 echo json_encode($messageData) . "\n";
             }
         };
-        
+        // Log::info('processRequest: call', $payload);
         // Process the streaming request
         $this->aiConnectionService->processRequest(
             $payload, 
             true, 
             $onData
         );
+        // Log::info('processRequest: done');
     }
     /*
      * Helper function to translate curl return object from google to openai format

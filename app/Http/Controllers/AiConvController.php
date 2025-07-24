@@ -38,6 +38,25 @@ class AiConvController extends Controller
     ///CREATE NEW CONVERSATION
     public function createConv(Request $request)
     {
+        // $request['conv_name'] = 'Test1';  
+        // $request['system_prompt'] = 'TESTPROMPT';
+      
+        // // Debug-Logging direkt am Anfang
+        // \Log::info('createConv() called', [
+        //     'user' => Auth::user(),
+        //     'request' => $request->all(),
+        //     'session_id' => session()->getId()
+        // ]);
+
+        // // Falls Auth::user() null ist, eigenen Fehler werfen!
+        // if (!Auth::user()) {
+        //     return response()->json([
+        //         'success' => false,
+        //         'error' => 'NOT_AUTHENTICATED',
+        //         'msg' => 'No user found – authentication missing.'
+        //     ], 401);
+        // }
+
         $validatedData = $request->validate([
             'conv_name' => 'string|max:255',
             'system_prompt' => 'string'
