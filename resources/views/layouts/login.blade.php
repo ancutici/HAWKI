@@ -32,6 +32,17 @@
             <img src="img/gptalk2.jpg" class="gptalk-logo">
     
 			{!! $authForms !!}
+
+            <div class="login-extra">
+            <a href="https://ilias.uni-hohenheim.de/goto.php/crs/1750504" 
+                class="course-link" target="_blank" rel="noopener">
+                Generative KI verstehen & anwenden
+            </a>
+            <div class="course-desc">
+                KI-Schulungsmodul für Studierende und Mitarbeitende der Uni: Grundlagen, rechtliche Aspekte und sicherer Einsatz von KI-Tools.
+            </div>
+            </div>
+
         </div>
 
 

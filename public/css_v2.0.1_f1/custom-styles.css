@@ -241,3 +241,26 @@
 .message-wrapper .dot {
   display: none;
 } */
+
+.login-extra {
+  margin-top: 12px;
+  font-size: 0.9em;
+}
+
+.course-link {
+  display: block;
+  font-weight: 600;
+  color: #004b87; /* Uni-Farbe oder Corporate-Blue */
+  text-decoration: none;
+  margin-bottom: 2px;
+}
+
+.course-link:hover {
+  text-decoration: underline;
+}
+
+.course-desc {
+  color: #666;
+  font-size: 0.85em;
+  line-height: 1.3;
+}
