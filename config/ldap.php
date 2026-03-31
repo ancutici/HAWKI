@@ -27,72 +27,51 @@ return [
     */
 
     'connections' => [
+        'default' =>[
+            'ldap_host' => env('LDAP_HOST'),
+            'ldap_port' => env('LDAP_PORT'),
+            'ldap_bind_dn' => (static function () {
+                $bindDn = env('LDAP_BIND_DN');
+                if (!empty($bindDn)) {
+                    return $bindDn;
+                }
+                // Historically the BASE_DN was used as BIND_DN if BIND_DN was not set
+                // We keep this behavior for backward compatibility
+                $baseDn = env('LDAP_BASE_DN');
+                if (!empty($baseDn)) {
+                    return $baseDn;
+                }
 
-        'default' => [
-            'hosts' => [env('LDAP_HOST', '127.0.0.1')],
-            'username' => env('LDAP_USERNAME', 'cn=user,dc=local,dc=com'),
-            'password' => env('LDAP_PASSWORD', 'secret'),
-            'port' => env('LDAP_PORT', 389),
-            'base_dn' => env('LDAP_BASE_DN', 'dc=local,dc=com'),
-            'timeout' => env('LDAP_TIMEOUT', 5),
-            'use_ssl' => env('LDAP_SSL', false),
-            'use_tls' => env('LDAP_TLS', false),
-            'use_sasl' => env('LDAP_SASL', false),
-            'sasl_options' => [
-                // 'mech' => 'GSSAPI',
+                return null;
+            })(),
+            'ldap_bind_pw' => env('LDAP_BIND_PW'),
+            'ldap_base_dn' => (static function () {
+                $searchDn = env('LDAP_SEARCH_DN');
+                if (!empty($searchDn)) {
+                    return $searchDn;
+                }
+
+                // If the LDAP_BIND_DN is set, we assume that LDAP_BASE_DN is now correctly pointing to the base
+                $bindDn = env('LDAP_BIND_DN');
+                if (!empty($bindDn)) {
+                    $baseDn = env('LDAP_BASE_DN');
+                    if (!empty($baseDn)) {
+                        return $baseDn;
+                    }
+                }
+
+                // If the LDAP_BIND_DN is NOT set, we assume that LDAP_BASE_DN is still the BIND_DN for backward compatibility
+                return null;
+            })(),
+            'ldap_filter'=> env('LDAP_FILTER'),
+
+            'attribute_map' => [
+                'username' => env("LDAP_ATTR_USERNAME", "cn"),
+                'email' => env("LDAP_ATTR_EMAIL", "mail"),
+                'employeeType' => env("LDAP_ATTR_EMPLOYEETYPE", "employeetype"),
+                'name' => env("LDAP_ATTR_NAME", "displayname"),
             ],
-        ],
-
-    ],
-
-
-    'custom_connection' =>[
-        'ldap_host' => env('LDAP_HOST'),
-        'ldap_port' => env('LDAP_PORT'),
-        'ldap_base_dn' => env('LDAP_BASE_DN'),
-        'ldap_bind_pw' => env('LDAP_BIND_PW'),
-        'ldap_search_dn' => env('LDAP_SEARCH_DN'),
-        'ldap_filter'=> env('LDAP_FILTER'),
-
-        'attribute_map' => [
-            'username' => 'cn',
-            'email' => 'mail',
-            'employeetype' => 'employeetype',
-            'name' => 'displayname',
+            'invert_name' => env('LDAP_INVERT_NAME', true),
         ],
     ],
-
-    /*
-    |--------------------------------------------------------------------------
-    | LDAP Logging
-    |--------------------------------------------------------------------------
-    |
-    | When LDAP logging is enabled, all LDAP search and authentication
-    | operations are logged using the default application logging
-    | driver. This can assist in debugging issues and more.
-    |
-    */
-
-    'logging' => [
-        'enabled' => env('LDAP_LOGGING', true),
-        'channel' => env('LOG_CHANNEL', 'stack'),
-        'level' => env('LOG_LEVEL', 'info'),
-    ],
-
-    /*
-    |--------------------------------------------------------------------------
-    | LDAP Cache
-    |--------------------------------------------------------------------------
-    |
-    | LDAP caching enables the ability of caching search results using the
-    | query builder. This is great for running expensive operations that
-    | may take many seconds to complete, such as a pagination request.
-    |
-    */
-
-    'cache' => [
-        'enabled' => env('LDAP_CACHE', false),
-        'driver' => env('CACHE_DRIVER', 'file'),
-    ],
-
 ];

@@ -3,210 +3,184 @@
 namespace App\Http\Controllers;
 
 
-use App\Models\User;
 use App\Models\PrivateUserData;
-
+use App\Models\User;
+use App\Services\Announcements\AnnouncementService;
+use App\Services\Auth\Contract\AuthServiceInterface;
+use App\Services\Auth\Contract\AuthServiceWithCredentialsInterface;
+use App\Services\Auth\Contract\AuthServiceWithLogoutRedirectInterface;
+use App\Services\Auth\Contract\AuthServiceWithPostProcessingInterface;
+use App\Services\Auth\Exception\AuthFailedException;
+use App\Services\Auth\Value\AuthenticatedUserInfo;
+use App\Services\Profile\ProfileService;
+use App\Services\System\SettingsService;
+use Cookie;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Auth;
-
-use App\Http\Controllers\Controller;
-use App\Http\Controllers\LanguageController;
-
-use App\Services\Auth\LdapService;
-use App\Services\Auth\OidcService;
-use App\Services\Auth\ShibbolethService;
-use App\Services\Auth\TestAuthService;
-
-use Illuminate\Support\Facades\Log;
-
+use Illuminate\Support\Facades\Session;
+use Illuminate\Validation\ValidationException;
+use Psr\Log\LoggerInterface;
+use Symfony\Component\HttpFoundation\Response;
 
 class AuthenticationController extends Controller
 {
-    protected $authMethod;
-
-    protected $ldapService;
-    protected $shibbolethService;
-    protected $oidcService;
-    protected $testAuthService;
-
-    protected $languageController;
-
-
-    public function __construct(LdapService $ldapService, ShibbolethService $shibbolethService , OidcService $oidcService, TestAuthService $testAuthService, LanguageController $languageController)
+    public function __construct(
+        protected AuthServiceInterface   $authService,
+        protected LanguageController     $languageController,
+        private readonly LoggerInterface $logger,
+    )
     {
-        $this->authMethod = env('AUTHENTICATION_METHOD');
-        $this->ldapService = $ldapService;
-        $this->shibbolethService = $shibbolethService;
-        $this->oidcService = $oidcService;
-        $this->testAuthService = $testAuthService;
-
-        $this->languageController = $languageController;
     }
 
-
-
-    /// User Ldap Service to request user info
-    /// Redirect to Handshake or Create Registration Access and redirect to Registration
-    public function ldapLogin(Request $request)
+    public function handleLogin(Request $request): Response
     {
-        $request->validate([
-            'account' => 'required|string',
-            'password' => 'required|string',
-        ]);
+        /**
+         * Based on the actual AuthService implementation,
+         * we may need to set credentials before calling authenticate.
+         * This closure handles that logic.
+         * It will always return either AuthenticatedUserInfo or a Response.
+         * @return AuthenticatedUserInfo|Response
+         */
+        $callAuthenticate = function () use ($request) {
+            if ($this->authService instanceof AuthServiceWithCredentialsInterface) {
+                if (!$request->isMethod('POST')) {
+                    throw new AuthFailedException('Login must be performed via POST method.', 400);
+                }
+                try {
+                    $credentials = $request->validate([
+                        'account' => 'required|string',
+                        'password' => 'required|string',
+                    ]);
 
-        $username = filter_var($request->input('account'), FILTER_UNSAFE_RAW);
-        $password = $request->input('password');
+                    $this->authService->useCredentials(
+                        filter_var($credentials['account'], FILTER_UNSAFE_RAW),
+                        $credentials['password']
+                    );
 
-        $authenticatedUserInfo = null;
-        if(config('test_users')['active']){
-            $authenticatedUserInfo = $this->testAuthService->authenticate($username, $password);
-        }
-
-        if(!$authenticatedUserInfo) {
-            if($this->authMethod === 'LDAP'){
-                $authenticatedUserInfo = $this->ldapService->authenticate($username, $password);
+                    return $this->authService->authenticate($request);
+                } catch (ValidationException $e) {
+                    throw new AuthFailedException('Username and password are required for login.', 400, $e);
+                } finally {
+                    $this->authService->forgetCredentials();
+                }
             }
-        }
 
-        // If Login Failed
-        if (!$authenticatedUserInfo) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Login Failed!',
-            ]);
-        }
+            return $this->authService->authenticate($request);
+        };
 
-        Log::info('LOGIN: ' . $authenticatedUserInfo['username']);
-        $username = $authenticatedUserInfo['username'];
-        $user = User::where('username', $username)->first();
+        $authHasForm = $this->authService instanceof AuthServiceWithCredentialsInterface;
 
-        
-
-        $redirectUri;
-        // If first time on HAWKI
-        if($user && $user->isRemoved === 0){
-            Auth::login($user);
+        /**
+         * A small helper to respond according to request method
+         * Handles both GET (redirect) and POST (JSON) requests
+         * This is required, because some authentication methods (e.g. Shibboleth, OIDC)
+         * initiate login via GET requests and expect a redirect response.
+         * @param string $url
+         * @return RedirectResponse|JsonResponse
+         */
+        $respond = static function (string $url) use ($authHasForm) {
+            if (!$authHasForm) {
+                return redirect($url);
+            }
 
             return response()->json([
                 'success' => true,
-                'redirectUri' => '/handshake',
+                'redirectUri' => $url,
             ]);
-        }
-        else{
+        };
 
-            Session::put('registration_access', true);
-            Session::put('authenticatedUserInfo', json_encode($authenticatedUserInfo));
-
-            return response()->json([
-                'success' => true,
-                'redirectUri' => '/register',
-            ]);
-        }
-    }
-
-
-    public function shibbolethLogin(Request $request)
-    {
         try {
-            $authenticatedUserInfo = $this->shibbolethService->authenticate($request);
-    
-            if (!$authenticatedUserInfo) {
-                return response()->json(['error' => 'Login Failed!'], 401);
+            $authenticateResult = $callAuthenticate();
+
+            if ($authenticateResult instanceof Response) {
+                return $authenticateResult;
             }
-    
-            Log::info('LOGIN: ' . $authenticatedUserInfo['username']);
-    
-            $user = User::where('username', $authenticatedUserInfo['username'])->first();
-    
-            if($user && $user->isRemoved === 0){
+
+            $this->logger->info('LOGIN: ' . $authenticateResult->username);
+
+            $user = User::where('username', $authenticateResult->username)
+                ->where('isRemoved', 0)
+                ->first();
+
+            if ($user) {
                 Auth::login($user);
-                return redirect('/handshake');
-            }
-    
-            Session::put('registration_access', true);
-            Session::put('authenticatedUserInfo', json_encode($authenticatedUserInfo));
-    
-            return redirect('/register');
-    
-        } catch (\Exception $e) {
-            return response()->json(['error' => $e->getMessage()], 500);
-        }
-    }
 
+                if ($this->authService instanceof AuthServiceWithPostProcessingInterface) {
+                    $postProcessResponse = $this->authService->afterLoginWithUser($user, $request);
+                    if ($postProcessResponse !== null) {
+                        return $postProcessResponse;
+                    }
+                }
 
-
-
-    public function openIDLogin(Request $request)
-    {
-        try {
-            $authenticatedUserInfo = $this->oidcService->authenticate($request);
-    
-            if (!$authenticatedUserInfo) {
-                return response()->json(['error' => 'Login Failed!'], 401);
+                return $respond('/handshake');
             }
 
-            // dd($authenticatedUserInfo);
+            if ($this->authService instanceof AuthServiceWithPostProcessingInterface) {
+                $postProcessResponse = $this->authService->afterLoginWithoutUser($authenticateResult, $request);
+                if ($postProcessResponse !== null) {
+                    return $postProcessResponse;
+                }
+            }
 
-            Log::info('LOGIN: ' . $authenticatedUserInfo['username']);
-    
-            $user = User::where('username', $authenticatedUserInfo['username'])->first();
-    
-            if($user && $user->isRemoved === 0){
-                // Aktualisiere die Felder bei jedem Login
-                $user->update([
-                    'name' => $authenticatedUserInfo['name'],
-                    'email' => $authenticatedUserInfo['email'],
-                    'employeetype' => $authenticatedUserInfo['employeetype'],
+            $request->session()->put([
+                'registration_access' => true,
+                'authenticatedUserInfo' => json_encode($authenticateResult)
+            ]);
+
+            return $respond('/register');
+        } catch (\Throwable $e) {
+            $error = $e instanceof AuthFailedException ? $e->getMessage() : 'An unexpected error occurred during authentication.';
+
+            if ($authHasForm) {
+                // Tell the form that the login failed...
+                return response()->json([
+                    'success' => false,
+                    'error' => $error,
+                    'message' => 'Login Failed!',
                 ]);
-                
-                Auth::login($user);
-                return redirect('/handshake');
             }
-    
-            Session::put('registration_access', true);
-            Session::put('authenticatedUserInfo', json_encode($authenticatedUserInfo));
-    
-            return redirect('/register');
-    
-        } catch (\Exception $e) {
-            return response()->json(['error' => $e->getMessage()], 500);
+
+            // Redirect back to login with error message
+            return redirect('/login')->withErrors(['login_error' => $error]);
         }
     }
-
 
 
     /// Initiate handshake process
     /// sends back the user keychain.
     /// keychain sync will be done on the frontend side (check encryption.js)
-    public function handshake(Request $request){
-        
+    public function handshake(Request $request)
+    {
+
         $userInfo = Auth::user();
 
         // Call getTranslation method from LanguageController
         $translation = $this->languageController->getTranslation();
-        $settingsPanel = (new SettingsController())->initialize();
+        $settingsPanel = (new SettingsService())->render();
 
-        $cryptoController = new EncryptionController();
-        $keychainData = $cryptoController->fetchUserKeychain();
-        
-        $settingsPanel = (new SettingsController())->initialize($translation);
+        $profileService = new ProfileService();
+        $keychainData = $profileService->fetchUserKeychain();
 
         $activeOverlay = false;
-        if(Session::get('last-route') && Session::get('last-route') != 'handshake'){
+        if (Session::get('last-route') && Session::get('last-route') != 'handshake') {
             $activeOverlay = true;
         }
         Session::put('last-route', 'handshake');
 
+        $allowPaste = config('hawki.security.passkey.allow_paste', true);
+        $charLimit = config('hawki.security.passkey.char_limitation', true);
 
         // Pass translation, authenticationMethod, and authForms to the view
-        return view('partials.gateway.handshake', compact('translation', 'settingsPanel', 'userInfo', 'keychainData', 'activeOverlay'));
-  
+        return view('partials.gateway.handshake', compact('translation', 'settingsPanel', 'userInfo', 'keychainData', 'activeOverlay', 'allowPaste', 'charLimit'));
+
     }
 
 
     /// Redirect user to registration page
-    public function register(Request $request){
+    public function register(Request $request)
+    {
 
         if (Auth::check()) {
             // The user is logged in, redirect to /chat
@@ -218,24 +192,25 @@ class AuthenticationController extends Controller
 
         // Call getTranslation method from LanguageController
         $translation = $this->languageController->getTranslation();
-        $settingsPanel = (new SettingsController())->initialize();
+        $settingsPanel = (new SettingsService())->render();
 
         $activeOverlay = false;
-        if(Session::get('last-route') && Session::get('last-route') != 'register'){
+        if (Session::get('last-route') && Session::get('last-route') != 'register') {
             $activeOverlay = true;
         }
         Session::put('last-route', 'register');
 
-
+        $allowPaste = config('hawki.security.passkey.allow_paste', true);
+        $charLimit = config('hawki.security.passkey.char_limitation', true);
         // Pass translation, authenticationMethod, and authForms to the view
-        return view('partials.gateway.register', compact('translation', 'settingsPanel', 'userInfo', 'activeOverlay'));
+        return view('partials.gateway.register', compact('translation', 'settingsPanel', 'userInfo', 'activeOverlay', 'allowPaste', 'charLimit'));
     }
 
 
 
     /// Setup User
     /// Create backup for userkeychain on the DB
-    public function completeRegistration(Request $request)
+    public function completeRegistration(Request $request, AnnouncementService $announcementService)
     {
         try {
             // Validate input data
@@ -245,7 +220,7 @@ class AuthenticationController extends Controller
                 'KCIV' => 'required|string',
                 'KCTAG' => 'required|string',
             ]);
-            
+
             // Retrieve user info from session
             $userInfo = json_decode(Session::get('authenticatedUserInfo'), true);
 
@@ -254,7 +229,7 @@ class AuthenticationController extends Controller
             $name = $userInfo['name'] ?? null;
             $email = $userInfo['email'] ?? null;
             $employeetype = $userInfo['employeetype'] ?? null;
-    
+
             $avatarId = $validatedData['avatar_id'] ?? '';
 
             // Update or create the local user
@@ -269,7 +244,14 @@ class AuthenticationController extends Controller
                     'isRemoved' => false
                 ]
             );
-    
+
+            try {
+                $policy = $announcementService->fetchLatestPolicy();
+                $announcementService->markAnnouncementAsSeen($user, $policy->id);
+                $announcementService->markAnnouncementAsAccepted($user, $policy->id);
+            } catch (\Throwable) {
+            }
+
             // Update or create the Private User Data
             PrivateUserData::create(
                 [
@@ -282,52 +264,40 @@ class AuthenticationController extends Controller
             // Log the user in
             Session::put('registration_access', false);
             Auth::login($user);
-    
+
             return response()->json([
                 'success' => true,
                 'redirectUri' => '/chat',
                 'userData' => $user
             ]);
-    
+
         } catch (ValidationException $e) {
-            // error_log('Validation Error: ' . json_encode($e->errors()));
-    
-            return response()->json([
-                'success' => false,
-                'errors' => $e->errors()
-            ], 422);  // Return HTTP 422 Unprocessable Entity
+            throw $e;
         }
     }
-    
+
     public function logout(Request $request)
     {
-        // Unset all session variables
-        Session::flush();
-
-        // Regenerate session ID
-        Session::regenerate();
-
-        // Remove PHPSESSID cookie
-        if ($request->hasCookie('PHPSESSID')) {
-            $cookie = cookie('PHPSESSID', '', time() - 3600);
-            Cookie::queue($cookie);
+        // First build the redirect response, so we still have all user- and session-data available.
+        $response = redirect('/login');
+        if ($this->authService instanceof AuthServiceWithLogoutRedirectInterface) {
+            $serviceResponse = $this->authService->getLogoutResponse($request);
+            if ($serviceResponse !== null) {
+                $response = $serviceResponse;
+            }
         }
 
-        // Destroy the session
-        Session::invalidate();
+        // Log out the user
+        Auth::logout();
 
-        // Determine the logout redirect URI based on the authentication method
-        $authMethod = env('AUTHENTICATION_METHOD');
-        if ($authMethod === 'Shibboleth') {
-            $redirectUri = config('shibboleth.logout_path');
-        } elseif ($authMethod === 'OIDC') {
-            $redirectUri = config('open_id_connect.oidc_logout_path');
-        } else {
-            $redirectUri = '/login';
-        }
+        // Invalidate the session (flushes + regenerates token)
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
 
-        // Redirect to the appropriate logout URI
-        return redirect($redirectUri);
+        // Clear PHPSESSID cookie (optional, Laravel doesn’t use PHPSESSID by default)
+        Cookie::queue(Cookie::forget('PHPSESSID'));
+
+        return $response;
     }
-    
+
 }

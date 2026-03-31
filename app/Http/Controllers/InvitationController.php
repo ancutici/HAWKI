@@ -12,7 +12,6 @@ use App\Jobs\SendEmailJob;
 use Illuminate\Http\Request;
 
 use App\Http\Controllers\RoomController;
-use App\Http\Controllers\InvitationController;
 
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\Auth;
@@ -33,18 +32,18 @@ class InvitationController extends Controller
 
         // Find the user based on username
         $user = User::where('username', $validatedData['username'])->first();
-    
+
         // Check if the user exists
         if (!$user) {
             return response()->json(['error' => 'user not found']);
         }
-    
+
         // Generate a signed URL with the hash
         $url = URL::signedRoute('open.invitation', [
-            'tempHash' => $validatedData['hash'], 
+            'tempHash' => $validatedData['hash'],
             'slug' => $validatedData['slug']
-        ], now()->addHours(48));    
-    
+        ], now()->addHours(48));
+
         // Prepare email data
         $emailData = [
             'user' => $user,
@@ -52,15 +51,15 @@ class InvitationController extends Controller
             'message' => 'YOU HAVE BEEN INVITED A THE NEW GROUP...',
             'url' => $url,  // Include the generated URL if needed in the email
         ];
-    
+
         // Specify the view template and subject line
         $viewTemplate = 'emails.invitation';
         $subjectLine = 'Invitation';
-    
+
         // Dispatch the email job
         SendEmailJob::dispatch($emailData, $user->email, $subjectLine, $viewTemplate)
                     ->onQueue('emails');
-    
+
         return response()->json(['message' => 'Invitation email sent successfully.']);
     }
 
@@ -69,13 +68,13 @@ class InvitationController extends Controller
     public function storeInvitations(Request $request, $slug) {
         $roomId = Room::where('slug', $slug)->firstOrFail()->id;
         $invitations = $request->input('invitations');
-    
+
         foreach($invitations as $inv) {
             // Check if an invitation already exists for this user in this room
             $existingInvitation = Invitation::where('room_id', $roomId)
                                              ->where('username', $inv['username'])
                                              ->first();
-    
+
             if ($existingInvitation) {
                 // Update the existing invitation
                 $existingInvitation->update([
@@ -149,23 +148,23 @@ class InvitationController extends Controller
 
     /// return invitation with the specific slug.
     /// thought for external invitation opening. (check groupchat functions)
-    /// NOTE: Not finished yet 
+    /// NOTE: Not finished yet
     public function getInvitationWithSlug(Request $request, $slug)
     {
         // Get the authenticated user
         $user = Auth::user();
-    
+
         // Retrieve the invitation where the room's slug matches and the invitation belongs to the authenticated user
         $invitation = $user->invitations()
             ->whereRelation('room', 'slug', $slug)
             ->with('room') // Eager load the room
             ->first();
-    
+
         // Check if the invitation exists
         if (!$invitation) {
             return response()->json(['error' => 'Invitation not found'], 404);
         }
-    
+
         // Format the invitation details
         $formattedInvitation = [
             'room_slug'     => $invitation->room->slug,
@@ -175,7 +174,7 @@ class InvitationController extends Controller
             'invitation'    => $invitation->invitation,
             'invitation_id' => $invitation->id
         ];
-    
+
         return response()->json($formattedInvitation);
     }
 

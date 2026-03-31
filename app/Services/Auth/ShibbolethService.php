@@ -2,56 +2,115 @@
 
 namespace App\Services\Auth;
 
+use App\Services\Auth\Contract\AuthServiceInterface;
+use App\Services\Auth\Contract\AuthServiceWithLogoutRedirectInterface;
+use App\Services\Auth\Exception\AuthFailedException;
+use App\Services\Auth\Util\AuthRedirectBuilder;
+use App\Services\Auth\Util\DisplayNameBuilder;
+use App\Services\Auth\Value\AuthenticatedUserInfo;
+use Illuminate\Container\Attributes\Config;
+use Illuminate\Container\Attributes\Singleton;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use App\Models\User;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Session;
-use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
+use Psr\Log\LoggerInterface;
+use Symfony\Component\HttpFoundation\Response;
 
 
-class ShibbolethService
+#[Singleton]
+readonly class ShibbolethService implements AuthServiceWithLogoutRedirectInterface, AuthServiceInterface
 {
-    /**
-     * Authenticates the user via Shibboleth and returns user information if authenticated.
-     * If the user is not authenticated, redirects to the Shibboleth login page.
-     *
-     * @param Request $request The HTTP request instance.
-     * @return array|Illuminate\Http\RedirectResponse|Illuminate\Http\JsonResponse User information array if authenticated,
-     *                                                                             redirection to the login page if not authenticated,
-     *                                                                             or a JSON error response if required attributes are missing or the login path is not set.
-     */
-    public function authenticate(Request $request)
+    public function __construct(
+        #[Config('shibboleth.attribute_map.username')]
+        private string          $usernameAttribute,
+        #[Config('shibboleth.attribute_map.email')]
+        private string          $emailAttribute,
+        #[Config('shibboleth.attribute_map.employeetype')]
+        private string          $employeeTypeAttribute,
+        #[Config('shibboleth.attribute_map.name')]
+        private string          $nameAttribute,
+        #[Config('shibboleth.login_path')]
+        private string          $loginPath,
+        #[Config('shibboleth.logout_path')]
+        private string          $logoutPath,
+        private LoggerInterface $logger,
+    )
     {
-        // Check if the user is authenticated
-        if (!empty($_SERVER['REMOTE_USER'])) {
-            // Retrieve configuration variables
-            $nameVar = config('shibboleth.attribute_map.name');
-            $mailVar = config('shibboleth.attribute_map.email');
-            $employeetypeVar = config('shibboleth.attribute_map.employeetype');
-    
-            // Check if the required attributes are present in the $_SERVER array
-            if (isset($_SERVER[$nameVar], $_SERVER[$mailVar], $_SERVER[$employeetypeVar])) {
-                // Return user information
-                return $userInfo = [
-                    'username' => $_SERVER['REMOTE_USER'],
-                    'name' => $_SERVER[$nameVar],
-                    'email' => $_SERVER[$mailVar],
-                    'employeetype' => $_SERVER[$employeetypeVar]
-                ];
-            } else {
-                // Error handling if attributes are missing
-                return response()->json(['error' => 'Missing required attributes'], 400);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function authenticate(Request $request): AuthenticatedUserInfo|Response
+    {
+        try {
+            $username = $this->getServerVarOrFail($request, $this->usernameAttribute);
+            $this->logger->debug('Authenticated Shibboleth user', ['username' => $username]);
+        } catch (\RuntimeException $e) {
+            $loginRedirect = AuthRedirectBuilder::build(
+                $this->loginPath,
+                ['target' => 'web.auth.login.get']
+            );
+
+            if (!$loginRedirect) {
+                throw new AuthFailedException('Shibboleth login path is not set in configuration', 500, $e);
             }
-        } else {
-            // Redirect to the Shibboleth login page
-            $loginPath = config('shibboleth.login_path');
-            if (!empty($loginPath)) {
-                return redirect($loginPath);
-            } else {
-                // Error handling if the login path is not set
-                return response()->json(['error' => 'Login path is not set'], 500);
+
+            return $loginRedirect;
+        }
+
+        try {
+            $userdata = new AuthenticatedUserInfo(
+                username: $username,
+                displayName: DisplayNameBuilder::build(
+                    definition: $this->nameAttribute,
+                    valueResolver: fn(string $field) => $this->getServerVarOrFail($request, $field),
+                    logger: $this->logger
+                ),
+                email: $this->getServerVarOrFail($request, $this->emailAttribute),
+                employeeType: $this->getServerVarOrFail($request, $this->employeeTypeAttribute),
+            );
+
+            $this->logger->debug('Retrieved Shibboleth user attributes', ['userdata' => $userdata]);
+
+            return $userdata;
+        } catch (\Throwable $e) {
+            throw new AuthFailedException('Failed to resolve userdata for Shibboleth auth', 500, $e);
+        }
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getLogoutResponse(Request $request): ?RedirectResponse
+    {
+        return AuthRedirectBuilder::build(
+            $this->logoutPath,
+            ['return' => 'login']
+        );
+    }
+
+    private function getServerVarOrFail(Request $request, string $var): string
+    {
+        $redirectVar = 'REDIRECT_' . $var;
+        $value = $request->server($var) ?? $request->server('REDIRECT_' . $var) ?? null;
+
+        if (!empty($value)) {
+            return $value;
+        }
+
+        // Try to find value case-insensitively (This is rather expensive, so we log it as a warning)
+        foreach ($request->server->all() as $key => $val) {
+            if (Str::lower($key) === Str::lower($var) && !empty($val)) {
+                $this->logger->warning("Found server variable '$key' case-insensitively for expected '$var'");
+                return $val;
+            }
+            if (Str::lower($key) === Str::lower($redirectVar) && !empty($val)) {
+                $this->logger->warning("Found server variable '$key' case-insensitively for expected '$redirectVar'");
+                return $val;
             }
         }
+
+        throw new \RuntimeException("Neither $var nor $redirectVar are set and not empty", 400);
     }
 }

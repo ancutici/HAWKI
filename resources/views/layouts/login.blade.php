@@ -9,12 +9,14 @@
 
     <link rel="icon" href="{{ asset('favicon.ico') }}">
 
-    <link rel="stylesheet" href="{{ asset('css_v2.0.1_f1/style.css') }}">
-    <link rel="stylesheet" href="{{ asset('css_v2.0.1_f1/login_style.css') }}">
-    <link rel="stylesheet" href="{{ asset('css_v2.0.1_f1/settings_style.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/style.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/login_style.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/settings_style.css') }}">
 
-    <script src="{{ asset('js_v2.0.1_f1/functions.js') }}"></script>
-    <script src="{{ asset('js_v2.0.1_f1/settings_functions.js') }}"></script>
+    <script src="{{ asset('js/functions.js') }}"></script>
+    <script src="{{ asset('js/settings_functions.js') }}"></script>
+    <script src="{{ asset('js/announcements.js') }}"></script>
+    @vite('resources/js/app.js')
 
     {!! $settingsPanel !!}
 
@@ -22,7 +24,7 @@
 		InitializePreDomSettings(false);
         UpdateSettingsLanguage('{{ Session::get("language")['id'] }}');
 	</script>
-    
+
 </head>
 <body>
 <div class="wrapper">
@@ -48,7 +50,7 @@
 
 
         <div class="footerPanel">
-  
+
             <button class="btn-sm" onclick="toggleSettingsPanel(true)">
                 <x-icon name="settings-icon"/>
             </button>
@@ -78,13 +80,12 @@
 </html>
 
 <script>
-    window.addEventListener('DOMContentLoaded', (event) => {
+    window.addEventListener('DOMContentLoaded', () => {
         if(window.innerWidth < 480){
             const bgVideo = document.querySelector(".image_preview_container");
             bgVideo.remove();
         }
 
-        // console.log(@json($activeOverlay));
         setTimeout(() => {
             if(@json($activeOverlay)){
                 // console.log('close overlay');
@@ -94,53 +95,62 @@
     });
 
     function onLoginKeydown(event){
-        if(event.key == "Enter"){
+        if(event.key === "Enter"){
             const username = document.getElementById('account');
             // console.log(username.value);
             if(!username.value){
                 return;
             }
             const password = document.getElementById('password');
-            if(document.activeElement != password){
+            if(document.activeElement !== password){
                 password.focus();
                 return;
             }
             if(username.value && password.value){
-                LoginLDAP();
+                submitLogin();
             }
         }
     }
-    async function LoginLDAP() {
+
+    async function submitLogin() {
         try {
             var formData = new FormData();
-            formData.append("account", document.getElementById("account").value);
-            formData.append("password", document.getElementById("password").value);
-            const csrfToken = document.getElementById('loginForm-LDAP').querySelector('input[name="_token"]').value;
+            formData.append('account', document.getElementById('account').value);
+            formData.append('password', document.getElementById('password').value);
+            const csrfToken = document.getElementById('hawkiLoginForm').querySelector('input[name="_token"]').value;
 
-            const response = await fetch('/req/login-ldap', {
-                method: "POST",
+            const response = await fetch('/req/login', {
+                method: 'POST',
                 headers: {
-                    "X-CSRF-TOKEN": csrfToken
+                    'X-CSRF-TOKEN': csrfToken,
+                    'Accept': 'application/json'
                 },
                 body: formData
             });
 
             if (!response.ok) {
-                throw new Error("Login request failed");
+                throw new Error('Login request failed');
             }
 
             const data = await response.json();
 
             if (data.success) {
-                await setOverlay(true, true)
+                await setOverlay(true, true);
                 window.location.href = data.redirectUri;
 
             } else {
                 // console.log('login failed');
-                document.getElementById("login-message").textContent = 'Login Failed!';
+                document.getElementById('login-message').textContent = 'Login Failed!';
             }
         } catch (error) {
             console.error(error);
         }
+    }
+
+    /**
+     * @deprecated: use submitLogin() instead!
+     */
+    async function LoginLDAP() {
+        await submitLogin();
     }
 </script>
