@@ -20,7 +20,10 @@ class LocalFileConverter implements FileConverterInterface
         $baseName = pathinfo($filename, PATHINFO_FILENAME);
 
         return match ($ext) {
-            'txt', 'md' => $this->passthrough($path, $baseName),
+            'txt', 'md',
+            'js', 'mjs', 'jsx', 'ts', 'tsx',
+            'css', 'json', 'yml', 'yaml', 'xml',
+            'php', 'py', 'sh', 'sql' => $this->passthrough($path, $baseName),
             'html', 'htm' => $this->htmlToMarkdown($path, $baseName),
             'csv'       => $this->csvToMarkdown($path, $baseName),
             'xlsx', 'xls' => $this->excelToMarkdown($path, $baseName),

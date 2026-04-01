@@ -117,12 +117,19 @@ class AttachmentService{
            str_contains($mime, 'powerpoint') ||
            in_array($mime, [
                'text/plain',
-               'text/markdown',
-               'text/x-markdown',
+               'text/markdown', 'text/x-markdown',
                'text/html',
-               'text/csv',
-               'text/x-csv',
-               'application/csv',
+               'text/csv', 'text/x-csv', 'application/csv',
+               'text/javascript', 'application/javascript',
+               'text/css',
+               'application/json',
+               'text/yaml', 'application/x-yaml',
+               'application/xml', 'text/xml',
+               'text/x-php', 'application/x-httpd-php',
+               'text/x-python', 'application/x-python',
+               'text/typescript',
+               'text/x-shellscript',
+               'text/x-sql',
            ])){
             return 'document';
         }

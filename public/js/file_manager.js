@@ -323,8 +323,17 @@ function checkFileFormat(mime){
     } else if (m === 'text/html') {
         return 'html';
     } else if (m === 'text/plain' ||
-               m === 'text/markdown' ||
-               m === 'text/x-markdown') {
+               m === 'text/markdown' || m === 'text/x-markdown' ||
+               m === 'text/javascript' || m === 'application/javascript' ||
+               m === 'text/css' ||
+               m === 'application/json' ||
+               m === 'text/yaml' || m === 'application/x-yaml' ||
+               m === 'application/xml' || m === 'text/xml' ||
+               m === 'text/x-php' || m === 'application/x-httpd-php' ||
+               m === 'text/x-python' || m === 'application/x-python' ||
+               m === 'text/typescript' ||
+               m === 'text/x-shellscript' ||
+               m === 'text/x-sql') {
         return 'txt';
     } else {
         return null;

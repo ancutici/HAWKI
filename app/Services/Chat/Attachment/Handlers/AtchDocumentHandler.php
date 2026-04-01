@@ -58,7 +58,9 @@ class AtchDocumentHandler implements AttachmentInterface
 
     public function extractFileContent($file): ?array{
         try{
-            $localTypes = ['txt', 'md', 'html', 'htm', 'csv', 'xlsx', 'xls', 'pptx'];
+            $localTypes = ['txt', 'md', 'html', 'htm', 'csv', 'xlsx', 'xls', 'pptx',
+                           'js', 'mjs', 'jsx', 'ts', 'tsx', 'css', 'json',
+                           'yml', 'yaml', 'xml', 'php', 'py', 'sh', 'sql'];
             $ext = strtolower($file->getClientOriginalExtension());
 
             if (in_array($ext, $localTypes)) {

@@ -8,7 +8,7 @@
         <div class="drag-drop-text">
             <h4>Dateien hinzufügen</h4>
             <p>Lege hier Dateien ab, um sie zum Gespräch hinzuzufügen.</p>
-            <p>(max. 10MB, PDF, docx, pptx, xlsx, csv, txt, md, html, JPG, PNG)</p>
+            <p>(max. 10MB, PDF, docx, pptx, xlsx, csv, txt, md, html, js, json, php, py, …, JPG, PNG)</p>
 
         </div>
     </div>

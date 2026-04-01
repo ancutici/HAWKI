@@ -90,15 +90,23 @@ async function handleSelectedFiles(files, inputField) {
             'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
             // Documents (lokale Konvertierung: Text, Markdown, HTML, CSV, Excel, PowerPoint)
             'text/plain',
-            'text/markdown',
-            'text/x-markdown',
+            'text/markdown', 'text/x-markdown',
             'text/html',
-            'text/csv',
-            'text/x-csv',
-            'application/csv',
+            'text/csv', 'text/x-csv', 'application/csv',
             'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
             'application/vnd.ms-excel',
-            'application/vnd.openxmlformats-officedocument.presentationml.presentation'
+            'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+            // Code-Formate
+            'text/javascript', 'application/javascript',
+            'text/css',
+            'application/json',
+            'text/yaml', 'application/x-yaml',
+            'application/xml', 'text/xml',
+            'text/x-php', 'application/x-httpd-php',
+            'text/x-python', 'application/x-python',
+            'text/typescript',
+            'text/x-shellscript',
+            'text/x-sql'
         );
     }
 
@@ -110,7 +118,18 @@ async function handleSelectedFiles(files, inputField) {
     Array.from(files).map(async file => {
         // File type validation (normalize mime: strip optional parameters like "; charset=utf-8")
         // Some browsers report no MIME type for .md and other text formats → fall back to extension
-        const extMimeMap = { md: 'text/markdown', htm: 'text/html' };
+        const extMimeMap = {
+            md: 'text/markdown', htm: 'text/html',
+            js: 'text/javascript', mjs: 'text/javascript',
+            css: 'text/css',
+            json: 'application/json',
+            yml: 'text/yaml', yaml: 'text/yaml',
+            xml: 'application/xml',
+            php: 'text/x-php',
+            py: 'text/x-python',
+            ts: 'text/typescript', tsx: 'text/typescript', jsx: 'text/javascript',
+            sh: 'text/x-shellscript', sql: 'text/x-sql',
+        };
         const fileExt = file.name.split('.').pop().toLowerCase();
         const fileMime = file.type.split(';')[0].trim() || extMimeMap[fileExt] || '';
         if (!allowedTypes.includes(fileMime)) {
