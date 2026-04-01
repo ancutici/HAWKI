@@ -2,6 +2,7 @@
 namespace App\Services\Chat\Attachment\Handlers;
 
 use App\Services\FileConverter\FileConverterFactory;
+use App\Services\FileConverter\Handlers\LocalFileConverter;
 use Illuminate\Support\Str;
 
 use App\Services\Storage\FileStorageService;
@@ -57,6 +58,13 @@ class AtchDocumentHandler implements AttachmentInterface
 
     public function extractFileContent($file): ?array{
         try{
+            $localTypes = ['txt', 'md', 'html', 'htm', 'csv', 'xlsx', 'xls', 'pptx'];
+            $ext = strtolower($file->getClientOriginalExtension());
+
+            if (in_array($ext, $localTypes)) {
+                return (new LocalFileConverter())->convert($file);
+            }
+
             $converter = FileConverterFactory::create();
             return $converter->convert($file);
         }

@@ -303,13 +303,29 @@ async function renderImage(blob){
 //#region Utils
 
 function checkFileFormat(mime){
-    if (mime.startsWith('image/')) {
+    const m = mime.split(';')[0].trim();
+    if (m.startsWith('image/')) {
         return 'image';
-    } else if (mime.includes('pdf')) {
+    } else if (m.includes('pdf')) {
         return 'pdf';
-    } else if (mime.includes('msword') ||
-               mime.includes('wordprocessingml')) {
+    } else if (m.includes('msword') ||
+               m.includes('wordprocessingml')) {
         return 'docx';
+    } else if (m.includes('spreadsheetml') ||
+               m.includes('ms-excel') ||
+               m === 'text/csv' ||
+               m === 'text/x-csv' ||
+               m === 'application/csv') {
+        return 'xlsx';
+    } else if (m.includes('presentationml') ||
+               m.includes('powerpoint')) {
+        return 'pptx';
+    } else if (m === 'text/html') {
+        return 'html';
+    } else if (m === 'text/plain' ||
+               m === 'text/markdown' ||
+               m === 'text/x-markdown') {
+        return 'txt';
     } else {
         return null;
     }

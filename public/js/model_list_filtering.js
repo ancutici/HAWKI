@@ -235,6 +235,10 @@ function getFilterFromMime(mime){
     switch(type){
         case('pdf'):
         case('docx'):
+        case('xlsx'):
+        case('pptx'):
+        case('txt'):
+        case('html'):
             return 'file_upload';
         case('image'):
             return 'vision';

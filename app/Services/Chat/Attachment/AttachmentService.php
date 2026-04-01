@@ -110,7 +110,20 @@ class AttachmentService{
     public function convertToAttachmentType($mime){
 
         if(str_contains($mime, 'pdf') ||
-           str_contains($mime, 'word')){
+           str_contains($mime, 'word') ||
+           str_contains($mime, 'spreadsheet') ||
+           str_contains($mime, 'excel') ||
+           str_contains($mime, 'presentation') ||
+           str_contains($mime, 'powerpoint') ||
+           in_array($mime, [
+               'text/plain',
+               'text/markdown',
+               'text/x-markdown',
+               'text/html',
+               'text/csv',
+               'text/x-csv',
+               'application/csv',
+           ])){
             return 'document';
         }
         if(str_contains($mime, 'image')){

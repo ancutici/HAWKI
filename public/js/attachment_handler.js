@@ -84,10 +84,21 @@ async function handleSelectedFiles(files, inputField) {
 
     if(converterActive){
         allowedTypes.push(
-            // Documents
+            // Documents (API-Konverter: PDF, Word)
             'application/pdf',
             'application/msword',
-            'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+            'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+            // Documents (lokale Konvertierung: Text, Markdown, HTML, CSV, Excel, PowerPoint)
+            'text/plain',
+            'text/markdown',
+            'text/x-markdown',
+            'text/html',
+            'text/csv',
+            'text/x-csv',
+            'application/csv',
+            'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+            'application/vnd.ms-excel',
+            'application/vnd.openxmlformats-officedocument.presentationml.presentation'
         );
     }
 
@@ -97,9 +108,13 @@ async function handleSelectedFiles(files, inputField) {
 
     // Convert FileList to Array and process all files in parallel
     Array.from(files).map(async file => {
-        // File type validation
-        if (!allowedTypes.includes(file.type)) {
-            showFeedbackMsg(inputField, 'error', `${translation.Input_Err_NotSupported} ${file.type}`);
+        // File type validation (normalize mime: strip optional parameters like "; charset=utf-8")
+        // Some browsers report no MIME type for .md and other text formats → fall back to extension
+        const extMimeMap = { md: 'text/markdown', htm: 'text/html' };
+        const fileExt = file.name.split('.').pop().toLowerCase();
+        const fileMime = file.type.split(';')[0].trim() || extMimeMap[fileExt] || '';
+        if (!allowedTypes.includes(fileMime)) {
+            showFeedbackMsg(inputField, 'error', `${translation.Input_Err_NotSupported} ${fileMime}`);
             return null; // Early exit from this file's processing
         }
         queueAnchoredAnnouncements('FileUpload');
@@ -111,13 +126,14 @@ async function handleSelectedFiles(files, inputField) {
             return null;
         }
 
-        if(!checkFilterCombination(input_id, getFilterFromMime(file.type))){
+        if(!checkFilterCombination(input_id, getFilterFromMime(fileMime))){
             showFeedbackMsg(inputField, 'error', `${translation.Input_Err_FilterConflict}`)
             return;
         }
 
         // Prepare file for upload
         const fileData = createFileStruct(file);
+        fileData.mime = fileMime; // use normalized/fallback mime
         const atchThumb = createAttachmentThumbnail(fileData, 'input');
 
         // Add to file preview container
@@ -145,7 +161,7 @@ function setAttachmentsFilter(input_id){
     let visionFilterFlag = false;
     attachments.forEach(attachment => {
         const type = checkFileFormat(attachment.fileData.mime);
-        if(type === 'pdf' || type === 'docx' || type === 'image'){
+        if(type === 'pdf' || type === 'docx' || type === 'xlsx' || type === 'pptx' || type === 'txt' || type === 'html' || type === 'image'){
             fileUploadFilterFlag = true;
             addInputFilter(input_id, 'file_upload');
         }
@@ -207,6 +223,9 @@ function createAttachmentThumbnail(fileData, thumbType) {
             imgPreview = '/img/fileformat/pdf.png';
         break;
         case('docx'):
+        case('xlsx'):
+        case('pptx'):
+        case('txt'):
             imgPreview = '/img/fileformat/doc.png';
         break;
     }
