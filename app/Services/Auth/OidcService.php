@@ -87,7 +87,7 @@ readonly class OidcService implements AuthServiceInterface, AuthServiceWithLogou
                     logger: $this->logger
                 ),
                 email: $this->getUserInfoOrFail($oidc, $this->emailAttribute),
-                employeeType: $this->getUserInfoOrFail($oidc, $this->employeeTypeAttribute),
+                employeeType: $this->resolveEmployeeType($oidc),
             );
         } catch (\Exception $e) {
             throw new AuthFailedException('Failed to resolve userdata for OIDC auth', 500, $e);
@@ -115,6 +115,23 @@ readonly class OidcService implements AuthServiceInterface, AuthServiceWithLogou
             ],
             $params
         );
+    }
+
+    /**
+     * Resolves the employeeType attribute from OIDC user info.
+     * The Hohenheim Keycloak provides "affiliation" as an array (e.g. ["member", "employee"]).
+     * Arrays are joined with commas; missing/empty values fall back to 'N/A'.
+     */
+    private function resolveEmployeeType(OpenIDConnectClient $oidc): string
+    {
+        $value = $oidc->requestUserInfo($this->employeeTypeAttribute);
+        if (is_array($value) && count($value) > 0) {
+            return implode(',', $value);
+        }
+        if (is_string($value) && !empty($value)) {
+            return $value;
+        }
+        return 'N/A';
     }
 
     private function getUserInfoOrFail(OpenIDConnectClient $oidc, string $var): string

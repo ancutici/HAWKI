@@ -2,8 +2,8 @@
 return [
     [
         'active'=> env('MODELS_OPENAI_GPT5_ACTIVE', true),
-        'id' => 'gpt-5',
-        'label' => 'OpenAI GPT 5',
+        'id' => 'gpt-5.1',
+        'label' => 'OpenAI GPT 5.1',
         "input"=> [
             "text",
             "image"
@@ -17,7 +17,7 @@ return [
             'tool_calling' => true,
             'file_upload' => true,
             'vision'=> true,
-//            'web_search' => 'native',
+            // 'web_search' => 'native',
         ],
         'default_params' => [
             // OpenAI API defaults: temp=1.0, top_p=1.0
