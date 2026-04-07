@@ -1,97 +1,130 @@
-# Guidelines for Using HAWKI
+# Guidelines for Using GPTalk
 
-Welcome to the guidelines for using HAWKI, which provides language models from OpenAI, Google, and open-source models via GWDG.  
+Welcome to the guidelines for using GPTalk, an AI service that provides language models from OpenAI and open-source models via GWDG.
 
-These guidelines are intended to give all university members a clear framework for responsible use of this technology. Please note that these guidelines supplement, but do not replace, the terms of use of OpenAI and Google. Users remain responsible for complying with those terms.  
+These guidelines aim to provide all university members with clear orientation on how to use this technology responsibly.
+Please note that this guide complements OpenAI's terms of use and does not claim to be exhaustive.
+Users are responsible for complying with the terms of use.
 
 ---
 
-## General Provisions
+## 1. General Provisions
 
-### Prohibited:
-- Entering personal data about yourself or others.  
-- Using the services for illegal, harmful, or abusive activities.  
-- Violating, misusing, or infringing on the rights of others.  
-- Modifying, copying, renting, selling, or distributing the services.  
-- Attempting to reverse-engineer, decompile, or discover source code or underlying components.  
-- Automatically or programmatically extracting data or outputs.  
-- Claiming that output was created by humans when it was not.  
-- Interfering with or disrupting services or circumventing protective measures.  
-- Using output to develop competing models.  
+### Prohibited Actions:
+- Entering personal data about yourself or others.
+- Using the services for illegal, harmful, or abusive purposes.
+- Violating, abusing, or infringing upon the rights of others.
+- Modifying, selling, renting, reproducing, or redistributing the service.
+- Automated or programmatic extraction of data or output.
+- Claiming that the output was created by a human when it was not.
+- Disrupting or circumventing the security mechanisms of the service.
+- Using the output to train other models.
 
-### Important to note:
-- You are responsible for both the input you provide and the resulting output.  
-- Ensure your input does not infringe on any rights and that you hold the necessary permissions, rights, or licenses.  
+### Important Notes:
+Users are responsible for the input they provide and the resulting output.
+Ensure that no rights are violated and that all necessary licenses, permissions, or usage rights are in place.
 
 ### Accuracy:
-- Use of these services may result in inaccurate or faulty output.  
-- Always critically evaluate results and do not use them as the sole source of truth.  
-- Your inputs are not stored by HAWK but are retained by OpenAI for 30 days for potential misuse detection. They are deleted afterwards.  
-- Your inputs are not used to improve the product.  
-- HAWK has a data processing agreement with GWDG, ensuring that GWDG does not store data sent via HAWKI.  
-- A list of models provided by GWDG can be found here: [GWDG Models](https://docs.hpc.gwdg.de/services/chat-ai/models/index.html).  
+GPTalk may produce inaccurate or incorrect results.
+Always critically evaluate the output and do not use it as the sole source of truth.
+
+An overview of available models can be found here: [GWDG Models](https://docs.hpc.gwdg.de/services/chat-ai/models/index.html)
+
+### Ethical Responsibility and Fairness:
+GPTalk is based on large training datasets that may unintentionally contain social biases.
+Please reflect critically on whether generated content is discriminatory, biased, or unfair.
+It should always be used in accordance with the values of respect, inclusion, and equal treatment.
+
+### Transparency in AI Usage:
+Inform colleagues and other affected individuals when GPTalk is used in work processes that may impact them.
+Open communication fosters trust and allows for collaborative reflection.
 
 ---
 
-## Group Chat
+## 2. Group Chat
 
-Rules for respectful group interaction:
+In the group chat, users communicate with each other and with the AI — there are a few simple rules to ensure that this works well:
 
-- Treat all participants with respect and courtesy.  
-- Constructive discussions are encouraged, but personal attacks or offensive language must be avoided.  
-- Stay on topic; avoid spam or excessive self-promotion.  
-- Do not spread false or misleading information.  
-- Be aware that all group chat messages can be read and processed by other members.  
-- Use of the chat must comply with ethical and data protection standards of the university.  
-- Abusive or discriminatory behavior may result in exclusion from HAWKI.  
-- Do not share sensitive or personal data in chats.  
+- Mutual respect and polite communication.
+- Constructive discussions without insults or personal attacks.
+- No spam or excessive self-promotion.
+- No dissemination of misinformation.
+- Be aware that all messages are visible and accessible to others.
+- Adhere to ethical and data protection guidelines.
+- In cases of abusive behavior, we reserve the right to exclude users from GPTalk.
+
+Do not share sensitive or personal data in group chats.
 
 ---
 
-## File Uploads
+## 3. File Uploads
 
 ### Purpose:
-File uploads allow temporary AI-supported processing of content.  
+File uploads allow temporary AI-supported processing of content.
 
-### Permissible content:
-Only files that:  
-- were created by the uploading user, or  
-- have a legal basis for use in the university context (e.g., § 60a UrhG, excerpts from literature, own notes, presentations, etc.).  
+### Supported File Formats and Limits:
+- **Images:** jpg, jpeg, png
+- **Documents:** pdf, doc, docx, pptx, txt, md, csv, xlsx, xls
+- **Code:** js, mjs, jsx, ts, tsx, css, json, yml, yaml, xml, php, py, sh, sql
+- **Maximum file size:** 10 MB
 
-The user is responsible for ensuring uploads do not violate copyright or personal rights.  
+### Permissible Content:
+Only files that:
+- were created by the uploading user, or
+- have a legal basis for use in the university context (e.g., § 60a UrhG).
 
-### Storage duration:
-- Uploaded files are automatically deleted after six months at the latest, unless manually deleted earlier.  
-- This follows the principle of data minimization under GDPR.  
+The user is responsible for ensuring uploads do not violate copyright or personal rights.
 
-### Data protection:
-- Processing is solely for university-related purposes.  
-- No data is shared with third parties.  
-- Further details are available in the HAWKI privacy policy.  
+### Storage Duration:
+- Uploaded files are automatically deleted after one month at the latest, unless manually deleted earlier.
+- This follows the principle of data minimization under GDPR.
 
----
-
-## Specific Provisions
-
-- A preliminary guideline and declaration of independence exist for generative AI usage.  
-- Students may use HAWKI for learning support but must not rely solely on generated responses.  
-- Entering personal data (own or others’) is strictly prohibited.  
-- Students remain responsible for outputs created with HAWKI and must disclose the use of AI transparently.  
-- **Teachers:** Automated grading of exams, essays, reports, or similar is prohibited.  
-- This ban follows the EU AI Act, which prohibits generative AI in high-risk educational assessments.  
-- Allowed uses include spelling/grammar checking, feedback preparation, simplifying language, creating rubrics or teaching materials.  
-- **University staff:** Uploading documents containing personal data or subject to confidentiality is prohibited.  
-- HAWKI may be used for efficiency and daily work support, provided that data protection and security policies are followed.  
+### Data Protection and Processing:
+- Documents are converted by GWDG depending on the file format. The GWDG data protection regulations apply; content is not stored by GWDG.
+- Processing is solely for university-related purposes.
+- No data is shared with third parties.
+- Further details are available in the GPTalk privacy policy.
 
 ---
 
-## Final Notes
+## 4. Specific Provisions by User Group
 
-These guidelines are intended as orientation for the responsible use of HAWKI.  
-The university can only provide this service if no personal data is entered.  
+### For Students:
+- Use GPTalk to support your learning process, but not as the sole source.
+- Do not enter personal data — neither yours nor others'.
+- You are responsible for the content and considered the author of your work.
+- Make your use of AI transparent.
 
-**Contact for questions:**  
-Prof. Stefan Wölwer, Arian Sadafi, Jonas Trippler, or Vincent Timm.  
+### For Teachers:
+- GPTalk must not be used to correct or assess student work. Even anonymized work may fall under high-risk applications according to the EU AI Act.
+- Use GPTalk exclusively for preparing, structuring, or brainstorming teaching materials.
+- Review all content for accuracy and relevance.
 
-Regardless of these guidelines, the terms of OpenAI and Google apply.  
+### For Researchers:
+- Use GPTalk for brainstorming, structuring texts, or drafting abstracts.
+- Do not enter internal research documents or confidential data.
+- Respect data protection, copyright, and scientific integrity.
+- GPTalk must not be used to monitor performance or behavior.
 
+### For Administrative and Support Staff (e.g., Secretariat, Examination Office, IT Services):
+- Do not enter confidential, personal, or internal documents into GPTalk.
+- GPTalk may be used to increase efficiency, provided data protection and security policies are followed.
+- GPTalk must not be used to monitor performance or behavior.
+- If working procedures change as a result of using GPTalk, adapt the documentation of your specialist procedure if necessary.
+
+Further Information:
+- [AI Policy](https://www.uni-hohenheim.de/fileadmin/uni_hohenheim/Intranet_MA/Rechtsvorschriften/KI-Richtlinie_Verwaltung.pdf)
+- [Use of Generative AI in Exams](https://www.uni-hohenheim.de/einsatz-von-generativer-ki-in-pruefungen)
+
+---
+
+## 5. Final Remarks
+
+This guide serves as orientation for the responsible use of GPTalk.
+All users are expected to understand and follow the outlined provisions to ensure the secure and ethical application of this technology.
+Please note: The university can only provide this service if no personal data and data worthy of protection for other reasons are entered.
+
+## Contact
+
+If you have technical or content-related questions, please contact:  
+**Email:** [gptalk@uni-hohenheim.de](mailto:gptalk@uni-hohenheim.de)
