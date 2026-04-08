@@ -467,6 +467,7 @@ async function uploadAttachmentQueue(queueId, category, slug = null) {
     if (!attachments || attachments.length === 0) return null;
 
     const uploadedFiles = [];
+    let hasErrors = false;
 
     const uploadTasks = attachments.map(attachment => {
         updateFileStatus(attachment.fileData.tempId, 'uploading');
@@ -486,6 +487,13 @@ async function uploadAttachmentQueue(queueId, category, slug = null) {
 
         return upload.promise
             .then(data => {
+                if (!data || !data.success) {
+                    hasErrors = true;
+                    updateFileStatus(attachment.fileData.tempId, 'error');
+                    const inputField = document.querySelector(`.input[id=${queueId}`);
+                    showFeedbackMsg(inputField, 'error', translation.Input_Err_UploadFailed);
+                    return;
+                }
                 attachment.fileData.uuid = data.uuid;
                 uploadedFiles.push({
                     uuid: data.uuid,
@@ -497,11 +505,12 @@ async function uploadAttachmentQueue(queueId, category, slug = null) {
             })
             .catch(error => {
                 console.error(`Upload failed for ${attachment.fileData.name}:`, error);
+                hasErrors = true;
                 updateFileStatus(attachment.fileData.tempId, 'error');
-                // Optionally handle failed uploads
             });
     });
 
     await Promise.all(uploadTasks);
+    if (hasErrors) return false;
     return uploadedFiles;
 }

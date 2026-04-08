@@ -75,7 +75,7 @@ async function onSendMessageToRoom(inputField) {
     /// UPLOAD ATTACHMENTS
     const input = inputField.closest('.input');
     const attachments = await uploadAttachmentQueue(input.id, 'room', activeRoom.slug);
-
+    if (attachments === false) return;
 
     const roomKey = await keychainGet(activeRoom.slug);
     const cryptoMsg = await encryptWithSymKey(roomKey, inputText, false);

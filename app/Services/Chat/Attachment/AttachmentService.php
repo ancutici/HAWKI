@@ -37,7 +37,7 @@ class AttachmentService{
 
             return $result;
         }
-        catch(Exception $e){
+        catch(\Throwable $e){
             Log::error("Error storing file: $e");
             return null;
         }
@@ -130,6 +130,7 @@ class AttachmentService{
                'text/typescript',
                'text/x-shellscript',
                'text/x-sql',
+               'message/rfc822',
            ])){
             return 'document';
         }

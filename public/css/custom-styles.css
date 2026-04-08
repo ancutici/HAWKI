@@ -193,5 +193,7 @@
   width: 50rem;
 }
 
-
+.system_prompt_field {
+  white-space: pre-wrap;
+}
 

@@ -78,6 +78,10 @@ async function sendMessageConv(inputField) {
 
     /// UPLOAD ATTACHMENTS
     const attachments = await uploadAttachmentQueue(input.id, 'conv');
+    if (attachments === false) {
+        setSendBtnStatus(SendBtnStatus.SENDABLE);
+        return;
+    }
 
     /// Encrypt message
     const convKey = await keychainGet('aiConvKey');
