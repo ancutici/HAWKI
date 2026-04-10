@@ -219,6 +219,11 @@ async function buildRequestObjectForAiConv(msgAttributes, messageElement = null,
 
         if(done){
 
+            // Store usage data for display in the message footer
+            if(data && data.usage){
+                messageElement.dataset.usageInfo = JSON.stringify(data.usage);
+            }
+
             const msgTxtElement = messageElement.querySelector(".message-text");
             msgTxtElement.innerHTML = formatMessage(messageElement.dataset.rawMsg, metadata);
             formatMathFormulas(msgTxtElement);

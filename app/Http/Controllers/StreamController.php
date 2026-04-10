@@ -192,6 +192,19 @@ class StreamController extends Controller
                 'status' => $response->status,
             ];
 
+            if ($response->usage !== null) {
+                $pricing = config('model_pricing');
+                $modelId = $response->usage->model->getId();
+                $prices = $pricing[$modelId] ?? $pricing['default'];
+                $costUsd = ($response->usage->promptTokens / 1_000_000 * $prices['input'])
+                         + ($response->usage->completionTokens / 1_000_000 * $prices['output']);
+                $messageData['usage'] = [
+                    'prompt_tokens'      => $response->usage->promptTokens,
+                    'completion_tokens'  => $response->usage->completionTokens,
+                    'cost_usd'           => $costUsd,
+                ];
+            }
+
             echo json_encode($messageData) . "\n";
             flush();
         };

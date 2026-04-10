@@ -34,6 +34,7 @@
             @elseif($activeModule === 'groupchat')
                 <div id="unread-message-icon" class="dot-lg"></div>
             @endif
+            <span id="msg-usage"></span>
             <p id="msg-timestamp"></p>
             <div id="sent-status-icon" >
                 <x-icon name="check"/>

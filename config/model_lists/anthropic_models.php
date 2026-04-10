@@ -13,8 +13,10 @@ return [
             'vision' => true,
         ],
         'default_params' => [
-            'temp' => env('MODELS_ANTHROPIC_HAIKU_PARAMS_TEMP', 1.0),
-            'top_p' => env('MODELS_ANTHROPIC_HAIKU_PARAMS_TOP_P', 1.0),
+            // Anthropic only accepts temperature OR top_p (not both); top_p is never sent when temperature is set.
+            // 0.7 gives balanced, consistent responses suitable for a university chat interface.
+            'temp' => env('MODELS_ANTHROPIC_HAIKU_PARAMS_TEMP', 0.7),
+            'top_p' => env('MODELS_ANTHROPIC_HAIKU_PARAMS_TOP_P', 0.9),
         ],
     ],
     [
@@ -31,8 +33,10 @@ return [
             // 'web_search' => 'native',            
         ],
         'default_params' => [
-            'temp' => env('MODELS_ANTHROPIC_SONNET_PARAMS_TEMP', 1.0),
-            'top_p' => env('MODELS_ANTHROPIC_SONNET_PARAMS_TOP_P', 1.0),
+            // Anthropic only accepts temperature OR top_p (not both); top_p is never sent when temperature is set.
+            // 0.7 gives balanced, consistent responses suitable for a university chat interface.
+            'temp' => env('MODELS_ANTHROPIC_SONNET_PARAMS_TEMP', 0.7),
+            'top_p' => env('MODELS_ANTHROPIC_SONNET_PARAMS_TOP_P', 0.9),
         ],
     ],
 ];

@@ -2,31 +2,6 @@
 return [
     [
         'active'=> env('MODELS_OPENAI_GPT5_ACTIVE', true),
-        'id' => 'gpt-5.1',
-        'label' => 'OpenAI GPT 5.1',
-        "input"=> [
-            "text",
-            "image"
-        ],
-        "output"=> [
-            "text"
-        ],
-        'tools' => [
-            // Native capabilities
-            'stream' => true,
-            'tool_calling' => true,
-            'file_upload' => true,
-            'vision'=> true,
-            // 'web_search' => 'native',
-        ],
-        'default_params' => [
-            // OpenAI API defaults: temp=1.0, top_p=1.0
-            'temp' => env('MODELS_OPENAI_GPT5_PARAMS_TEMP', 1.0),
-            'top_p' => env('MODELS_OPENAI_GPT5_PARAMS_TOP_P', 1.0),
-        ],
-    ],
-    [
-        'active'=> env('MODELS_OPENAI_GPT5_ACTIVE', true),
         'id' => 'gpt-5.4-mini',
         'label' => 'OpenAI GPT 5.4 mini',
         "input"=> [
@@ -45,9 +20,34 @@ return [
             'web_search' => 'native',
         ],
         'default_params' => [
-            // OpenAI API defaults: temp=1.0, top_p=1.0
-            'temp' => env('MODELS_OPENAI_GPT5_PARAMS_TEMP', 1.0),
-            'top_p' => env('MODELS_OPENAI_GPT5_PARAMS_TOP_P', 1.0),
+            // Balanced defaults (0.7/0.9) for consistent responses; both params are sent simultaneously to OpenAI.
+            'temp' => env('MODELS_OPENAI_GPT5_PARAMS_TEMP', 0.7),
+            'top_p' => env('MODELS_OPENAI_GPT5_PARAMS_TOP_P', 0.9),
+        ],
+    ],
+    [
+        'active'=> env('MODELS_OPENAI_GPT5_ACTIVE', true),
+        'id' => 'gpt-5.1',
+        'label' => 'OpenAI GPT 5.1',
+        "input"=> [
+            "text",
+            "image"
+        ],
+        "output"=> [
+            "text"
+        ],
+        'tools' => [
+            // Native capabilities
+            'stream' => true,
+            'tool_calling' => true,
+            'file_upload' => true,
+            'vision'=> true,
+            // 'web_search' => 'native',
+        ],
+        'default_params' => [
+            // Balanced defaults (0.7/0.9) for consistent responses; both params are sent simultaneously to OpenAI.
+            'temp' => env('MODELS_OPENAI_GPT5_PARAMS_TEMP', 0.7),
+            'top_p' => env('MODELS_OPENAI_GPT5_PARAMS_TOP_P', 0.9),
         ],
     ],
     [
@@ -72,9 +72,9 @@ return [
             'web_search' => 'native',
         ],
         'default_params' => [
-            // OpenAI API defaults: temp=1.0, top_p=1.0
-            'temp' => env('MODELS_OPENAI_GPT4_1_PARAMS_TEMP', 1.0),
-            'top_p' => env('MODELS_OPENAI_GPT4_1_PARAMS_TOP_P', 1.0),
+            // Balanced defaults (0.7/0.9) for consistent responses; both params are sent simultaneously to OpenAI.
+            'temp' => env('MODELS_OPENAI_GPT4_1_PARAMS_TEMP', 0.7),
+            'top_p' => env('MODELS_OPENAI_GPT4_1_PARAMS_TOP_P', 0.9),
         ],
     ],
     [
@@ -95,9 +95,9 @@ return [
             'vision'=> false,
         ],
         'default_params' => [
-            // OpenAI API defaults: temp=1.0, top_p=1.0
-            'temp' => env('MODELS_OPENAI_GPT4_1_NANO_PARAMS_TEMP', 1.0),
-            'top_p' => env('MODELS_OPENAI_GPT4_1_NANO_PARAMS_TOP_P', 1.0),
+            // Balanced defaults (0.7/0.9) for consistent responses; both params are sent simultaneously to OpenAI.
+            'temp' => env('MODELS_OPENAI_GPT4_1_NANO_PARAMS_TEMP', 0.7),
+            'top_p' => env('MODELS_OPENAI_GPT4_1_NANO_PARAMS_TOP_P', 0.9),
         ],
     ],
     [

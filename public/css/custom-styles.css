@@ -197,3 +197,10 @@
   white-space: pre-wrap;
 }
 
+/* Token usage display in message footer */
+#msg-usage {
+    font-size: var(--font-xxs);
+    color: var(--text-faded-color);
+    white-space: nowrap;
+}
+

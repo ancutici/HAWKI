@@ -11,10 +11,10 @@ return [
     |
     */
     'default_models' => [
-        'default_model' => env('DEFAULT_MODEL', 'gpt-4.1-nano'),
-        'default_web_search_model' => env('DEFAULT_WEBSEARCH_MODEL', 'gemini-2.0-flash'),
-        'default_file_upload_model' => env('DEFAULT_FILEUPLOAD_MODEL', 'qwen3-omni-30b-a3b-instruct'),
-        'default_vision_model' => env('DEFAULT_VISION_MODEL', 'qwen3-omni-30b-a3b-instruct'),
+        'default_model' => env('DEFAULT_MODEL', 'gpt-5.4-mini'),
+        'default_web_search_model' => env('DEFAULT_WEBSEARCH_MODEL', 'gpt-5.4-mini'),
+        'default_file_upload_model' => env('DEFAULT_FILEUPLOAD_MODEL', 'gpt-5.4-mini'),
+        'default_vision_model' => env('DEFAULT_VISION_MODEL', 'gpt-5.4-mini'),
     ],
 
     /*
@@ -74,6 +74,12 @@ return [
             'ping_url' => env('OPENAI_PING_URL', 'https://api.openai.com/v1/models'),
             'models' => require __DIR__ . env('OPENAI_MODEL_LIST_DIR', '/model_lists/openai_models.php'),
         ],
+        'anthropic' => [
+            'active' => env('ANTHROPIC_ACTIVE', false),
+            'api_key' => env('ANTHROPIC_API_KEY'),
+            'api_url' => env('ANTHROPIC_API_URL', 'https://api.anthropic.com/v1/messages'),
+            'models' => require __DIR__ . env('ANTHROPIC_MODEL_LIST_DIR', '/model_lists/anthropic_models.php'),
+        ],        
         'gwdg' => [
             'active' => env('GWDG_ACTIVE', true),
             'api_key' => env('GWDG_API_KEY'),
@@ -101,12 +107,6 @@ return [
             'api_url' => env('OPEN_WEB_UI_API_URL', 'your_url/api/chat/completions'),
             'ping_url' => env('OPEN_WEB_UI_PING_URL', 'your_url/api/models'),
             'models' => require __DIR__ . env('OPEN_WEB_UI_MODEL_LIST_DIR', '/model_lists/openwebui_models.php'),
-        ],
-        'anthropic' => [
-            'active' => env('ANTHROPIC_ACTIVE', false),
-            'api_key' => env('ANTHROPIC_API_KEY'),
-            'api_url' => env('ANTHROPIC_API_URL', 'https://api.anthropic.com/v1/messages'),
-            'models' => require __DIR__ . env('ANTHROPIC_MODEL_LIST_DIR', '/model_lists/anthropic_models.php'),
         ],
     ]
 ];

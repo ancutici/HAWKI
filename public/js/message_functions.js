@@ -325,6 +325,22 @@ function updateMessageElement(messageElement, messageObj, updateContent = false)
     const timeStamp = messageObj.created_at !== messageObj.updated_at ? `edited: ${time}` : `${time}`;
     messageElement.querySelector('#msg-timestamp').innerText = timeStamp;
 
+    // DISPLAY TOKEN USAGE (if captured during streaming)
+    const usageEl = messageElement.querySelector('#msg-usage');
+    if(usageEl && messageElement.dataset.usageInfo){
+        try {
+            const u = JSON.parse(messageElement.dataset.usageInfo);
+            const fmt = (n) => n.toLocaleString('de-DE');
+            const cost = u.cost_usd;
+            const costStr = cost === 0
+                ? '0,00 $'
+                : cost < 0.01
+                    ? '< 0,01 $'
+                    : cost.toLocaleString('de-DE', {minimumFractionDigits: 2, maximumFractionDigits: 4}) + ' $';
+            usageEl.textContent = `↑ ${fmt(u.prompt_tokens)}  ↓ ${fmt(u.completion_tokens)}  ${costStr}`;
+        } catch(e) { /* ignore malformed data */ }
+    }
+
     activateMessageControls(messageElement);
 }
 
