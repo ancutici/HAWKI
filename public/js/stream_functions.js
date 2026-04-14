@@ -309,7 +309,7 @@ async function requestChatlogSummery(msgs = null) {
         {
             role: "system",
             content: {
-                text: translation.Summary_Prompt
+                text: translation.Summery_Prompt
             },
         },
         {

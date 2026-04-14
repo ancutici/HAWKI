@@ -127,9 +127,15 @@ async function exportAsPDF() {
 
     // summery
     const summeryMsg = convertMsgObjToLog(Array.from(messages).slice(-100));
-    const summery = await requestChatlogSummery(summeryMsg);
-
-
+    let summery;
+    try {
+        summery = await requestChatlogSummery(summeryMsg);
+    } catch (error) {
+        console.error('Export failed: could not generate summary', error);
+        btn.disabled = false;
+        btn.querySelector('.loading').style.display = 'none';
+        return;
+    }
 
     const doc = new jsPDF();
 
@@ -386,7 +392,15 @@ async function exportAsWord() {
     }
 
     const summeryMsg = convertMsgObjToLog(Array.from(messages).slice(-100));
-    const summery = await requestChatlogSummery(summeryMsg);
+    let summery;
+    try {
+        summery = await requestChatlogSummery(summeryMsg);
+    } catch (error) {
+        console.error('Export failed: could not generate summary', error);
+        btn.disabled = false;
+        btn.querySelector('.loading').style.display = 'none';
+        return;
+    }
 
     const chatLogChildren = [];
     const date = new Date();
