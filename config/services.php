@@ -35,4 +35,9 @@ return [
         ],
     ],
 
+    'graylog' => [
+        'host' => env('GRAYLOG_HOST'),
+        'port' => (int) env('GRAYLOG_PORT', 12201),
+    ],
+
 ];

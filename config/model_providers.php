@@ -40,9 +40,9 @@ return [
     |
     */
     'system_models' => [
-        'title_generator' => env('TITLE_GENERATOR_MODEL', 'gpt-4.1-nano'),
-        'prompt_improver' => env('PROMPT_IMPROVEMENT_MODEL', 'gpt-4.1-nano'),
-        'summarizer' => env('SUMMARIZER_MODEL', 'gpt-4.1-nano'),
+        'title_generator' => env('TITLE_GENERATOR_MODEL', 'gpt-5.4-nano'),
+        'prompt_improver' => env('PROMPT_IMPROVEMENT_MODEL', 'gpt-5.4-nano'),
+        'summarizer' => env('SUMMARIZER_MODEL', 'gpt-5.4-nano'),
     ],
 
     /*
