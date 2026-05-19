@@ -8,28 +8,61 @@ namespace App\Services\AI\Utils;
 class StreamChunkHandler
 {
     private string $jsonBuffer = '';
-    
+    private string $lineBuffer = '';
+
     public function __construct(
         private readonly \Closure $onChunk
     )
     {
     }
-    
+
     public function handle(string $data): void
     {
-        if (!str_starts_with(trim($data), 'data: ')) {
-            $data = $this->normalizeDataChunk($data);
+        // If we already have a partial SSE line in the buffer, append directly without
+        // format detection. This reassembles "data: {json}" lines that span multiple
+        // curl write callbacks (common for large events like response.completed).
+        if (!empty($this->lineBuffer)) {
+            $this->lineBuffer .= $data;
+            $this->flushLineBuffer();
+            return;
         }
-        
-        foreach (explode("data: ", $data) as $chunk) {
-            if (connection_aborted()) {
-                break;
+
+        // Fresh data: detect format from the start.
+        $trimmedStart = ltrim($data);
+
+        // Google streaming format: raw JSON array without any "data: " / "event: " prefix.
+        if (!str_starts_with($trimmedStart, 'data: ') && !str_starts_with($trimmedStart, 'event: ')) {
+            $data = $this->normalizeDataChunk($data);
+            if (empty($data)) {
+                return;
             }
-            
+        }
+
+        $this->lineBuffer .= $data;
+        $this->flushLineBuffer();
+    }
+
+    private function flushLineBuffer(): void
+    {
+        // Process all complete lines in the buffer. Incomplete trailing lines stay buffered
+        // and will be completed when the next curl write callback arrives.
+        while (($newlinePos = strpos($this->lineBuffer, "\n")) !== false) {
+            if (connection_aborted()) {
+                return;
+            }
+
+            $line = rtrim(substr($this->lineBuffer, 0, $newlinePos), "\r");
+            $this->lineBuffer = substr($this->lineBuffer, $newlinePos + 1);
+
+            if (!str_starts_with($line, 'data: ')) {
+                continue;
+            }
+
+            $chunk = substr($line, 6); // strip "data: " prefix
             if (empty($chunk) || !json_validate($chunk)) {
                 continue;
             }
-            
+
             ($this->onChunk)($chunk);
         }
     }
