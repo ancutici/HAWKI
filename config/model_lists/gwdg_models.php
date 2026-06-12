@@ -23,9 +23,9 @@ return [
         ],
     ],
     [
-        'active' => env('MODELS_GWDG_GEMMA_3_27B_IT_ACTIVE', true),
-        'id' => 'gemma-3-27b-it',
-        'label' => 'GWDG Gemma 3 27B Instruct',
+        'active' => env('MODELS_GWDG_GEMMA_4_31B_IT_ACTIVE', true),
+        'id' => 'gemma-4-31b-it',
+        'label' => 'GWDG Gemma 4 31B Instruct',
         'input' => [
             'text',
             'image',
@@ -93,9 +93,9 @@ return [
         ],
     ],
     [
-        'active' => env('MODELS_GWDG_QWEN3_5_35B_A3B_ACTIVE', true),
-        'id' => 'qwen3.5-35b-a3b',
-        'label' => 'GWDG Qwen 3.5 35B A3B',
+        'active' => env('MODELS_GWDG_QWEN3_6_35B_A3B_ACTIVE', true),
+        'id' => 'qwen3.6-35b-a3b',
+        'label' => 'GWDG Qwen 3.6 35B A3B',
         'input' => [
             'text',
             'image',
