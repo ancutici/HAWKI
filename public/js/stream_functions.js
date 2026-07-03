@@ -203,7 +203,9 @@ function createMessageLogForAI(regenerationElement = null){
 
 function createMsgObject(msg){
     const role = msg.dataset.role === 'assistant' ? 'assistant' : 'user';
-    const msgTxt = msg.querySelector(".message-text").textContent;
+    // Use the stored raw markdown, not the rendered DOM's textContent — the latter
+    // loses ``` code fences and picks up UI artifacts like "Kopiert!" from the copy button.
+    const msgTxt = msg.dataset.rawMsg ?? msg.querySelector(".message-text").textContent;
     const filteredText = detectMentioning(msgTxt).filteredText;
 
     const attachmentEls = msg.querySelectorAll('.attachment');
