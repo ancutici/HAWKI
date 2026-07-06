@@ -10,16 +10,13 @@ return [
     // Anthropic
     'claude-haiku-4-5'            => ['input' => 1.00,  'output' => 5.00],
     'claude-haiku-4-5-20251001'   => ['input' => 1.00,  'output' => 5.00],
-    'claude-sonnet-4-5'           => ['input' => 3.00,  'output' => 15.00],
+    'claude-sonnet-5'             => ['input' => 2.00,  'output' => 15.00],
     'claude-sonnet-4-5-20251001'  => ['input' => 3.00,  'output' => 15.00],
 
     // OpenAI
-    'gpt-5.1'                     => ['input' => 1.25,  'output' => 10.00],
+    'gpt-5.4'                     => ['input' => 2.50,  'output' => 15.00],
     'gpt-5.4-mini'                => ['input' => 0.75,  'output' => 4.50],
     'gpt-5.4-nano'                => ['input' => 0.20,  'output' => 1.25],
-    'gpt-4.1'                     => ['input' => 2.00,  'output' => 8.00],
-    'gpt-4.1-nano'                => ['input' => 0.10,  'output' => 0.40],
-    'o4-mini'                     => ['input' => 1.10,  'output' => 4.40],
 
     // Default fallback — covers all GWDG models and any unlisted model
     'default'                     => ['input' => 0.00,  'output' => 0.00],
