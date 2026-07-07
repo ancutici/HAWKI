@@ -19,6 +19,7 @@ class GraylogService
 
     public function sendChatUsage(
         TokenUsage $usage,
+        float $costUsd,
         string $chatType,
         string $employeeType
     ): void {
@@ -28,13 +29,14 @@ class GraylogService
 
         // Syslog UDP (RFC 3164), user.info = priority 14
         $msg = sprintf(
-            '<%d>%s %s gptalk: model=%s prompt_tokens=%d completion_tokens=%d chat_type=%s employee_type=%s',
+            '<%d>%s %s gptalk: model=%s prompt_tokens=%d completion_tokens=%d cost_usd=%.6f chat_type=%s employee_type=%s',
             14,
             date('M j H:i:s'),
             gethostname(),
             $usage->model->getId(),
             $usage->promptTokens,
             $usage->completionTokens,
+            $costUsd,
             $chatType,
             $employeeType,
         );
