@@ -74,6 +74,7 @@ class AnthropicStreamingRequest extends AbstractRequest
 
             case 'error':
                 $error = $data['error']['message'] ?? 'Unknown Anthropic streaming error';
+                \Log::error('Anthropic streaming error', ['error' => $error]);
                 return $this->createErrorResponse($error);
 
             default:
