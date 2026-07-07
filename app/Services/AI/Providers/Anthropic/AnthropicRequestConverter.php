@@ -59,6 +59,10 @@ readonly class AnthropicRequestConverter
         // Merge consecutive messages with the same role (Anthropic requires alternating roles)
         $mergedMessages = $this->mergeConsecutiveMessagesWithSameRole($formattedMessages);
 
+        // Prompt caching: reuse the (unchanged) prior turns of this conversation instead of
+        // re-billing them as fresh input on every request.
+        $this->markCacheBreakpoint($mergedMessages);
+
         $payload = [
             'model'      => $modelId,
             'max_tokens' => self::DEFAULT_MAX_TOKENS,
@@ -67,7 +71,13 @@ readonly class AnthropicRequestConverter
         ];
 
         if ($systemPrompt !== null && $systemPrompt !== '') {
-            $payload['system'] = $systemPrompt;
+            // Cached as its own block: the system prompt is identical on every turn of a
+            // conversation (and often across conversations/users using the same default prompt).
+            $payload['system'] = [[
+                'type'          => 'text',
+                'text'          => $systemPrompt,
+                'cache_control' => ['type' => 'ephemeral'],
+            ]];
         }
 
         // Anthropic does not allow temperature and top_p at the same time; prefer temperature.
@@ -123,6 +133,24 @@ readonly class AnthropicRequestConverter
         }
 
         return ['role' => $role, 'content' => $blocks];
+    }
+
+    /**
+     * Marks the last content block of the second-to-last message with an ephemeral cache
+     * breakpoint. Anthropic caches everything up to and including that block, so on the next
+     * request (same conversation, one turn later) all prior turns are read from cache instead
+     * of billed as fresh input. The final message is always this turn's brand-new input and
+     * never repeats verbatim, so it is deliberately left outside the cached prefix.
+     */
+    private function markCacheBreakpoint(array &$messages): void
+    {
+        $breakpointIndex = count($messages) - 2;
+        if ($breakpointIndex < 0 || empty($messages[$breakpointIndex]['content'])) {
+            return;
+        }
+
+        $lastBlockIndex = count($messages[$breakpointIndex]['content']) - 1;
+        $messages[$breakpointIndex]['content'][$lastBlockIndex]['cache_control'] = ['type' => 'ephemeral'];
     }
 
     private function mergeConsecutiveMessagesWithSameRole(array $messages): array

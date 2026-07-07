@@ -10,6 +10,8 @@ use App\Services\AI\Value\TokenUsage;
 
 class AnthropicStreamingRequest extends AbstractRequest
 {
+    use AnthropicUsageTrait;
+
     private int $inputTokens = 0;
     private int $outputTokens = 0;
     private ?string $stopReason = null;
@@ -42,8 +44,10 @@ class AnthropicStreamingRequest extends AbstractRequest
 
         switch ($type) {
             case 'message_start':
-                // Input token count is in the initial message object
-                $this->inputTokens = (int)($data['message']['usage']['input_tokens'] ?? 0);
+                // Input token count (and cache creation/read counts) are in the initial message object
+                $usage = $data['message']['usage'] ?? [];
+                $this->inputTokens = (int)($usage['input_tokens'] ?? 0);
+                $this->logCacheUsage($model, $usage);
                 return new AiResponse(content: ['text' => ''], isDone: false);
 
             case 'content_block_delta':

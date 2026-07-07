@@ -175,9 +175,11 @@ function createMessageLogForAI(regenerationElement = null){
     }
 
     let [lastWholeNum, lastDecimalNum] = lastMsgId.split('.').map(Number);
-    //get last 100 messages
-    // REF-> Message Memory Limit
-    const messages = Array.from(document.querySelectorAll('.message')).slice(-20);
+    // Send the full thread, not just a trailing window: Anthropic prompt caching only matches
+    // a request's messages against a previous request's messages if it's an exact, unshifted
+    // prefix. A sliding window drops the oldest message every turn, which shifts that prefix
+    // and defeats caching for any conversation longer than the window.
+    const messages = Array.from(document.querySelectorAll('.message'));
 
     //WHOLE CHAT LOG FOR MAIN and ONLY THE THREAD MSGS FOR THREAD
     messages.forEach(msg => {
