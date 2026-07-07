@@ -45,10 +45,15 @@ readonly class AnthropicRequestConverter
             }
         }
 
-        // Format conversation messages for the Anthropic Messages API
+        // Format conversation messages for the Anthropic Messages API.
+        // formatMessage() returns null for turns with no text/attachments (nothing to send);
+        // those are dropped rather than sent as an empty block (see formatMessage()).
         $formattedMessages = [];
         foreach ($conversationMessages as $message) {
-            $formattedMessages[] = $this->formatMessage($message, $attachmentsMap, $model);
+            $formatted = $this->formatMessage($message, $attachmentsMap, $model);
+            if ($formatted !== null) {
+                $formattedMessages[] = $formatted;
+            }
         }
 
         // Merge consecutive messages with the same role (Anthropic requires alternating roles)
@@ -89,7 +94,7 @@ readonly class AnthropicRequestConverter
         return $payload;
     }
 
-    private function formatMessage(array $message, array $attachmentsMap, AiModel $model): array
+    private function formatMessage(array $message, array $attachmentsMap, AiModel $model): ?array
     {
         $role    = $message['role'];
         $content = $message['content'] ?? [];
@@ -108,9 +113,13 @@ readonly class AnthropicRequestConverter
             }
         }
 
-        // Anthropic requires content to be a non-empty array; fall back to empty string for assistant
+        // Anthropic requires content to be a non-empty array AND rejects text blocks whose
+        // "text" is itself empty ("text content blocks must be non-empty"). A message with
+        // neither text nor attachments carries no information, so drop it instead of sending
+        // an empty block — otherwise Anthropic rejects the whole request, and once such a
+        // turn is persisted in a conversation's history it poisons every future request there.
         if (empty($blocks)) {
-            $blocks[] = ['type' => 'text', 'text' => ''];
+            return null;
         }
 
         return ['role' => $role, 'content' => $blocks];

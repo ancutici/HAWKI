@@ -219,6 +219,27 @@ async function buildRequestObjectForAiConv(msgAttributes, messageElement = null,
 
         if(done){
 
+            // Never persist an empty or error terminal response: it would otherwise be
+            // saved as a blank assistant turn, and every future request in this thread
+            // would replay it — which providers like Anthropic reject outright.
+            const hasError = !!(data && data.content && data.content.error);
+            const isEmpty = !msg || msg.trim() === '';
+            if(hasError || isEmpty){
+                setSendBtnStatus(SendBtnStatus.SENDABLE);
+                if(messageElement){
+                    messageElement.remove();
+                }
+                showFeedbackMsg(
+                    document.getElementById('input-container'),
+                    'error',
+                    translation.Input_Err_AiResponseFailed
+                );
+                if(isDone){
+                    isDone(false);
+                }
+                return;
+            }
+
             // Store usage data for display in the message footer
             if(data && data.usage){
                 messageElement.dataset.usageInfo = JSON.stringify(data.usage);

@@ -491,7 +491,10 @@ async function uploadAttachmentQueue(queueId, category, slug = null) {
                     hasErrors = true;
                     updateFileStatus(attachment.fileData.tempId, 'error');
                     const inputField = document.querySelector(`.input[id=${queueId}`);
-                    showFeedbackMsg(inputField, 'error', translation.Input_Err_UploadFailed);
+                    const message = data && data.reason === 'content_too_large'
+                        ? translation.Input_Err_ContentTooLarge
+                        : translation.Input_Err_UploadFailed;
+                    showFeedbackMsg(inputField, 'error', message);
                     return;
                 }
                 attachment.fileData.uuid = data.uuid;

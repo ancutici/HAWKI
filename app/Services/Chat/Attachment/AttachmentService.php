@@ -115,6 +115,10 @@ class AttachmentService{
            str_contains($mime, 'excel') ||
            str_contains($mime, 'presentation') ||
            str_contains($mime, 'powerpoint') ||
+           // PHP's fileinfo/libmagic reports many source-code variants under
+           // text/* (e.g. "text/x-script.python" for a well-formed .py file)
+           // that aren't in the explicit list below; treat all text/* as documents.
+           str_starts_with($mime, 'text/') ||
            in_array($mime, [
                'text/plain',
                'text/markdown', 'text/x-markdown',

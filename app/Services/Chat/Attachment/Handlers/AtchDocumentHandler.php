@@ -45,6 +45,19 @@ class AtchDocumentHandler implements AttachmentInterface
             // throw new \Exception('Failed to store file.');
         }
 
+        // Rough token-budget guard (~4 chars/token) so an oversized file can't silently
+        // blow the model's context window later, at request time.
+        $estimatedTokens = (int) ceil(array_sum(array_map('strlen', $results)) / 4);
+        $maxEstimatedTokens = config('file_converter.max_estimated_tokens');
+        if ($maxEstimatedTokens > 0 && $estimatedTokens > $maxEstimatedTokens) {
+            return [
+                'success' => false,
+                'uuid' => $uuid,
+                'reason' => 'content_too_large',
+                'message' => "File content too large (~{$estimatedTokens} estimated tokens, limit {$maxEstimatedTokens}).",
+            ];
+        }
+
         foreach($results as $relativePath => $content){
             $this->storageService->store($content, basename($relativePath), $uuid, $category, true, '/output');
         }

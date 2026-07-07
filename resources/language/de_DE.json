@@ -28,6 +28,8 @@
     "Input_Err_UploadFailed": "Fehler beim Hochladen der Datei!",
     "Input_Err_NotSupported": "Dateityp wird nicht unterstützt:",
     "Input_Err_MaxSize": "Dateigröße überschreitet das zulässige Maximum.",
+    "Input_Err_ContentTooLarge": "Der Inhalt der Datei ist zu umfangreich und wurde nicht angehängt.",
+    "Input_Err_AiResponseFailed": "Die Antwort des Modells war leer oder fehlerhaft und wurde nicht gespeichert.",
     "Input_Err_FilterConflict": "You can't use the selected tools at the same time",
 
     "Exp_Title":"SESSION-TIMEOUT",
