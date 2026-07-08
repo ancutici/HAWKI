@@ -14,6 +14,8 @@ class AnthropicStreamingRequest extends AbstractRequest
 
     private int $inputTokens = 0;
     private int $outputTokens = 0;
+    private int $cacheCreationTokens = 0;
+    private int $cacheReadTokens = 0;
     private ?string $stopReason = null;
 
     public function __construct(
@@ -26,6 +28,8 @@ class AnthropicStreamingRequest extends AbstractRequest
     {
         $this->inputTokens = 0;
         $this->outputTokens = 0;
+        $this->cacheCreationTokens = 0;
+        $this->cacheReadTokens = 0;
         $this->stopReason = null;
 
         $this->executeStreamingRequest(
@@ -47,6 +51,8 @@ class AnthropicStreamingRequest extends AbstractRequest
                 // Input token count (and cache creation/read counts) are in the initial message object
                 $usage = $data['message']['usage'] ?? [];
                 $this->inputTokens = (int)($usage['input_tokens'] ?? 0);
+                $this->cacheCreationTokens = (int)($usage['cache_creation_input_tokens'] ?? 0);
+                $this->cacheReadTokens = (int)($usage['cache_read_input_tokens'] ?? 0);
                 $this->logCacheUsage($model, $usage);
                 return new AiResponse(content: ['text' => ''], isDone: false);
 
@@ -65,7 +71,9 @@ class AnthropicStreamingRequest extends AbstractRequest
                     ? new TokenUsage(
                         model: $model,
                         promptTokens: $this->inputTokens,
-                        completionTokens: $this->outputTokens
+                        completionTokens: $this->outputTokens,
+                        cacheCreationTokens: $this->cacheCreationTokens,
+                        cacheReadTokens: $this->cacheReadTokens,
                     )
                     : null;
                 return new AiResponse(

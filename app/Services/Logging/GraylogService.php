@@ -29,7 +29,7 @@ class GraylogService
 
         // Syslog UDP (RFC 3164), user.info = priority 14
         $msg = sprintf(
-            '<%d>%s %s gptalk: model=%s prompt_tokens=%d completion_tokens=%d cost_usd=%.6f chat_type=%s employee_type=%s',
+            '<%d>%s %s gptalk: model=%s prompt_tokens=%d completion_tokens=%d cost_usd=%.6f chat_type=%s employee_type=%s cache_creation_tokens=%d cache_read_tokens=%d',
             14,
             date('M j H:i:s'),
             gethostname(),
@@ -39,6 +39,8 @@ class GraylogService
             $costUsd,
             $chatType,
             $employeeType,
+            $usage->cacheCreationTokens,
+            $usage->cacheReadTokens,
         );
 
         $sock = @fsockopen('udp://' . $this->host, $this->port, $errno, $errstr, 1);

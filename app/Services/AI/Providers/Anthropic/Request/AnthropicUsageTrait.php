@@ -15,19 +15,22 @@ trait AnthropicUsageTrait
             return null;
         }
 
-        $this->logCacheUsage($model, $data['usage']);
+        $usage = $data['usage'];
+        $this->logCacheUsage($model, $usage);
 
         return new TokenUsage(
             model: $model,
-            promptTokens: (int)($data['usage']['input_tokens'] ?? 0),
-            completionTokens: (int)($data['usage']['output_tokens'] ?? 0),
+            promptTokens: (int)($usage['input_tokens'] ?? 0),
+            completionTokens: (int)($usage['output_tokens'] ?? 0),
+            cacheCreationTokens: (int)($usage['cache_creation_input_tokens'] ?? 0),
+            cacheReadTokens: (int)($usage['cache_read_input_tokens'] ?? 0),
         );
     }
 
     /**
-     * Temporary diagnostic logging to verify prompt caching is actually hitting/writing —
-     * cache_creation_input_tokens/cache_read_input_tokens are not persisted to the DB or
-     * shown to users, only logged, since UsageRecord/cost tracking doesn't account for them yet.
+     * Diagnostic logging for prompt cache hit/write visibility in the app log
+     * (cache tokens are also included in TokenUsage, which feeds cost calculation
+     * and the Graylog usage record).
      */
     protected function logCacheUsage(AiModel $model, array $usage): void
     {

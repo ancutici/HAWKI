@@ -38,7 +38,9 @@ class UsageAnalyzerService
         $pricing = config('model_pricing');
         $prices = $pricing[$usage->model->getId()] ?? $pricing['default'];
         $costUsd = ($usage->promptTokens / 1_000_000 * $prices['input'])
-                 + ($usage->completionTokens / 1_000_000 * $prices['output']);
+                 + ($usage->completionTokens / 1_000_000 * $prices['output'])
+                 + ($usage->cacheCreationTokens / 1_000_000 * ($prices['cache_write'] ?? 0))
+                 + ($usage->cacheReadTokens / 1_000_000 * ($prices['cache_read'] ?? 0));
 
         $this->graylog->sendChatUsage(
             $usage,
