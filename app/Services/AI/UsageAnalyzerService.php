@@ -35,19 +35,23 @@ class UsageAnalyzerService
             'type' => $type,
         ]);
 
-        $pricing = config('model_pricing');
-        $prices = $pricing[$usage->model->getId()] ?? $pricing['default'];
-        $costUsd = ($usage->promptTokens / 1_000_000 * $prices['input'])
-                 + ($usage->completionTokens / 1_000_000 * $prices['output'])
-                 + ($usage->cacheCreationTokens / 1_000_000 * ($prices['cache_write'] ?? 0))
-                 + ($usage->cacheReadTokens / 1_000_000 * ($prices['cache_read'] ?? 0));
-
         $this->graylog->sendChatUsage(
             $usage,
-            $costUsd,
+            $this->calculateCost($usage),
             $type,
             $this->normalizeEmployeeType($user->employeetype ?? ''),
         );
+    }
+
+    public function calculateCost(TokenUsage $usage): float
+    {
+        $pricing = config('model_pricing');
+        $prices = $pricing[$usage->model->getId()] ?? $pricing['default'];
+
+        return ($usage->promptTokens / 1_000_000 * $prices['input'])
+             + ($usage->completionTokens / 1_000_000 * $prices['output'])
+             + ($usage->cacheCreationTokens / 1_000_000 * ($prices['cache_write'] ?? 0))
+             + ($usage->cacheReadTokens / 1_000_000 * ($prices['cache_read'] ?? 0));
     }
 
     public function summarizeAndCleanup()

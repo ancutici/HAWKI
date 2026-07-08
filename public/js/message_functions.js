@@ -331,7 +331,13 @@ function updateMessageElement(messageElement, messageObj, updateContent = false)
         try {
             const u = JSON.parse(messageElement.dataset.usageInfo);
             const fmt = (n) => n.toLocaleString('de-DE');
-            usageEl.textContent = `↑ ${fmt(u.prompt_tokens)}  ↓ ${fmt(u.completion_tokens)}`;
+            const cost = u.cost_usd;
+            const costStr = cost === 0
+                ? '0,00 $'
+                : cost < 0.01
+                    ? '< 0,01 $'
+                    : cost.toLocaleString('de-DE', {minimumFractionDigits: 2, maximumFractionDigits: 4}) + ' $';
+            usageEl.textContent = `↑ ${fmt(u.prompt_tokens)}  ↓ ${fmt(u.completion_tokens)}  ${costStr}`;
         } catch(e) { /* ignore malformed data */ }
     }
 

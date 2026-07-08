@@ -196,6 +196,7 @@ class StreamController extends Controller
                 $messageData['usage'] = [
                     'prompt_tokens'      => $response->usage->promptTokens,
                     'completion_tokens'  => $response->usage->completionTokens,
+                    'cost_usd'           => $this->usageAnalyzer->calculateCost($response->usage),
                 ];
             }
 
