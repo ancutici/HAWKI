@@ -46,8 +46,15 @@ class AtchDocumentHandler implements AttachmentInterface
         }
 
         // Rough token-budget guard (~4 chars/token) so an oversized file can't silently
-        // blow the model's context window later, at request time.
-        $estimatedTokens = (int) ceil(array_sum(array_map('strlen', $results)) / 4);
+        // blow the model's context window later, at request time. Only the extracted
+        // text/markdown counts toward this - embedded images (also returned in $results
+        // by GwdgDocling) aren't sent to the model as text and would otherwise wildly
+        // inflate the estimate.
+        $textLengths = array_map(
+            'strlen',
+            array_filter($results, fn($path) => str_ends_with(strtolower($path), '.md'), ARRAY_FILTER_USE_KEY)
+        );
+        $estimatedTokens = (int) ceil(array_sum($textLengths) / 4);
         $maxEstimatedTokens = config('file_converter.max_estimated_tokens');
         if ($maxEstimatedTokens > 0 && $estimatedTokens > $maxEstimatedTokens) {
             return [
