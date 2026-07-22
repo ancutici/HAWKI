@@ -25,26 +25,45 @@ return [
         ],
     ],
     [
-        'active' => env('MODELS_GWDG_MISTRAL_LARGE_3_675B_INSTRUCT_2512_ACTIVE', true),
-        'id' => 'mistral-large-3-675b-instruct-2512',
-        'label' => 'GWDG Mistral Large 3 675B Instruct 2512',
+        'active' => env('MODELS_GWDG_DEEPSEEK_V4_FLASH_ACTIVE', true),
+        'id' => 'deepseek-v4-flash',
+        'label' => 'GWDG DeepSeek V4 Flash',
         'input' => [
             'text',
-            'image',
         ],
         'output' => [
             'text',
         ],
         'tools' => [
             'stream' => true,
-            'tool_calling' => true,
-            'file_upload' => env('MODELS_GWDG_MISTRAL_LARGE_3_675B_INSTRUCT_2512_TOOLS_FILE_UPLOAD', true),
-            'vision' => env('MODELS_GWDG_MISTRAL_LARGE_3_675B_INSTRUCT_2512_TOOLS_VISION', true),
+            'tool_calling' => false, // Not documented in GWDG model card; not assumed
+            'file_upload' => env('MODELS_GWDG_DEEPSEEK_V4_FLASH_TOOLS_FILE_UPLOAD', true),
         ],
         'default_params' => [
-            // GWDG recommends near-deterministic temp (<0.1) for typical tasks; top_p=0.95 is the standard vLLM value
-            'temp' => env('MODELS_GWDG_MISTRAL_LARGE_3_675B_INSTRUCT_2512_PARAMS_TEMP', 0.1),
-            'top_p' => env('MODELS_GWDG_MISTRAL_LARGE_3_675B_INSTRUCT_2512_PARAMS_TOP_P', 0.95),
+            // GWDG model card recommends temp=1.0, top_p=1.0
+            'temp' => env('MODELS_GWDG_DEEPSEEK_V4_FLASH_PARAMS_TEMP', 1.0),
+            'top_p' => env('MODELS_GWDG_DEEPSEEK_V4_FLASH_PARAMS_TOP_P', 1.0),
+        ],
+    ],
+    [
+        'active' => env('MODELS_GWDG_MISTRAL_MEDIUM_3_5_128B_ACTIVE', true),
+        'id' => 'mistral-medium-3.5-128b',
+        'label' => 'GWDG Mistral Medium 3.5 128B',
+        'input' => [
+            'text',
+        ],
+        'output' => [
+            'text',
+        ],
+        'tools' => [
+            'stream' => true,
+            'tool_calling' => false, // Not documented in GWDG model card; not assumed
+            'file_upload' => env('MODELS_GWDG_MISTRAL_MEDIUM_3_5_128B_TOOLS_FILE_UPLOAD', true),
+        ],
+        'default_params' => [
+            // No official sampling recommendation in GWDG model card; vLLM/API defaults used
+            'temp' => env('MODELS_GWDG_MISTRAL_MEDIUM_3_5_128B_PARAMS_TEMP', 1.0),
+            'top_p' => env('MODELS_GWDG_MISTRAL_MEDIUM_3_5_128B_PARAMS_TOP_P', 1.0),
         ],
     ],
     [

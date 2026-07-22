@@ -48,11 +48,15 @@ readonly class OpenAiRequestConverter
             'stream' => $rawPayload['stream'] && $model->hasCapability('stream'),
         ];
 
+        // Some reasoning-tier models reject temperature/top_p outright ("Unsupported parameter:
+        // 'temperature'"); config marks those via tools.temperature = 'unsupported'.
+        $supportsTemperature = $model->getCapabilityStrategy('temperature') !== 'unsupported';
+
         // Add optional parameters if present in the raw payload
-        if (isset($rawPayload['params']['temperature'])) {
+        if ($supportsTemperature && isset($rawPayload['params']['temperature'])) {
             $payload['temperature'] = $rawPayload['params']['temperature'];
         }
-        if (isset($rawPayload['params']['top_p'])) {
+        if ($supportsTemperature && isset($rawPayload['params']['top_p'])) {
             $payload['top_p'] = $rawPayload['params']['top_p'];
         }
 
