@@ -21,6 +21,7 @@ trait RoomFunctions
         // Create the room with name and description
         $room = Room::create([
             'room_name' => $data['room_name'],
+            'confidentiality_class' => $data['confidentiality_class'] ?? 'C2',
         ]);
         // Add AI as assistant
         $room->addMember(1, Member::ROLE_ASSISTANT);
@@ -53,6 +54,7 @@ trait RoomFunctions
             'slug' => $room->slug,
             'system_prompt' => $room->system_prompt,
             'room_description' => $room->room_description,
+            'confidentiality_class' => $room->confidentiality_class->value,
             'role' => $role,
 
             'members' => $room->members->map(function ($member) {

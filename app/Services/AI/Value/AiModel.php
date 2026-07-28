@@ -320,8 +320,10 @@ class AiModel implements JsonSerializable
         $out['capabilities'] = $this->getCapabilities();
         unset($out['tools']); // config stores as 'tools'; expose as 'capabilities'
         $out['status'] = ModelOnlineStatus::UNKNOWN->value;
+        $out['provider'] = null;
         if(isset($this->context)){
             $out['status'] = $this->context->getStatus()->value;
+            $out['provider'] = $this->context->getProvider()->getConfig()->getId();
         }
         return $out;
     }

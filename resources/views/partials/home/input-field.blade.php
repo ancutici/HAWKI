@@ -53,6 +53,23 @@
             </div>
 
             <div class="right">
+                <div id="class-selectors">
+
+                    <div class="burger-dropdown" id="class-selector-burger">
+                        @include('partials.home.components.classification-list')
+                    </div>
+
+                    <div class="burger-btn-arrow burger-btn" onclick="openInputClassSelector(this)">
+                        <div class="icon">
+                            <x-icon name="chevron-up"/>
+                        </div>
+                        <div class="label">
+                            <span class="dot class-selector-dot"></span>
+                            <span class="class-selector-label"></span>
+                        </div>
+                    </div>
+
+                </div>
                 <div id="model-selectors">
 
                     <div class="burger-dropdown" id="model-selector-burger">

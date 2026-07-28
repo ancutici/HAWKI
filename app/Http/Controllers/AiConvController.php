@@ -61,7 +61,8 @@ class AiConvController extends Controller
 
         $validatedData = $request->validate([
             'conv_name'     => 'nullable|string|max:255',
-            'system_prompt' => 'nullable|string'
+            'system_prompt' => 'nullable|string',
+            'confidentiality_class' => 'nullable|in:C1,C2,C3,C4'
         ]);
 
         $conv = $this->aiConvService->create($validatedData);

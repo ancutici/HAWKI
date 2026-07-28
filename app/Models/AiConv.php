@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Services\AI\Value\ConfidentialityClass;
 use App\Services\Chat\Message\MessageHandlerFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -14,7 +15,12 @@ class AiConv extends Model
         'conv_name',
         'slug',
         'user_id',
-        'system_prompt'
+        'system_prompt',
+        'confidentiality_class'
+    ];
+
+    protected $casts = [
+        'confidentiality_class' => ConfidentialityClass::class,
     ];
 
     // Define the relationship with User

@@ -33,6 +33,15 @@
 
 
                     <div class="row flex-col top-gap-2">
+                        <label>{{ $translation["Classification"] }}</label>
+                        <select class="text-field" id="room-classification-input">
+                            <option value="C1">C1 · WHITE — {{ $translation["Classification_C1"] }}</option>
+                            <option value="C2" selected>C2 · GREEN — {{ $translation["Classification_C2"] }}</option>
+                            <option value="C3">C3 · AMBER — {{ $translation["Classification_C3"] }}</option>
+                            <option value="C4">C4 · RED — {{ $translation["Classification_C4"] }}</option>
+                        </select>
+                    </div>
+                    <div class="row flex-col top-gap-2">
                         <label>{{ $translation["RoomDesc"] }}</label>
                         <textarea
                             class="text-input"

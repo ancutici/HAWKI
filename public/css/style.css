@@ -282,6 +282,36 @@ svg{
 #member-info-modal .modal-panel{
     width: 25em;
 }
+
+.classification-info-grid{
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
+    gap: 0.75rem;
+    margin-top: 1rem;
+}
+.classification-info-card{
+    border: var(--border-stroke-thin);
+    border-radius: var(--border-radius-tight);
+    padding: 0.75rem;
+}
+.classification-info-sub{
+    font-size: 0.7rem;
+    font-weight: 700;
+    color: var(--text-faded-color);
+}
+.classification-info-label{
+    font-size: 1rem;
+    font-weight: 700;
+    margin-top: 0.15rem;
+}
+.classification-info-heading{
+    font-size: 0.65rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    color: var(--text-faded-color);
+    margin-top: 0.6rem;
+}
 #member-info-modal .modal-content{
     margin: 1rem 0;
     align-items: center;
@@ -479,6 +509,12 @@ button:disabled{
 }
 .grn-c{
     background-color: green;
+}
+.wht-c{
+    background-color: silver;
+}
+.amb-c{
+    background-color: #e5a300;
 }
 
 /* SECTION: BURGER MENUS */

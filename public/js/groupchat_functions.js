@@ -114,6 +114,11 @@ async function onSendMessageToRoom(inputField) {
     /// if HAWKI is targeted send copy to stream controller
     if(submittedObj.filteredContent.aiMention && submittedObj.filteredContent.aiMention.toLowerCase().includes(aiHandle.toLowerCase())){
 
+        if (!isCurrentModelSendable(input.id)) {
+            showFeedbackMsg(input, 'error', translation.Input_Err_NoModelAvailable);
+            return;
+        }
+
         const aiCryptoSalt = await fetchServerSalt('AI_CRYPTO_SALT');
         const aiKey = await deriveKey(roomKey, activeRoom.slug, aiCryptoSalt);
         const aiKeyRaw = await exportSymmetricKey(aiKey);
@@ -473,6 +478,7 @@ async function createNewRoom(){
     const inputs = document.querySelector('.inputs-list');
     const name = inputs.querySelector('#chat-name-input').value;
     const description = inputs.querySelector('#room-description-input').value;
+    const confidentialityClass = inputs.querySelector('#room-classification-input').value;
 
     if (!name || !description) {
         document.getElementById('room-creation').querySelector('#alert-message').innerText = 'Please Fill all the required inputs.';
@@ -481,6 +487,7 @@ async function createNewRoom(){
 
     requestObj = {
         'room_name': name,
+        'confidentiality_class': confidentialityClass,
     }
 
     try {
@@ -845,6 +852,11 @@ async function loadRoom(btn=null, slug=null){
     clearInput();
 
     activeRoom = roomData;
+
+    //classification is fixed at room creation, always locked in the chat toolbar.
+    setClass(roomData.confidentiality_class);
+    lockClassification();
+
     const chatControlPanel = document.querySelector('#room-control-panel');
     chatControlPanel.querySelector('#chat-name').textContent = roomData.name;
     chatControlPanel.querySelector('#chat-slug').textContent = roomData.slug;

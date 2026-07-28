@@ -45,6 +45,7 @@
     <script src="{{ asset('js/announcements.js') }}"></script>
     <script src="{{ asset('js/link_preview.js') }}"></script>
     <script src="{{ asset('js/model_functions.js') }}"></script>
+    <script src="{{ asset('js/classification_functions.js') }}"></script>
 
 	@if(config('sanctum.allow_external_communication'))
         <script src="{{ asset('js/sanctum_functions.js') }}"></script>
@@ -86,6 +87,7 @@
         @include('partials.home.templates.' . $viewName = str_replace('.blade', '',  $temp->getFilenameWithoutExtension()))
     @endforeach
     @include('partials.home.modals.confirm-modal')
+    @include('partials.home.modals.classification-info-modal')
 
 </body>
 </html>

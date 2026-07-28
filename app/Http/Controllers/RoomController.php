@@ -36,6 +36,7 @@ class RoomController extends Controller
     {
         $validatedData = $request->validate([
             'room_name' => 'required|string|max:255',
+            'confidentiality_class' => 'nullable|in:C1,C2,C3,C4',
         ]);
         $data = $this->roomService->create($validatedData);
         return response()->json([

@@ -31,6 +31,9 @@ function initializeAiChatModule(chatsObject){
     initFileUploader(input);
 
     initializeChatlogFunctions();
+
+    unlockClassification();
+    setClass('C2');
 }
 
 
@@ -67,6 +70,12 @@ async function sendMessageConv(inputField) {
         return;
     }
     const input = inputField.closest('.input');
+
+    if (!isCurrentModelSendable(input.id)) {
+        showFeedbackMsg(input, 'error', translation.Input_Err_NoModelAvailable);
+        return;
+    }
+
     let inputText = String(escapeHTML(inputField.value.trim()));
 
     setSendBtnStatus(SendBtnStatus.LOADING);
@@ -340,6 +349,9 @@ async function initNewConv(firstMessage){
     //update active conv cache.
     activeConv = convData;
 
+    //confidentiality class is fixed for this conversation from now on.
+    lockClassification();
+
     return;
 }
 
@@ -349,6 +361,10 @@ function startNewChat(){
     clearChatlog();
     clearInput();
     history.replaceState(null, '', `/chat`);
+
+    activeConv = null;
+    unlockClassification();
+    setClass('C2');
 
     const systemPromptFields = document.querySelectorAll('.system_prompt_field');
     systemPromptFields.forEach(field => {
@@ -444,7 +460,8 @@ async function submitConvToServer(convName) {
 
     const requestObject = {
         conv_name: convName,
-        system_prompt: systemPromptStr
+        system_prompt: systemPromptStr,
+        confidentiality_class: activeClassification
     }
 
     try {
@@ -523,6 +540,9 @@ async function loadConv(btn=null, slug=null){
     clearChatlog();
     clearInput();
     activeConv = convData;
+
+    setClass(convData.confidentiality_class);
+    lockClassification();
 
     const convKey = await keychainGet('aiConvKey');
     const systemPromptObj = JSON.parse(convData.system_prompt);

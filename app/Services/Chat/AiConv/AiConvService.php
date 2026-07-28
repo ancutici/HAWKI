@@ -40,6 +40,7 @@ class AiConvService{
             'user_id' => Auth::id(), // Associate the conversation with the user
             'slug' => Str::slug(Str::random(16)), // Create a unique slug
             'system_prompt'=> $validatedData['system_prompt'],
+            'confidentiality_class' => $validatedData['confidentiality_class'] ?? 'C2',
         ]);
     }
 
@@ -58,6 +59,7 @@ class AiConvService{
             'name' => $conv->chat_name,
             'slug' => $conv->slug,
             'system_prompt' => $conv->system_prompt,
+            'confidentiality_class' => $conv->confidentiality_class->value,
             'messages' => $conv->messageObjects()
         ];
     }

@@ -38,6 +38,11 @@ function expandFilters(filters, rules = FILTER_RULES) {
 
 // === Model Eligibility Function ===
 function isModelEligible(model, filters) {
+    if (typeof isProviderAllowedForActiveClassification === 'function'
+        && !isProviderAllowedForActiveClassification(model.provider)) {
+        return false;
+    }
+
     const expandedFilters = expandFilters(filters);
 
     // Apply onlyIf and prohibits logic
@@ -79,26 +84,29 @@ function filterModels(fieldId = null, filters = null) {
 // === Refresh UI: Enable/Disable model selectors ===
 function refreshModelList(fieldId, context = 'input') {
     const success = selectFallbackModel(fieldId, context);
-    if(success) {
-        const filters = context === 'regeneration' ? regenerationFilters : (inputFilters.get(fieldId) || []);
-        const filteredModels = filterModels(fieldId, filters);
-        const allowedIds = new Set(filteredModels.map(m => m.id));
 
-        let container;
-        if(context === 'regeneration') {
-            container = document.getElementById('regenerate-controls');
-        } else {
-            container = document.querySelector(`.input[id="${fieldId}"]`)?.closest('.input-container');
-        }
+    // Always sync the disabled state of model buttons, even when no fallback
+    // model could be found (e.g. every model is ineligible, as with a C4
+    // confidentiality class) — otherwise buttons keep whatever state they
+    // had before and nothing looks restricted.
+    const filters = context === 'regeneration' ? regenerationFilters : (inputFilters.get(fieldId) || []);
+    const filteredModels = filterModels(fieldId, filters);
+    const allowedIds = new Set(filteredModels.map(m => m.id));
 
-        if(container) {
-            container.querySelectorAll('.model-selector').forEach(button => {
-                if(button.dataset.status === 'offline'){
-                    return;
-                }
-                button.disabled = !allowedIds.has(button.dataset.modelId);
-            });
-        }
+    let container;
+    if(context === 'regeneration') {
+        container = document.getElementById('regenerate-controls');
+    } else {
+        container = document.querySelector(`.input[id="${fieldId}"]`)?.closest('.input-container');
+    }
+
+    if(container) {
+        container.querySelectorAll('.model-selector').forEach(button => {
+            if(button.dataset.status === 'offline'){
+                return;
+            }
+            button.disabled = !allowedIds.has(button.dataset.modelId);
+        });
     }
     return success;
 }
@@ -181,7 +189,10 @@ function selectFallbackModel(fieldId, context = 'input', currentModel = null) {
     }
 
     // 4️⃣ nothing works → error
-    if (context === 'input') {
+    // Only show this for an actual capability filter conflict (vision, file_upload, ...).
+    // If no such filter is active, the confidentiality class itself is the sole reason
+    // no model is eligible (e.g. C4), which is already communicated via the banner.
+    if (context === 'input' && filters.length > 0) {
         const input = document
             .querySelector(`.input[id="${fieldId}"]`)
             ?.closest('.input-container');
@@ -210,6 +221,17 @@ function isModelUsable(model, filters, availableModelIds) {
     if (!availableModelIds.has(model.id)) return false;
 
     return isModelEligible(model, filters);
+}
+
+// === Guard used right before actually sending a message ===
+// The dropdown only *visually* disables ineligible models — nothing stops a stale
+// activeModel (set before a filter/classification change) from still being submitted.
+// Callers must check this before invoking a model.
+function isCurrentModelSendable(fieldId) {
+    const filters = inputFilters.get(fieldId) || [];
+    const filteredModels = filterModels(fieldId, filters);
+    const availableModelIds = new Set(filteredModels.map(m => m.id));
+    return isModelUsable(activeModel, filters, availableModelIds);
 }
 
 

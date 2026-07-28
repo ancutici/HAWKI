@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Services\AI\Value\ConfidentialityClass;
 use App\Services\Chat\Message\MessageHandlerFactory;
 use App\Services\Storage\AvatarStorageService;
 use Exception;
@@ -20,7 +21,12 @@ class Room extends Model
         'room_icon',
         'room_description',
         'system_prompt',
-        'slug'
+        'slug',
+        'confidentiality_class'
+    ];
+
+    protected $casts = [
+        'confidentiality_class' => ConfidentialityClass::class,
     ];
 
     protected static function boot()
