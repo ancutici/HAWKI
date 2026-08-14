@@ -25,9 +25,9 @@ return [
         ],
     ],
     [
-        'active' => env('MODELS_GWDG_DEEPSEEK_V4_FLASH_ACTIVE', true),
-        'id' => 'deepseek-v4-flash',
-        'label' => 'GWDG DeepSeek V4 Flash',
+        'active' => env('MODELS_GWDG_DEEPSEEK_V4_FLASH_0731_ACTIVE', true),
+        'id' => 'deepseek-v4-flash-0731',
+        'label' => 'GWDG DeepSeek V4 Flash 0731',
         'input' => [
             'text',
         ],
@@ -37,12 +37,13 @@ return [
         'tools' => [
             'stream' => true,
             'tool_calling' => false, // Not documented in GWDG model card; not assumed
-            'file_upload' => env('MODELS_GWDG_DEEPSEEK_V4_FLASH_TOOLS_FILE_UPLOAD', true),
+            'file_upload' => env('MODELS_GWDG_DEEPSEEK_V4_FLASH_0731_TOOLS_FILE_UPLOAD', true),
         ],
         'default_params' => [
-            // GWDG model card recommends temp=1.0, top_p=1.0
-            'temp' => env('MODELS_GWDG_DEEPSEEK_V4_FLASH_PARAMS_TEMP', 1.0),
-            'top_p' => env('MODELS_GWDG_DEEPSEEK_V4_FLASH_PARAMS_TOP_P', 1.0),
+            // Successor snapshot of deepseek-v4-flash; GWDG model card page was unreachable
+            // (client-rendered), so the prior model's recommended temp=1.0, top_p=1.0 is carried over.
+            'temp' => env('MODELS_GWDG_DEEPSEEK_V4_FLASH_0731_PARAMS_TEMP', 1.0),
+            'top_p' => env('MODELS_GWDG_DEEPSEEK_V4_FLASH_0731_PARAMS_TOP_P', 1.0),
         ],
     ],
     [

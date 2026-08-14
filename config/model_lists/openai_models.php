@@ -2,31 +2,6 @@
 return [
     [
         'active'=> env('MODELS_OPENAI_GPT5_ACTIVE', true),
-        'id' => 'gpt-5.4-mini',
-        'label' => 'OpenAI GPT 5.4 mini',
-        "input"=> [
-            "text",
-            "image"
-        ],
-        "output"=> [
-            "text"
-        ],
-        'tools' => [
-            // Native capabilities
-            'stream' => true,
-            'tool_calling' => true,
-            'file_upload' => true,
-            'vision'=> true,
-            'web_search' => 'native',
-        ],
-        'default_params' => [
-            // Balanced defaults (0.7/0.9) for consistent responses; both params are sent simultaneously to OpenAI.
-            'temp' => env('MODELS_OPENAI_GPT5_PARAMS_TEMP', 0.7),
-            'top_p' => env('MODELS_OPENAI_GPT5_PARAMS_TOP_P', 0.9),
-        ],
-    ],
-    [
-        'active'=> env('MODELS_OPENAI_GPT5_ACTIVE', true),
         'id' => 'gpt-5.6-terra',
         'label' => 'OpenAI GPT 5.6 Terra',
         "input"=> [
@@ -42,16 +17,20 @@ return [
             'tool_calling' => true,
             'file_upload' => true,
             'vision'=> true,
-            // 'web_search' => 'native',
+            // Testweise für alle OpenAI-Modelle aktiviert (2026-08-14) - Nutzer verifiziert manuell.
+            'web_search' => 'native',
             // Reasoning-only model: OpenAI rejects temperature/top_p outright for this model.
             'temperature' => 'unsupported',
         ],
         'default_params' => [],
     ],
     [
+        // Ersetzt gpt-5.4-mini (default_model/web_search/file_upload/vision) und gpt-5.4-nano
+        // (title_generator/prompt_improver/summarizer) - GPT 5.6 fasst beide Kostenklassen in
+        // einem Modell zusammen, siehe config/model_providers.php.
         'active'=> env('MODELS_OPENAI_GPT5_ACTIVE', true),
-        'id' => 'gpt-5.4-nano',
-        'label' => 'OpenAI GPT 5.4 nano',
+        'id' => 'gpt-5.6-luna',
+        'label' => 'OpenAI GPT 5.6 Luna',
         "input"=> [
             "text",
             "image"
@@ -65,13 +44,12 @@ return [
             'tool_calling' => true,
             'file_upload' => true,
             'vision'=> true,
+            // Testweise für alle OpenAI-Modelle aktiviert (2026-08-14) - Nutzer verifiziert manuell.
             'web_search' => 'native',
+            // Same 5.6-generation reasoning model as gpt-5.6-terra: OpenAI rejects temperature/top_p outright.
+            'temperature' => 'unsupported',
         ],
-        'default_params' => [
-            // Balanced defaults (0.7/0.9) for consistent responses; both params are sent simultaneously to OpenAI.
-            'temp' => env('MODELS_OPENAI_GPT5_PARAMS_TEMP', 0.7),
-            'top_p' => env('MODELS_OPENAI_GPT5_PARAMS_TOP_P', 0.9),
-        ],
+        'default_params' => [],
     ],
 
 ];
