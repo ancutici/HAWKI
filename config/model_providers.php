@@ -11,10 +11,10 @@ return [
     |
     */
     'default_models' => [
-        'default_model' => env('DEFAULT_MODEL', 'gpt-5.4-mini'),
-        'default_web_search_model' => env('DEFAULT_WEBSEARCH_MODEL', 'gpt-5.4-mini'),
-        'default_file_upload_model' => env('DEFAULT_FILEUPLOAD_MODEL', 'gpt-5.4-mini'),
-        'default_vision_model' => env('DEFAULT_VISION_MODEL', 'gpt-5.4-mini'),
+        'default_model' => env('DEFAULT_MODEL', 'gpt-5.6-luna'),
+        'default_web_search_model' => env('DEFAULT_WEBSEARCH_MODEL', 'gpt-5.6-luna'),
+        'default_file_upload_model' => env('DEFAULT_FILEUPLOAD_MODEL', 'gpt-5.6-luna'),
+        'default_vision_model' => env('DEFAULT_VISION_MODEL', 'gpt-5.6-luna'),
     ],
 
     /*
@@ -40,9 +40,9 @@ return [
     |
     */
     'system_models' => [
-        'title_generator' => env('TITLE_GENERATOR_MODEL', 'gpt-5.4-nano'),
-        'prompt_improver' => env('PROMPT_IMPROVEMENT_MODEL', 'gpt-5.4-nano'),
-        'summarizer' => env('SUMMARIZER_MODEL', 'gpt-5.4-nano'),
+        'title_generator' => env('TITLE_GENERATOR_MODEL', 'gpt-5.6-luna'),
+        'prompt_improver' => env('PROMPT_IMPROVEMENT_MODEL', 'gpt-5.6-luna'),
+        'summarizer' => env('SUMMARIZER_MODEL', 'gpt-5.6-luna'),
     ],
 
     /*
