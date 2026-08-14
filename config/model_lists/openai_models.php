@@ -17,7 +17,7 @@ return [
             'tool_calling' => true,
             'file_upload' => true,
             'vision'=> true,
-            // Testweise für alle OpenAI-Modelle aktiviert (2026-08-14) - Nutzer verifiziert manuell.
+            // Web-Suche für alle OpenAI-Modelle aktiviert und am 2026-08-14 manuell verifiziert.
             'web_search' => 'native',
             // Reasoning-only model: OpenAI rejects temperature/top_p outright for this model.
             'temperature' => 'unsupported',
@@ -44,7 +44,7 @@ return [
             'tool_calling' => true,
             'file_upload' => true,
             'vision'=> true,
-            // Testweise für alle OpenAI-Modelle aktiviert (2026-08-14) - Nutzer verifiziert manuell.
+            // Web-Suche für alle OpenAI-Modelle aktiviert und am 2026-08-14 manuell verifiziert.
             'web_search' => 'native',
             // Same 5.6-generation reasoning model as gpt-5.6-terra: OpenAI rejects temperature/top_p outright.
             'temperature' => 'unsupported',
