@@ -16,6 +16,13 @@ class GwdgStreamingRequest extends AbstractRequest
 
     private array $accumulatedToolCalls = [];
 
+    /**
+     * True while a <think> block has been opened but not yet closed.
+     * Reasoning models stream their chain-of-thought in a separate delta field
+     * rather than inline, so the block is reconstructed across chunks.
+     */
+    private bool $reasoningOpen = false;
+
     public function __construct(
         private array    $payload,
         private \Closure $onData
@@ -26,6 +33,7 @@ class GwdgStreamingRequest extends AbstractRequest
     public function execute(AiModel $model): void
     {
         $this->accumulatedToolCalls = [];
+        $this->reasoningOpen = false;
 //        \Log::info('GwdgStreamingRequest starting execution');
 //        \Log::debug($this->payload);
 
@@ -62,7 +70,8 @@ class GwdgStreamingRequest extends AbstractRequest
             : null;
 
         // Extract content if available
-        $content = $jsonChunk['choices'][0]['delta']['content'] ?? '';
+        $delta = $jsonChunk['choices'][0]['delta'] ?? [];
+        $content = $this->buildContent($delta, $isDone);
 
         return new AiResponse(
             content: ['text' => $content],
@@ -72,6 +81,44 @@ class GwdgStreamingRequest extends AbstractRequest
             toolCalls: $toolCalls,
             finishReason: $finishReason
         );
+    }
+
+    /**
+     * Merges a chunk's reasoning and text deltas into a single content string.
+     *
+     * Reasoning models served by GWDG (GLM, Qwen) do not emit their chain-of-thought
+     * inline. vLLM's reasoning parser splits it into a separate delta field, named
+     * either 'reasoning' or 'reasoning_content' depending on the model. Without this
+     * mapping the whole thinking phase is dropped, which shows up as a request that
+     * streams nothing for minutes — and as an empty answer when generation stops
+     * while still reasoning (finish_reason 'length').
+     *
+     * The thinking text is wrapped in <think> tags so it renders through the think
+     * block the frontend already builds for inline-tagged models; unclosed blocks are
+     * balanced client-side, so the block grows live while the model is still thinking.
+     */
+    private function buildContent(array $delta, bool $isDone): string
+    {
+        $reasoning = (string)($delta['reasoning'] ?? $delta['reasoning_content'] ?? '');
+        $text = (string)($delta['content'] ?? '');
+
+        $content = '';
+
+        if ($reasoning !== '') {
+            if (!$this->reasoningOpen) {
+                $content .= '<think>';
+                $this->reasoningOpen = true;
+            }
+            $content .= $reasoning;
+        }
+
+        // Close the block as soon as the answer starts, or if the stream ends mid-thought
+        if ($this->reasoningOpen && ($text !== '' || $isDone)) {
+            $content .= '</think>';
+            $this->reasoningOpen = false;
+        }
+
+        return $content . $text;
     }
 
     /**

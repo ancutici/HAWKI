@@ -33,8 +33,16 @@ class GwdgNonStreamingRequest extends AbstractRequest
     private function dataToResponse(AiModel $model, array $data): AiResponse
     {
         $message = $data['choices'][0]['message'] ?? [];
-        $content = $message['content'] ?? '';
+        $content = (string)($message['content'] ?? '');
         $finishReason = $data['choices'][0]['finish_reason'] ?? null;
+
+        // Reasoning models return their chain-of-thought in a separate field rather than
+        // inline (see GwdgStreamingRequest::buildContent). Wrap it so it renders as a
+        // think block instead of being dropped.
+        $reasoning = (string)($message['reasoning'] ?? $message['reasoning_content'] ?? '');
+        if ($reasoning !== '') {
+            $content = '<think>' . $reasoning . '</think>' . $content;
+        }
         $toolCalls = null;
 
         // Parse tool calls if present

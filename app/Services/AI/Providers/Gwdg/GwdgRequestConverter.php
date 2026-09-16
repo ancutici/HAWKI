@@ -98,8 +98,8 @@ readonly class GwdgRequestConverter
             ];
 
             // Only include content if it's non-empty
-            $content = $message['content'] ?? '';
-            if ($content !== '' && $content !== null) {
+            $content = $this->stripReasoning((string)($message['content'] ?? ''));
+            if ($content !== '') {
                 $formatted['content'] = $content;
             }
 
@@ -112,17 +112,26 @@ readonly class GwdgRequestConverter
 
         // Handle string content (from tool results or simple messages)
         if (is_string($content)) {
-            $formattedContent[] = [
-                'type' => 'text',
-                'text' => $content,
-            ];
+            $text = $role === 'assistant' ? $this->stripReasoning($content) : $content;
+            if ($text !== '') {
+                $formattedContent[] = [
+                    'type' => 'text',
+                    'text' => $text,
+                ];
+            }
         } else {
             // Handle structured content
             if (!empty($content['text'])) {
-                $formattedContent[] = [
-                    'type' => 'text',
-                    'text' => $content['text'],
-                ];
+                $text = $role === 'assistant'
+                    ? $this->stripReasoning((string)$content['text'])
+                    : $content['text'];
+
+                if ($text !== '') {
+                    $formattedContent[] = [
+                        'type' => 'text',
+                        'text' => $text,
+                    ];
+                }
             }
 
             // Handle attachments with permission checks
@@ -135,6 +144,28 @@ readonly class GwdgRequestConverter
             'role' => $role,
             'content' => $formattedContent
         ];
+    }
+
+    /**
+     * Removes <think> blocks from stored assistant text before it is replayed as history.
+     *
+     * Reasoning is persisted with the message so the user can still expand it in the UI,
+     * but it is the model's scratchpad, not part of its answer. Replaying it costs input
+     * tokens on every follow-up turn and grows fast — a single GLM 5.3 Flash turn can spend
+     * several thousand tokens on reasoning alone.
+     *
+     * Only applied to assistant messages: a user may legitimately write about <think> tags,
+     * and their text must never be altered. Code fences are not excluded, so an assistant
+     * message quoting a literal <think> tag inside a code block loses that snippet from the
+     * history it sends back — the rendered message the user sees is unaffected.
+     */
+    private function stripReasoning(string $text): string
+    {
+        // Closed blocks first, then a trailing unclosed one left by an aborted generation
+        $text = preg_replace('#<think>.*?</think>#is', '', $text) ?? $text;
+        $text = preg_replace('#<think>.*$#is', '', $text) ?? $text;
+
+        return trim($text);
     }
 
     private function mergeConsecutiveMessagesWithSameRole(array $messages): array

@@ -29,17 +29,21 @@ function formatChunk(chunk, groundingMetadata) {
   let formatText = summedText;
 
   try {
-    // Balance code blocks - ensure all blocks are closed
-    const backtickCount = (summedText.match(/```/g) || []).length;
-    if (backtickCount % 2 !== 0) {
-      formatText += '```';
-    }
-
-    // Balance thinking blocks - ensure all blocks are closed
+    // Balance thinking blocks first - ensure all blocks are closed.
+    // Order matters: a reasoning model may still be drafting fenced code inside the
+    // block, and closing it first keeps the backtick balancing below from appending
+    // a stray ``` into the thought text.
     const thinkOpenCount = (summedText.match(/<think>/g) || []).length;
     const thinkCloseCount = (summedText.match(/<\/think>/g) || []).length;
     if (thinkOpenCount > thinkCloseCount) {
       formatText += '</think>';
+    }
+
+    // Balance code blocks - ensure all blocks are closed. Fences inside a thinking
+    // block are part of its plain-text content and must not be counted here.
+    const outsideThink = formatText.replace(/<think>[\s\S]*?<\/think>/g, '');
+    if ((outsideThink.match(/```/g) || []).length % 2 !== 0) {
+      formatText += '```';
     }
 
     // Render the formatted text using markdown processor
@@ -126,11 +130,22 @@ function preprocessContent(content) {
   const thinkReplacements = [];
   const result = [];
 
+  // Think blocks must be extracted before the code-block segmentation below.
+  // A thinking block is an outer container, and reasoning models routinely draft
+  // fenced code inside it. The segmentation splits on ``` lines, which would put
+  // <think> and </think> into different segments, so the block would never match
+  // and its raw tags would leak into the rendered message. Its content is inserted
+  // as plain text later, so no markdown handling is needed for what is inside.
+  const contentWithoutThink = content.replace(thinkRegex, (thinkMatch) => {
+    thinkReplacements.push(thinkMatch);
+    return `%%%THINK${thinkReplacements.length - 1}%%%`;
+  });
+
   let inCodeBlock = false;
   let currentSegment = '';
 
   // Process content by lines for better code block detection
-  const lines = content.split('\n');
+  const lines = contentWithoutThink.split('\n');
 
   for (let i = 0; i < lines.length; i++) {
     const line = lines[i];
@@ -142,7 +157,7 @@ function preprocessContent(content) {
     if (codeBlockStartRegex.test(trimmedLine)) {
       // Process current segment before entering/exiting code block
       if (!inCodeBlock && currentSegment) {
-        result.push(processNonCodeSegment(currentSegment, mathRegex, thinkRegex, mathReplacements, thinkReplacements));
+        result.push(processNonCodeSegment(currentSegment, mathRegex, mathReplacements));
         currentSegment = '';
       } else if (inCodeBlock && currentSegment) {
         // For code blocks, just add as-is
@@ -166,7 +181,7 @@ function preprocessContent(content) {
         result.push(currentSegment);
       } else {
         // For non-code, process with replacements
-        result.push(processNonCodeSegment(currentSegment, mathRegex, thinkRegex, mathReplacements, thinkReplacements));
+        result.push(processNonCodeSegment(currentSegment, mathRegex, mathReplacements));
       }
     }
   }
@@ -179,23 +194,17 @@ function preprocessContent(content) {
 }
 
 // Helper function to process non-code segments
-function processNonCodeSegment(segment, mathRegex, thinkRegex, mathReplacements, thinkReplacements) {
-  // Process math formulas first
-  let processed = segment.replace(mathRegex, (mathMatch) => {
+// Think blocks are already replaced by placeholders in preprocessContent, so only
+// math is handled here.
+function processNonCodeSegment(segment, mathRegex, mathReplacements) {
+  // Process math formulas
+  return segment.replace(mathRegex, (mathMatch) => {
     // Skip dollar signs followed by numbers (likely currency)
     if (/^\$\d+/.test(mathMatch)) return mathMatch;
 
     mathReplacements.push(mathMatch);
     return `%%%MATH${mathReplacements.length - 1}%%%`;
   });
-
-  // Then process think blocks
-  processed = processed.replace(thinkRegex, (thinkMatch) => {
-      thinkReplacements.push(thinkMatch);
-    return `%%%THINK${thinkReplacements.length - 1}%%%`;
-  });
-
-  return processed;
 }
 
 // Improved post-processing of content after Markdown rendering
