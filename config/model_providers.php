@@ -30,6 +30,25 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    |   Streaming
+    |--------------------------------------------------------------------------
+    |
+    |   stream_idle_timeout: seconds a stream may deliver nothing before the request
+    |   is aborted and an error is shown to the user. Reasoning models think silently
+    |   for a while before their first token, so this must not be too tight.
+    |
+    |   It must however stay clearly below the web server's timeout (Apache 'Timeout',
+    |   which ProxyTimeout inherits). Otherwise the web server drops the connection
+    |   first, the user gets a bare 504 instead of a readable message, and the cause
+    |   is only visible in the log.
+    |
+    */
+    'streaming' => [
+        'stream_idle_timeout' => (int)env('AI_STREAM_IDLE_TIMEOUT', 90),
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
     |   System Models
     |--------------------------------------------------------------------------
     |
