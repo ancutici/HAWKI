@@ -116,6 +116,30 @@ return [
         ],
     ],
     [
+        'active' => env('MODELS_GWDG_QWEN3_8_27B_ACTIVE', true),
+        'id' => 'qwen3.8-27b',
+        'label' => 'GWDG Qwen 3.8 27B',
+        'input' => [
+            // GWDG model table lists "Vision", but /v1/models reports text-only input
+            // for the deployed endpoint; following the live API until image input is enabled.
+            'text',
+        ],
+        'output' => [
+            'text',
+            'thought',
+        ],
+        'tools' => [
+            'stream' => true,
+            'tool_calling' => false, // Thinking-mode model; tool calling conflicts with chain-of-thought output
+            'file_upload' => env('MODELS_GWDG_QWEN3_8_27B_TOOLS_FILE_UPLOAD', true),
+        ],
+        'default_params' => [
+            // GWDG recommended values: temp=1.0, top_p=0.95
+            'temp' => env('MODELS_GWDG_QWEN3_8_27B_PARAMS_TEMP', 1.0),
+            'top_p' => env('MODELS_GWDG_QWEN3_8_27B_PARAMS_TOP_P', 0.95),
+        ],
+    ],
+    [
         'active' => env('MODELS_GWDG_QWEN3_CODER_NEXT_ACTIVE', true),
         'id' => 'qwen3-coder-next',
         'label' => 'GWDG Qwen 3 Coder Next',
@@ -200,6 +224,31 @@ return [
             // GWDG recommended values: temp=1.0, top_p=0.95
             'temp' => env('MODELS_GWDG_GLM_4_7_PARAMS_TEMP', 1.0),
             'top_p' => env('MODELS_GWDG_GLM_4_7_PARAMS_TOP_P', 0.95),
+        ],
+    ],
+    [
+        'active' => env('MODELS_GWDG_GLM_5_3_FLASH_ACTIVE', true),
+        'id' => 'glm-5.3-flash',
+        'label' => 'GWDG GLM 5.3 Flash',
+        'input' => [
+            'text',
+            'image',
+            'video',
+        ],
+        'output' => [
+            'text',
+            'thought',
+        ],
+        'tools' => [
+            'stream' => true,
+            'tool_calling' => false, // Thinking-mode model; tool calling conflicts with chain-of-thought output
+            'file_upload' => env('MODELS_GWDG_GLM_5_3_FLASH_TOOLS_FILE_UPLOAD', true),
+            'vision' => env('MODELS_GWDG_GLM_5_3_FLASH_TOOLS_VISION', true),
+        ],
+        'default_params' => [
+            // GWDG recommended values: temp=1.0, top_p=0.95
+            'temp' => env('MODELS_GWDG_GLM_5_3_FLASH_PARAMS_TEMP', 1.0),
+            'top_p' => env('MODELS_GWDG_GLM_5_3_FLASH_PARAMS_TOP_P', 0.95),
         ],
     ],
 ];
