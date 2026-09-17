@@ -22,10 +22,11 @@ return [
      * If null, the general default models are used above (can be useful to prevent high cost models being used by external apps)
      */
     'default_models.ext_app' => [
-//        'default_model' => null,
-//        'default_web_search_model' => null,
-//        'default_file_upload_model' => null,
-//        'default_vision_model' => null,
+        // Externe Anwendungen duerfen aus Kostengruenden nur GWDG-Modelle nutzen.
+        'default_model' => env('EXT_DEFAULT_MODEL', 'gemma-4-31b-it'),
+        'default_web_search_model' => env('EXT_WEBSEARCH_MODEL', 'gemma-4-31b-it'),
+        'default_file_upload_model' => env('EXT_FILEUPLOAD_MODEL', 'gemma-4-31b-it'),
+        'default_vision_model' => env('EXT_VISION_MODEL', 'gemma-4-31b-it'),
     ],
 
     /*
@@ -69,9 +70,9 @@ return [
      * If null, the general system models are used above (can be useful to prevent high cost models being used by external apps)
      */
     'system_models.ext_app' => [
-//        'title_generator' => null,
-//        'prompt_improver' => null,
-//        'summarizer' => null,
+        'title_generator' => env('EXT_TITLE_GENERATOR_MODEL', 'gemma-4-31b-it'),
+        'prompt_improver' => env('EXT_PROMPT_IMPROVEMENT_MODEL', 'gemma-4-31b-it'),
+        'summarizer' => env('EXT_SUMMARIZER_MODEL', 'gemma-4-31b-it'),
     ],
 
     /*

@@ -104,6 +104,14 @@ class HomeController extends Controller
 
         $converterActive = FileConverterFactory::converterActive();
 
+        // Model IDs usable through the external API, for the info block on the profile page.
+        $externalModelIds = [];
+        if (config('sanctum.allow_external_communication')) {
+            foreach ($this->aiService->getAvailableModels(true)->models as $externalModel) {
+                $externalModelIds[] = $externalModel->getId();
+            }
+        }
+
         // Pass translation, authenticationMethod, and authForms to the view
         return view('modules.' . $requestModule,
                     compact('translation',
@@ -118,6 +126,7 @@ class HomeController extends Controller
                             'toolKitLabels',
                             'announcements',
                             'converterActive',
+                            'externalModelIds',
                         ));
     }
 

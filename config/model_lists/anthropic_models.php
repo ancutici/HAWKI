@@ -1,8 +1,19 @@
 <?php
+
+/*
+ * 'external' steuert, ob ein Modell ueber die API (POST /api/ai-req) nutzbar ist.
+ * Vorgabe Uni Hohenheim: per API sind aus Kostengruenden nur GWDG-Modelle erlaubt.
+ * Der Key MUSS bei jedem Modell gesetzt werden - fehlt er, gilt das Modell als
+ * erlaubt (siehe AiModel::isAllowedInExternalApp()).
+ * Zusaetzlich muessen die ext_app-Defaults in config/model_providers.php auf
+ * GWDG-Modelle zeigen, sonst zieht der Default das Modell in die externe Liste.
+ */
+
 return [
     [
         'active' => env('MODELS_ANTHROPIC_HAIKU_ACTIVE', true),
         'id' => 'claude-haiku-4-5',
+        'external' => false,
         'label' => 'Claude Haiku 4.5',
         'input' => ['text', 'image'],
         'output' => ['text'],
@@ -22,6 +33,7 @@ return [
     [
         'active' => env('MODELS_ANTHROPIC_SONNET_ACTIVE', true),
         'id' => 'claude-sonnet-5',
+        'external' => false,
         'label' => 'Claude Sonnet 5',
         'input' => ['text', 'image'],
         'output' => ['text'],

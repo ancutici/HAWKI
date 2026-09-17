@@ -3,6 +3,7 @@ return [
     [
         'active'=> env('MODELS_GOOGLE_GEMINI_2_0_FLASH_ACTIVE', true),
         'id' => 'gemini-2.0-flash',
+        'external' => false,
         'label' => 'Google Gemini 2.0 Flash',
         "input"=> [
             "text",
@@ -28,6 +29,7 @@ return [
     [
         'active'=> env('MODELS_GOOGLE_GEMINI_2_0_FLASH_LITE_ACTIVE', true),
         'id' => 'gemini-2.0-flash-lite',
+        'external' => false,
         'label' => 'Google Gemini 2.0 Flash Lite',
         "input"=> [
             "text",
@@ -51,6 +53,7 @@ return [
     [
         'active'=> env('MODELS_GOOGLE_GEMINI_2_5_PRO_ACTIVE', true),
         'id' => 'gemini-2.5-pro',
+        'external' => false,
         'label' => 'Google Gemini 2.5 Pro',
         "input"=> [
             "text",

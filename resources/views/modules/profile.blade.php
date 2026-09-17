@@ -43,14 +43,14 @@
 
             <h3 class="label-header top-gap-3">{{ $translation["PersonalData"] }}</h3>
             <div class="">
-                <!-- @if(config('sanctum.allow_user_token') && config('sanctum.allow_external_communication'))
-                    <button class="btn-md-txt" onclick="toggleAccessTokensPanel(true)">{{ $translation["AccessTokens"] }}</button>
-                @else
-                    <p class="gray-text zero-v-margin">{{ $translation["AccessTokens"] }}</p>
-                    <p class="sub-descript">{{ $translation["Api_Warning"] }}</p>
+                @if(config('sanctum.allow_external_communication'))
+                    @if(config('sanctum.allow_user_token'))
+                        <button class="btn-lg-fill" onclick="toggleAccessTokensPanel(true)">{{ $translation["AccessTokens"] }}</button>
+                    @endif
+                    @include('partials.home.components.api-info')
                 @endif
 
-                <button class="btn-md-txt red-text top-gap-2" onclick="clearPersonalData()">{{ $translation["ClearLocalData"] }}</button>
+                <button class="btn-lg-fill delete-btn top-gap-2" onclick="clearPersonalData()">{{ $translation["ClearLocalData"] }}</button>
             </div>
 
         </div>

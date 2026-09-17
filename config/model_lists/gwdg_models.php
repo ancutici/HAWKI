@@ -1,9 +1,19 @@
 <?php
 
+/*
+ * 'external' steuert, ob ein Modell ueber die API (POST /api/ai-req) nutzbar ist.
+ * Vorgabe Uni Hohenheim: per API sind aus Kostengruenden nur GWDG-Modelle erlaubt.
+ * Der Key MUSS bei jedem Modell gesetzt werden - fehlt er, gilt das Modell als
+ * erlaubt (siehe AiModel::isAllowedInExternalApp()).
+ * Zusaetzlich muessen die ext_app-Defaults in config/model_providers.php auf
+ * GWDG-Modelle zeigen, sonst zieht der Default das Modell in die externe Liste.
+ */
+
 return [
     [
         'active' => env('MODELS_GWDG_GEMMA_4_31B_IT_ACTIVE', true),
         'id' => 'gemma-4-31b-it',
+        'external' => true,
         'label' => 'GWDG Gemma 4 31B Instruct',
         'input' => [
             'text',
@@ -27,6 +37,7 @@ return [
     [
         'active' => env('MODELS_GWDG_DEEPSEEK_V4_FLASH_0731_ACTIVE', true),
         'id' => 'deepseek-v4-flash-0731',
+        'external' => true,
         'label' => 'GWDG DeepSeek V4 Flash 0731',
         'input' => [
             'text',
@@ -49,6 +60,7 @@ return [
     [
         'active' => env('MODELS_GWDG_MISTRAL_MEDIUM_3_5_128B_ACTIVE', true),
         'id' => 'mistral-medium-3.5-128b',
+        'external' => true,
         'label' => 'GWDG Mistral Medium 3.5 128B',
         'input' => [
             'text',
@@ -70,6 +82,7 @@ return [
     [
         'active' => env('MODELS_GWDG_QWEN3_5_397B_A17B_ACTIVE', true),
         'id' => 'qwen3.5-397b-a17b',
+        'external' => true,
         'label' => 'GWDG Qwen 3.5 397B A17B',
         'input' => [
             'text',
@@ -94,6 +107,7 @@ return [
     [
         'active' => env('MODELS_GWDG_QWEN3_6_35B_A3B_ACTIVE', true),
         'id' => 'qwen3.6-35b-a3b',
+        'external' => true,
         'label' => 'GWDG Qwen 3.6 35B A3B',
         'input' => [
             'text',
@@ -118,6 +132,7 @@ return [
     [
         'active' => env('MODELS_GWDG_QWEN3_8_27B_ACTIVE', true),
         'id' => 'qwen3.8-27b',
+        'external' => true,
         'label' => 'GWDG Qwen 3.8 27B',
         'input' => [
             // GWDG model table lists "Vision", but /v1/models reports text-only input
@@ -142,6 +157,7 @@ return [
     [
         'active' => env('MODELS_GWDG_QWEN3_CODER_NEXT_ACTIVE', true),
         'id' => 'qwen3-coder-next',
+        'external' => true,
         'label' => 'GWDG Qwen 3 Coder Next',
         'input' => [
             'text',
@@ -163,6 +179,7 @@ return [
     [
         'active' => env('MODELS_GWDG_QWEN3_OMNI_30B_A3B_INSTRUCT_ACTIVE', true),
         'id' => 'qwen3-omni-30b-a3b-instruct',
+        'external' => true,
         'label' => 'GWDG Qwen 3 Omni 30B A3B Instruct',
         'input' => [
             'text',
@@ -187,6 +204,7 @@ return [
     [
         'active' => env('MODELS_GWDG_OPENAI_GPT_OSS_120B_ACTIVE', true),
         'id' => 'openai-gpt-oss-120b',
+        'external' => true,
         'label' => 'GWDG OpenAI GPT OSS 120B',
         'input' => [
             'text',
@@ -208,6 +226,7 @@ return [
     [
         'active' => env('MODELS_GWDG_GLM_4_7_ACTIVE', true),
         'id' => 'glm-4.7',
+        'external' => true,
         'label' => 'GWDG GLM 4.7',
         'input' => [
             'text',
@@ -229,6 +248,7 @@ return [
     [
         'active' => env('MODELS_GWDG_GLM_5_3_FLASH_ACTIVE', true),
         'id' => 'glm-5.3-flash',
+        'external' => true,
         'label' => 'GWDG GLM 5.3 Flash',
         'input' => [
             'text',

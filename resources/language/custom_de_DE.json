@@ -1,4 +1,10 @@
 {
+    "Api_Info_Title": "API-Zugang",
+    "Api_Info_Experimental": "Experimentell. Per API sind ausschließlich die GWDG-Modelle nutzbar.",
+    "Api_Info_Endpoint": "Endpunkt",
+    "Api_Info_Models": "Verfügbare Modell-IDs",
+    "Api_Info_Example": "Beispiel",
+    "Api_Info_Limit": "Rate-Limit der GWDG, uniweit geteilt: 30/Minute · 200/Stunde · 1000/Tag · 3000/Monat.",
     "Guidelines": "Leitfaden zum Umgang mit GPTalk",
     "Cnf_tokenMsg1": "Bitte bewahre diesen Token sicher auf und verwende ihn mit Bedacht, um dein Konto zu schützen. Wenn GPTalk verdächtiges Verhalten feststellt, wird dieser Token widerrufen.",
     "Exported_At":"Exportiert aus GPTalk am:",

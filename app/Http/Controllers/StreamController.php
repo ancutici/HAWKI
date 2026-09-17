@@ -54,6 +54,20 @@ class StreamController extends Controller
 
         $payload = $validatedData['payload'];
 
+        // Only models marked as available for external apps may be used here.
+        // sendRequest() resolves the model without a usage type, so the check has
+        // to happen before the request is handed over.
+        if (!$this->aiService->getModel($payload['model'], true)) {
+            return response()->json([
+                'success' => false,
+                'message' => sprintf('The model "%s" is not available via the API.', $payload['model']),
+            ], 403);
+        }
+
+        // The external endpoint always answers in one piece; the request converters
+        // of all providers read this key unconditionally.
+        $payload['stream'] = false;
+
         // Handle standard response
         $response = $this->aiService->sendRequest($payload);
 

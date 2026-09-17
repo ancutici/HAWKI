@@ -1,8 +1,19 @@
 <?php
+
+/*
+ * 'external' steuert, ob ein Modell ueber die API (POST /api/ai-req) nutzbar ist.
+ * Vorgabe Uni Hohenheim: per API sind aus Kostengruenden nur GWDG-Modelle erlaubt.
+ * Der Key MUSS bei jedem Modell gesetzt werden - fehlt er, gilt das Modell als
+ * erlaubt (siehe AiModel::isAllowedInExternalApp()).
+ * Zusaetzlich muessen die ext_app-Defaults in config/model_providers.php auf
+ * GWDG-Modelle zeigen, sonst zieht der Default das Modell in die externe Liste.
+ */
+
 return [
     [
         'active'=> env('MODELS_OPENAI_GPT5_ACTIVE', true),
         'id' => 'gpt-5.6-terra',
+        'external' => false,
         'label' => 'OpenAI GPT 5.6 Terra',
         "input"=> [
             "text",
@@ -30,6 +41,7 @@ return [
         // einem Modell zusammen, siehe config/model_providers.php.
         'active'=> env('MODELS_OPENAI_GPT5_ACTIVE', true),
         'id' => 'gpt-5.6-luna',
+        'external' => false,
         'label' => 'OpenAI GPT 5.6 Luna',
         "input"=> [
             "text",
