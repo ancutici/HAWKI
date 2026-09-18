@@ -10,6 +10,7 @@ use App\Http\Middleware\MandatorySignatureCheck;
 use App\Http\Middleware\PreventBackHistory;
 use App\Http\Middleware\RegistrationAccess;
 use App\Http\Middleware\SessionExpiryChecker;
+use App\Http\Middleware\OpenAiErrorFormat;
 use App\Http\Middleware\TokenCreationCheck;
 use App\Services\Storage\AvatarStorageService;
 use App\Services\Storage\FileStorageService;
@@ -123,5 +124,6 @@ class AppServiceProvider extends ServiceProvider
         Route::aliasMiddleware('token_creation', TokenCreationCheck::class);
         Route::aliasMiddleware('signature_check', MandatorySignatureCheck::class);
         Route::aliasMiddleware('deprecated', DeprecatedEndpointMiddleware::class);
+        Route::aliasMiddleware('openai_errors', OpenAiErrorFormat::class);
     }
 }

@@ -4,6 +4,7 @@ use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
 use Illuminate\Http\Request;
+use App\Services\AI\OpenAiCompat\OpenAiExceptionRenderer;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -21,6 +22,13 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withExceptions(function (Exceptions $exceptions) {
         $exceptions->shouldRenderJsonWhen(function (Request $request) {
             return $request->expectsJson() || $request->is('api/*');
+        });
+
+        // The OpenAI-compatible routes need their errors in the shape their clients parse,
+        // {"error": {"message": ..., "type": ...}}. Everything outside /api/v1/ is left
+        // untouched - see OpenAiExceptionRenderer for why this cannot be a middleware.
+        $exceptions->render(function (Throwable $e, Request $request) {
+            return OpenAiExceptionRenderer::render($e, $request);
         });
     })
     ->create();

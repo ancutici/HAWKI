@@ -41,7 +41,7 @@ return [
         // einem Modell zusammen, siehe config/model_providers.php.
         'active'=> env('MODELS_OPENAI_GPT5_ACTIVE', true),
         'id' => 'gpt-5.6-luna',
-        'external' => false,
+        'external' => true,
         'label' => 'OpenAI GPT 5.6 Luna',
         "input"=> [
             "text",

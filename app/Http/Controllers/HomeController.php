@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use App\Services\AI\AiService;
+use App\Services\AI\OpenAiCompat\ApiCatalog;
 use App\Services\Announcements\AnnouncementService;
 use App\Services\Chat\AiConv\AiConvService;
 use App\Services\Chat\Room\RoomService;
@@ -26,7 +27,8 @@ class HomeController extends Controller
     // Inject LanguageController instance
     public function __construct(
         private LanguageController $languageController,
-        private AiService          $aiService
+        private AiService          $aiService,
+        private ApiCatalog         $apiCatalog
     )
     {
     }
@@ -104,12 +106,15 @@ class HomeController extends Controller
 
         $converterActive = FileConverterFactory::converterActive();
 
-        // Model IDs usable through the external API, for the info block on the profile page.
-        $externalModelIds = [];
+        // Model IDs usable through the OpenAI-compatible API, for the info block on the
+        // profile page. Same source as GET /api/v1/models, so the two cannot drift apart.
+        $apiModels = ['chat' => [], 'embedding' => [], 'rerank' => []];
         if (config('sanctum.allow_external_communication')) {
-            foreach ($this->aiService->getAvailableModels(true)->models as $externalModel) {
-                $externalModelIds[] = $externalModel->getId();
-            }
+            $apiModels = [
+                'chat' => array_keys($this->apiCatalog->chatModels()),
+                'embedding' => array_keys($this->apiCatalog->embeddingModels()),
+                'rerank' => array_keys($this->apiCatalog->rerankModels()),
+            ];
         }
 
         // Pass translation, authenticationMethod, and authForms to the view
@@ -126,7 +131,7 @@ class HomeController extends Controller
                             'toolKitLabels',
                             'announcements',
                             'converterActive',
-                            'externalModelIds',
+                            'apiModels',
                         ));
     }
 
