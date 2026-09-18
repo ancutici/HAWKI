@@ -224,28 +224,6 @@ return [
         ],
     ],
     [
-        'active' => env('MODELS_GWDG_GLM_4_7_ACTIVE', true),
-        'id' => 'glm-4.7',
-        'external' => true,
-        'label' => 'GWDG GLM 4.7',
-        'input' => [
-            'text',
-        ],
-        'output' => [
-            'text',
-        ],
-        'tools' => [
-            'stream' => true,
-            'tool_calling' => true,
-            'file_upload' => env('MODELS_GWDG_GLM_4_7_TOOLS_FILE_UPLOAD', true),
-        ],
-        'default_params' => [
-            // GWDG recommended values: temp=1.0, top_p=0.95
-            'temp' => env('MODELS_GWDG_GLM_4_7_PARAMS_TEMP', 1.0),
-            'top_p' => env('MODELS_GWDG_GLM_4_7_PARAMS_TOP_P', 0.95),
-        ],
-    ],
-    [
         'active' => env('MODELS_GWDG_GLM_5_3_FLASH_ACTIVE', true),
         'id' => 'glm-5.3-flash',
         'external' => true,
