@@ -14,11 +14,11 @@
 return [
     // Anthropic
     'claude-haiku-4-5'            => ['input' => 1.00,  'output' => 5.00,  'cache_write' => 1.25, 'cache_read' => 0.10],
-    'claude-sonnet-5'             => ['input' => 2.00,  'output' => 10.00, 'cache_write' => 2.50, 'cache_read' => 0.20],
+    'claude-sonnet-5-5'           => ['input' => 2.00,  'output' => 10.00, 'cache_write' => 2.50, 'cache_read' => 0.20],
 
     // OpenAI
-    'gpt-5.6-terra'               => ['input' => 2.00,  'output' => 12.00],
-    'gpt-5.6-luna'                => ['input' => 0.20,  'output' => 1.20],
+    'gpt-6.1-sol'                 => ['input' => 2.00,  'output' => 10.00],
+    'gpt-6-luna'                  => ['input' => 0.10,  'output' => 0.50],
 
     // Default fallback — covers all GWDG models and any unlisted model
     'default'                     => ['input' => 0.00,  'output' => 0.00],

@@ -58,53 +58,6 @@ return [
         ],
     ],
     [
-        'active' => env('MODELS_GWDG_MISTRAL_MEDIUM_3_5_128B_ACTIVE', true),
-        'id' => 'mistral-medium-3.5-128b',
-        'external' => true,
-        'label' => 'GWDG Mistral Medium 3.5 128B',
-        'input' => [
-            'text',
-        ],
-        'output' => [
-            'text',
-        ],
-        'tools' => [
-            'stream' => true,
-            'tool_calling' => false, // Not documented in GWDG model card; not assumed
-            'file_upload' => env('MODELS_GWDG_MISTRAL_MEDIUM_3_5_128B_TOOLS_FILE_UPLOAD', true),
-        ],
-        'default_params' => [
-            // No official sampling recommendation in GWDG model card; vLLM/API defaults used
-            'temp' => env('MODELS_GWDG_MISTRAL_MEDIUM_3_5_128B_PARAMS_TEMP', 1.0),
-            'top_p' => env('MODELS_GWDG_MISTRAL_MEDIUM_3_5_128B_PARAMS_TOP_P', 1.0),
-        ],
-    ],
-    [
-        'active' => env('MODELS_GWDG_QWEN3_5_397B_A17B_ACTIVE', true),
-        'id' => 'qwen3.5-397b-a17b',
-        'external' => true,
-        'label' => 'GWDG Qwen 3.5 397B A17B',
-        'input' => [
-            'text',
-            'image',
-        ],
-        'output' => [
-            'text',
-            'thought',
-        ],
-        'tools' => [
-            'stream' => true,
-            'tool_calling' => false, // Thinking-mode model; tool calling conflicts with chain-of-thought output
-            'file_upload' => env('MODELS_GWDG_QWEN3_5_397B_A17B_TOOLS_FILE_UPLOAD', true),
-            'vision' => env('MODELS_GWDG_QWEN3_5_397B_A17B_TOOLS_VISION', true),
-        ],
-        'default_params' => [
-            // Thinking mode: model card recommends temp=0.6 and top_p=0.95
-            'temp' => env('MODELS_GWDG_QWEN3_5_397B_A17B_PARAMS_TEMP', 0.6),
-            'top_p' => env('MODELS_GWDG_QWEN3_5_397B_A17B_PARAMS_TOP_P', 0.95),
-        ],
-    ],
-    [
         'active' => env('MODELS_GWDG_QWEN3_6_35B_A3B_ACTIVE', true),
         'id' => 'qwen3.6-35b-a3b',
         'external' => true,
@@ -199,28 +152,6 @@ return [
             // vLLM examples for Qwen 3 Omni use temp=0.6 and top_p=0.95
             'temp' => env('MODELS_GWDG_QWEN3_OMNI_30B_A3B_INSTRUCT_PARAMS_TEMP', 0.6),
             'top_p' => env('MODELS_GWDG_QWEN3_OMNI_30B_A3B_INSTRUCT_PARAMS_TOP_P', 0.95),
-        ],
-    ],
-    [
-        'active' => env('MODELS_GWDG_OPENAI_GPT_OSS_120B_ACTIVE', true),
-        'id' => 'openai-gpt-oss-120b',
-        'external' => true,
-        'label' => 'GWDG OpenAI GPT OSS 120B',
-        'input' => [
-            'text',
-        ],
-        'output' => [
-            'text',
-        ],
-        'tools' => [
-            'stream' => true,
-            'tool_calling' => true,
-            'file_upload' => env('MODELS_GWDG_OPENAI_GPT_OSS_120B_TOOLS_FILE_UPLOAD', true),
-        ],
-        'default_params' => [
-            // No official sampling recommendations; OpenAI API defaults temp=1.0 and top_p=1.0 used
-            'temp' => env('MODELS_GWDG_OPENAI_GPT_OSS_120B_PARAMS_TEMP', 1.0),
-            'top_p' => env('MODELS_GWDG_OPENAI_GPT_OSS_120B_PARAMS_TOP_P', 1.0),
         ],
     ],
     [

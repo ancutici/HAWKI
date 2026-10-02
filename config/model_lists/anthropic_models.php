@@ -32,9 +32,9 @@ return [
     ],
     [
         'active' => env('MODELS_ANTHROPIC_SONNET_ACTIVE', true),
-        'id' => 'claude-sonnet-5',
+        'id' => 'claude-sonnet-5-5',
         'external' => false,
-        'label' => 'Claude Sonnet 5',
+        'label' => 'Claude Sonnet 5.5',
         'input' => ['text', 'image'],
         'output' => ['text'],
         'tools' => [
@@ -45,7 +45,7 @@ return [
             // 'web_search' => 'native',            
         ],
         'default_params' => [
-            // claude-sonnet-5 does not accept temperature or top_p.
+            // claude-sonnet-5-5 rejects temperature and top_p ("deprecated for this model", geprueft am 2026-10-02).
         ],
     ],
 ];
