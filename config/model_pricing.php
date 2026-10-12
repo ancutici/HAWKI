@@ -13,8 +13,9 @@
  */
 return [
     // Anthropic
-    'claude-haiku-4-5'            => ['input' => 1.00,  'output' => 5.00,  'cache_write' => 1.25, 'cache_read' => 0.10],
-    'claude-sonnet-5-5'           => ['input' => 2.00,  'output' => 10.00, 'cache_write' => 2.50, 'cache_read' => 0.20],
+    // Haiku 5.5: Preis fuer Prompts bis 100k Tokens; darueber 0.50 / 2.50 / 0.625 / 0.05 (Staffel nicht abbildbar).
+    'claude-haiku-5-5'            => ['input' => 0.10,  'output' => 0.50,  'cache_write' => 0.125, 'cache_read' => 0.01],
+    'claude-sonnet-5-5'           => ['input' => 2.00,  'output' => 10.00, 'cache_write' => 2.50, 'cache_read' => 0.10],
 
     // OpenAI
     'gpt-6.1-sol'                 => ['input' => 2.00,  'output' => 10.00],
