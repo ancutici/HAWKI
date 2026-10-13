@@ -119,19 +119,33 @@ readonly class OidcService implements AuthServiceInterface, AuthServiceWithLogou
 
     /**
      * Resolves the employeeType attribute from OIDC user info.
-     * The Hohenheim Keycloak provides "affiliation" as an array (e.g. ["member", "employee"]).
-     * Arrays are joined with commas; missing/empty values fall back to 'N/A'.
+     * Keycloak delivered "affiliation" as an array (e.g. ["student", "staff"]), the Shibboleth IdP
+     * delivers "eduPersonScopedAffiliation" as a space separated string of scoped values
+     * (e.g. "staff@uni-hohenheim.de member@uni-hohenheim.de library-walk-in@uni-hohenheim.de").
+     * Both are normalized to the stored format "staff", "student" or "student,staff":
+     * scopes are stripped and the generic values "member" and "library-walk-in" are dropped.
+     * Missing/empty values fall back to 'N/A'.
      */
     private function resolveEmployeeType(OpenIDConnectClient $oidc): string
     {
         $value = $oidc->requestUserInfo($this->employeeTypeAttribute);
-        if (is_array($value) && count($value) > 0) {
-            return implode(',', $value);
+        return self::normalizeEmployeeType($value);
+    }
+
+    private static function normalizeEmployeeType(mixed $value): string
+    {
+        $parts = is_array($value) ? $value : preg_split('/[\s,]+/', (string) $value);
+        $types = [];
+        foreach ($parts as $part) {
+            $type = strtolower(trim(explode('@', (string) $part)[0]));
+            if ($type !== '') {
+                $types[$type] = true;
+            }
         }
-        if (is_string($value) && !empty($value)) {
-            return $value;
-        }
-        return 'N/A';
+        $specific = array_diff(array_keys($types), ['member', 'library-walk-in']);
+        $types = !empty($specific) ? $specific : array_keys($types);
+
+        return !empty($types) ? implode(',', $types) : 'N/A';
     }
 
     private function getUserInfoOrFail(OpenIDConnectClient $oidc, string $var): string
