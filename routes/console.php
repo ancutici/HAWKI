@@ -10,6 +10,9 @@ if (getenv('BACKUP_DISABLED') === false) {
         interval: config('backup.backup.schedule_interval'),
         intervalArgs: config('backup.backup.schedule_interval_args')
     );
+    // Alte Backups löschen: nur die letzten 7 Tage behalten (config/backup.php → cleanup).
+    // Uhrzeit in App-Zeitzone UTC, also nach dem täglichen backup:run (00:00 UTC).
+    Schedule::command('backup:clean')->dailyAt('03:00');
 }
 
 Schedule::command('ai:models:check-status')->everyFifteenMinutes();
